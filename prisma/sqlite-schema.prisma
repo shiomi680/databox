@@ -1,0 +1,44 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model ShippingModel {
+  ShippingId                   Int      @id @default(autoincrement())
+  ShipDate             DateTime?
+  ShipFrom             String?
+  ShipTo               String?
+  Title                String
+  ShippingInvoicePrice      Float?
+  ShippingInvoiceCurrency      String?
+  TradeTerm            String?
+  AcquisitionDate      DateTime?
+  AcquisitionPrice     Float?
+  BookValue     Float?
+  Defrayer             String?
+  Comment              String?
+  CommentAboutSale     String?
+  Gx          String?
+  CommentAboutAcquisition String?
+  InvoiceNo            String?
+  Carrier              String?
+  Files                 FileModel[]
+  AwbNo                String?
+  ExportPermission     String?
+}
+
+model FileModel{
+  FileId          Int               @id @default(autoincrement())
+  OwnerShippingId Int
+  ShippingModel        ShippingModel          @relation(fields: [OwnerShippingId], references: [ShippingId])
+  FileName        String?
+  FilePath        String?
+  UploadTimestamp DateTime @default(now())
+}
+
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
