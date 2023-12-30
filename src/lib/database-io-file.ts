@@ -45,7 +45,7 @@ export async function updateFileMap(params: UpdateFileMapInput) {
 type ResponseFileMap = {
   fileList: ({
     FileModel: {
-      FileID: number
+      FileId: number
       FileName: string | null
       FilePath: string | null
       UploadTimestamp: Date

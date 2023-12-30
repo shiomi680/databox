@@ -22,7 +22,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 
 export function FileUploadComponent({ itemId }: { itemId: string }) {
-  const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<FileModel[]>([])
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [hoveredFile, setHoveredFile] = useState<number | null>(null)
 
@@ -31,11 +31,13 @@ export function FileUploadComponent({ itemId }: { itemId: string }) {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (event.target.files) {
+      console.log("tedset")
       setIsUploading(true)
       const filesArray = Array.from(event.target.files)
       const itemIdNum = parseInt(itemId, 10)
 
-      const uploaded = await uploadFiles(itemIdNum, filesArray)
+      const uploaded:FileModel[] = await uploadFiles(itemIdNum, filesArray)
+      console.log(uploaded)
       setUploadedFiles([...uploadedFiles, ...uploaded])
       setIsUploading(false)
     }
@@ -53,7 +55,7 @@ export function FileUploadComponent({ itemId }: { itemId: string }) {
   const handleDelete = async (fileId: number) => {
     const result = await deleteFile(fileId, Number(itemId))
     if (!('error' in result)) {
-      const newFiles = uploadedFiles.filter((file) => file.FileID !== fileId)
+      const newFiles = uploadedFiles.filter((file) => file.FileId !== fileId)
       setUploadedFiles(newFiles)
       // TODO: Handle post-delete actions like refreshing the file list.
     }
@@ -117,25 +119,27 @@ export function FileUploadComponent({ itemId }: { itemId: string }) {
         <List style={{ marginTop: 20 }}>
           {uploadedFiles.map((file) => (
             <ListItem
-              key={file.FileID}
+              key={file.FileId}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 padding: '10px 0',
                 borderBottom: '1px solid #f0f0f0',
                 backgroundColor:
-                  hoveredFile === file.FileID ? '#f9f9f9' : 'transparent',
+                  hoveredFile === file.FileId ? '#f9f9f9' : 'transparent',
               }}
-              onMouseEnter={() => setHoveredFile(file.FileID)}
+              onMouseEnter={() => setHoveredFile(file.FileId)}
               onMouseLeave={() => setHoveredFile(null)}
             >
               <a
-                href={file.FilePath}
+                href={file.FilePath||""}
                 download
                 style={{ flex: 1, display: 'flex', alignItems: 'center' }}
                 onClick={(e) => {
                   e.preventDefault() // Prevent default behavior
+                  if(file.FilePath){
                   window.location.href = file.FilePath // Manually redirecting to the file path to start the download
+                  }
                 }}
               >
                 <Typography variant="body1" style={{ marginRight: 10 }}>
@@ -149,7 +153,7 @@ export function FileUploadComponent({ itemId }: { itemId: string }) {
                 startIcon={<DeleteIcon />}
                 variant="outlined"
                 color="secondary"
-                onClick={() => handleDelete(file.FileID)}
+                onClick={() => handleDelete(file.FileId)}
               >
                 Delete
               </Button>

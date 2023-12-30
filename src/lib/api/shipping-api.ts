@@ -13,7 +13,7 @@ export async function getShippingApi(shippingId:number) {
             ShippingId:shippingId
         },
         include:{
-            Files:true
+            ShippingFileMapping:true
         }
     })
     if (shippingInfo) {
