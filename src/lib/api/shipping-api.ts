@@ -2,25 +2,40 @@ import { ShippingModel } from '@prisma/client'
 import { prisma } from './prisma'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 
-export type ShippingReturn = UnwrapPromise<ReturnType<typeof getShippingApi>>
+export type ShippingApiReturn = UnwrapPromise<ReturnType<typeof getShippingApi>>
 export type UpdateShippingReturn = UnwrapPromise<ReturnType<typeof createOrUpdateShipping>>
 
-export type PostShippingApiParams = Partial<ShippingModel>
+export type PostShippingApiParams = Partial<
+  Omit<ShippingModel, 'ShipDate' | 'AcquisitionDate'> & {
+    ShipDate: string | null
+    AcquisitionDate: string | null
 
-export async function getShippingApi(shippingId:number) {
-    const shippingInfo=await prisma.shippingModel.findUnique({
-        where:{
-            ShippingId:shippingId
-        },
-        include:{
-            ShippingFileMapping:true
-        }
-    })
-    if (shippingInfo) {
-        return shippingInfo
-      } else {
-        throw new Error(`${shippingInfo} is not exist`)
-      }
+  }
+>
+
+
+// export type PostShippingApiParams = Partial<ShippingModel>
+
+
+export async function getShippingApi(shippingId: number) {
+  const shippingInfo = await prisma.shippingModel.findUnique({
+    where: {
+      ShippingId: shippingId
+    },
+    include: {
+      ShippingFileMapping: true
+    }
+  })
+  if (shippingInfo) {
+    const rtn = {
+      ...shippingInfo,
+      ShipDate: shippingInfo.ShipDate?.toISOString(),
+      AcquisitionDate: shippingInfo.AcquisitionDate?.toISOString()
+    }
+    return rtn
+  } else {
+    throw new Error(`${shippingInfo} is not exist`)
+  }
 }
 
 // export async function createNewShipping() {
@@ -55,20 +70,31 @@ export async function getShippingApi(shippingId:number) {
 //     Tags: createTags,
 //   }
 // }
-export async function createOrUpdateShipping(shipping: Partial<ShippingModel>) {
-
+export async function createOrUpdateShipping(shipping: PostShippingApiParams) {
   if (shipping.ShippingId) {
     const { ShippingId, ...inputData } = shipping
     return await prisma.shippingModel.update({
       where: {
         ShippingId: ShippingId,
       },
-      data: inputData,
+      data: {
+        ...inputData,
+        ShipDate: shipping.ShipDate ? new Date(shipping.ShipDate) : null,
+        AcquisitionDate: shipping.AcquisitionDate ? new Date(shipping.AcquisitionDate) : null
+      }
+    }
+    )
+  } else {
+    const { ShippingId, Title = "", ShipDate, AcquisitionDate, ...inputData } = shipping
+
+    return await prisma.shippingModel.create({
+      data: {
+        ...inputData,
+        Title: Title,
+        ShipDate: ShipDate ? new Date(ShipDate) : null,
+        AcquisitionDate: AcquisitionDate ? new Date(AcquisitionDate) : null
+      }
     })
-  } else{
-    const { ShippingId,Title ="", ...inputData } = shipping
-    return await prisma.shippingModel.create({ data: { ...inputData, Title } })
-  
   }
 }
 

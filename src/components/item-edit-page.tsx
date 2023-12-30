@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { ShippingModel } from '@prisma/client'
-import { PostShippingApiParams,ShippingReturn, updateShipping,getShipping } from '@/lib/client/shipping-io'
+import { PostShippingApiParams, ShippingReturn, updateShipping, getShipping } from '@/lib/client/shipping-io'
 
 //MUI
 import Button from '@mui/material/Button'
@@ -15,7 +15,7 @@ import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider'
 
 // Components
-import { ItemEditPanel,ShippingFormVlues } from '@/components/item-edit-panel'
+import { ItemEditPanel, ShippingFormVlues } from '@/components/item-edit-panel'
 import { FileUploadComponent } from './file-upload-panel'
 
 export default function ItemPage({ itemId }: { itemId: string }) {
@@ -30,7 +30,7 @@ export default function ItemPage({ itemId }: { itemId: string }) {
   } = useStateForItemPage(itemId)
 
   const is_item_new = itemId === 'new'
-  
+
 
   //送信ボタンを押したとき
   const onSubmit = async (values: any) => {
@@ -129,6 +129,7 @@ function useStateForItemPage(itemId: string) {
   }
 
 
+
   useEffect(() => {
     initializeData()
   }, [itemId])
@@ -141,16 +142,44 @@ function useStateForItemPage(itemId: string) {
     isLoading,
     imageId,
   }
-  
+
 }
 function formItemToApiItem(item: ShippingFormVlues, shippingId: number | undefined) {
   const rtn: PostShippingApiParams = {
     ...item,
-    ShippingId: shippingId
+    ShippingId: shippingId,
+    AcquisitionPrice: item.AcquisitionPrice ? parseFloat(item.AcquisitionPrice) : null,
+    ShippingInvoicePrice: item.ShippingInvoicePrice ? parseFloat(item.ShippingInvoicePrice) : null,
+    BookValue: item.BookValue ? parseFloat(item.BookValue) : null
   }
+
   return rtn
 }
 function apiItemToformItem(item: ShippingReturn) {
-  const rtn: ShippingFormVlues = item
+  const { ShippingFileMapping, ...rest } = item
+
+  const rtn: ShippingFormVlues = {
+    ...rest,
+    AcquisitionDate: item.AcquisitionDate ? dateToStringForMui(item.AcquisitionDate) : null,
+    ShipDate: item.ShipDate ? dateToStringForMui(item.ShipDate) : null,
+    AcquisitionPrice: item.AcquisitionPrice?.toString(),
+    ShippingInvoicePrice: item.ShippingInvoicePrice?.toString(),
+    BookValue: item.BookValue?.toString()
+  }
+
   return rtn
+}
+
+function dateToStringForMui(date: Date) {
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2)
+    month = '0' + month;
+  if (day.length < 2)
+    day = '0' + day;
+
+  return [year, month, day].join('-');
 }

@@ -1,15 +1,24 @@
 import { fetchData, postData } from './data-io'
 import {
-    ShippingReturn,
-    UpdateShippingReturn,
-    PostShippingApiParams,
-    ShippingListElement,
-    ShippingListReturn
+  ShippingApiReturn,
+  UpdateShippingReturn,
+  PostShippingApiParams,
+  ShippingListElement,
+  ShippingListReturn
 } from '../api/shipping-api'
+import { UnwrapPromise } from '@prisma/client/runtime/library'
 
-export const getShipping = async (shippingId: number): Promise<ShippingReturn> => {
-  const data = await fetchData<ShippingReturn>(`/api/shipping/${shippingId}`)
-  return data
+type ShippingReturn = UnwrapPromise<ReturnType<typeof getShipping>>
+
+export const getShipping = async (shippingId: number) => {
+  const data = await fetchData<ShippingApiReturn>(`/api/shipping/${shippingId}`)
+  const rtn = {
+    ...data,
+    AcquisitionDate: data.AcquisitionDate ? new Date(data.AcquisitionDate) : null,
+    ShipDate: data.ShipDate ? new Date(data.ShipDate) : null
+  }
+
+  return rtn
 }
 
 //送信ボタンを押したとき
@@ -28,4 +37,4 @@ export async function getShippingList(): Promise<ShippingListReturn> {
 }
 
 
-export type { ShippingReturn, UpdateShippingReturn, PostShippingApiParams ,ShippingListElement,ShippingListReturn}
+export type { ShippingReturn, UpdateShippingReturn, PostShippingApiParams, ShippingListElement, ShippingListReturn }
