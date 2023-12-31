@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:my-secret-pw@localhost:3306/mydatabase" // example: "mysql://root:password@localhost:3306/mydatabase"
+}
+
+model BOM {
+  BOMID           Int                @id @default(autoincrement())
+  BOMName         String
+  BOMDescription  String?
+  ItemBOMMapping  ItemBOMMapping[]
+}
+
+model Category {
+  CategoryID  Int    @id @default(autoincrement())
+  CategoryName String?
+  Item         Item[]
+}
+
+model Item {
+  ItemID          Int               @id @default(autoincrement())
+  ItemName        String?
+  ItemDescription String?
+  Cost            Decimal?
+  SalePrice       Decimal?
+  CategoryID      Int?
+  Category        Category?          @relation(fields: [CategoryID], references: [CategoryID])
+  ItemBOMMapping  ItemBOMMapping[]
+  ItemFileMapping ItemFileMapping[]
+}
+
+model ItemBOMMapping {
+  BOMID Int
+  ItemID Int
+  BOM   BOM   @relation(fields: [BOMID], references: [BOMID])
+  Item  Item  @relation(fields: [ItemID], references: [ItemID])
+  Quantity Int
+
+  @@id([BOMID, ItemID])
+}
+
+model ItemFileMapping {
+  ItemID Int
+  FileID Int
+  Item   Item  @relation(fields: [ItemID], references: [ItemID])
+  FileTable   FileTable  @relation(fields: [FileID], references: [FileID])
+
+  @@id([ItemID, FileID])
+  @@index([ItemID, FileID], name: "ItemFileMapping_index")
+}
+
+model FileTable {
+  FileID          Int               @id @default(autoincrement())
+  FileName        String?
+  FilePath        String?
+  UploadTimestamp DateTime @default(now())
+  ItemFileMapping ItemFileMapping[]
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
