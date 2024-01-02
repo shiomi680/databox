@@ -1,27 +1,34 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button } from '@mui/material';
 import { ControlledTextField } from "./controlled-text-field"
 
 export type ShipData = {
-  ShipDate: Date,
+  ShipDate: string,
   Title: string,
   ShippingInvoicePrice: number,
 }
 
 type ShippingFormProps = {
   initialData: ShipData,
-  onSubmit: (data: ShipData) => void,
+  onChange: (data: ShipData) => void,
 }
 
-function ShippingForm({ initialData, onSubmit }: ShippingFormProps) {
-  const { handleSubmit, control } = useForm<ShipData>({
+function ShippingForm({ initialData, onChange }: ShippingFormProps) {
+  const { control, watch } = useForm<ShipData>({
     defaultValues: initialData
   });
 
+  useEffect(() => {
+    const data = watch();
+    const parsedData = {
+      ...data,
+      ShippingInvoicePrice: parseFloat(data.ShippingInvoicePrice as unknown as string)
+    };
+    onChange(parsedData);
+  }, [watch]);
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form >
       <ControlledTextField
         name="ShippingInvoicePrice"
         control={control}
@@ -34,7 +41,7 @@ function ShippingForm({ initialData, onSubmit }: ShippingFormProps) {
         control={control}
         defaultValue={initialData.Title}
         type="text"
-        label="ShippingInvoicePrice"
+        label="Title"
       />
       <ControlledTextField
         name="ShipDate"
@@ -43,7 +50,6 @@ function ShippingForm({ initialData, onSubmit }: ShippingFormProps) {
         type="date"
         label="ShipDate"
       />
-
     </form>
   );
 }
