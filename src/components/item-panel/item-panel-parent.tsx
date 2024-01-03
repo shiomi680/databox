@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ShippingForm, { ShipData } from './item-panel';
-import { FileUploadComponent } from '../file-panel';
+import { FileUploadComponent } from '../panels/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
-import { useGetShipQuery, useCreateShipMutation, useUpdateShipMutation } from '@/generated/graphql';
 import { Button } from '@mui/material';
-
+import { getShipping, updateShipping, ShippingReturn } from '@/lib/client/shipping-io';
+import ShipHandle from '@/lib/client/casts/ship-casts';
 interface ParentComponentProps {
   shipId: string;
 }
@@ -14,67 +14,80 @@ interface ParentComponentProps {
 function ParentComponent({ shipId }: ParentComponentProps) {
   const router = useRouter();
   const isNew = shipId === 'new';
-  const { data, loading, error } = useGetShipQuery({ variables: { Id: shipId }, skip: isNew });
-  const [createShip] = useCreateShipMutation();
-  const [updateShip] = useUpdateShipMutation();
-  const xx = data?.getShip
-  const initialData: ShipData = isNew || !data || !data.getShip ? {
-    ShipDate: "",
-    ShippingInvoicePrice: 0,
-    Title: ""
-  } : {
-    ShipDate: data.getShip.ShipDate || "",
-    ShippingInvoicePrice: data.getShip.ShippingInvoicePrice || 0,
-    Title: data.getShip.Title || ""
-  };
+  const shipIdInt = parseInt(shipId)
 
-  const initialFiles: FileInfo[] = isNew || !data || !data.getShip ? [] :
-    (data.getShip.Files || []).map(file => ({
-      ...file,
-      FileId: parseInt(file?.FileId || '0'),
-      UploadTimestamp: file?.UploadTimestamp ? new Date(file.UploadTimestamp) : new Date(),
-    }));
-  const [formData, setFormData] = useState<ShipData>(initialData);
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialFiles);
+  const [formData, setFormData] = useState<ShipData>();
+  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
+  const { initFormData, initUploadedFiles, loading } = useFetchData(shipId, isNew)
 
+
+  // const [initFormData, setInitFormData] = useState<ShipData>();
+  // const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-  }, [error]);
+    setFormData(initFormData)
+    setUploadedFiles(initUploadedFiles)
+  }, [initFormData, initUploadedFiles]);
 
   const onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(formData, uploadedFiles);
-  }
-
-  const onSubmit = async (formData: ShipData, files: FileInfo[]) => {
-    const fileIds = files.map(file => file.FileId);
-    try {
-      if (isNew) {
-        const response = await createShip({ variables: { ShipDate: formData.ShipDate, Title: formData.Title, ShippingInvoicePrice: formData.ShippingInvoicePrice, FileIds: fileIds } });
-        // Redirect after creation
-        router.push(`/pages/ship/${response.data?.createShip.Id}`)
-      } else {
-        await updateShip({ variables: { Id: shipId, ShipDate: formData.ShipDate, Title: formData.Title, ShippingInvoicePrice: formData.ShippingInvoicePrice, FileIds: fileIds } });
-      }
-    } catch (error) {
-      console.error(error);
+    if (formData) {
+      onSubmit(formData, uploadedFiles);
     }
   }
 
-  if (loading) {
-    return <div>Loading...</div>; // or a loading spinner
+  const onSubmit = async (formData: ShipData, fileInfos: FileInfo[]) => {
+    const fileIds = fileInfos.map(f => f.FileId);
+    try {
+      const data = {
+        shipData: formData,
+        id: isNew ? undefined : shipIdInt,
+        files: fileIds
+      }
+      const x = await updateShipping(ShipHandle.toPostData(data))
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-
+  if (loading || !initFormData) {
+    return <div>Loading...</div>; // or a loading spinner
+  }
   return (
     <form onSubmit={onSubmitForm}>
-      <ShippingForm initialData={initialData} onChange={setFormData} />
-      <FileUploadComponent initialFiles={initialFiles} onChange={setUploadedFiles} />
+      <ShippingForm initialData={initFormData} onChange={setFormData} />
+      <FileUploadComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} />
       <Button type="submit" variant="contained">Submit</Button>
     </form>
   );
 }
+
+// Define your custom hook
+const useFetchData = (shipId: string, isNew: boolean) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [initFormData, setInitFormData] = useState<ShipData>();
+  const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isNew) {
+        setLoading(false)
+      } else {
+        const apiData = await getShipping(parseInt(shipId));
+        const data = ShipHandle.toFormData(apiData)
+        setInitFormData(data)
+        if (apiData?.Files) {
+          setInitUploadedFiles(apiData.Files)
+        }
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [shipId, isNew]);
+
+  return { initFormData, initUploadedFiles, loading };
+};
+
+
 
 export default ParentComponent;

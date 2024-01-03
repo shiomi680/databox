@@ -9,14 +9,18 @@ type ControlledTextFieldProps = {
   defaultValue: any,
   type: string,
   label: string,
+  onChangeValue: (value: string | number) => void,
 }
 
-export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({ name, control, defaultValue, type, label }) => (
+export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({ name, control, defaultValue, type, label, onChangeValue }) => (
   <Controller
     name={name}
     control={control}
     defaultValue={defaultValue}
-    render={({ field }) => <TextField {...field} type={type} label={label} />}
+    render={({ field }) => <TextField {...field} type={type} label={label} onChange={(e => {
+      field.onChange(e)
+      onChangeValue(e.target.value)
+    })} />}
   />
 );
 

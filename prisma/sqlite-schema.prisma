@@ -4,48 +4,30 @@ datasource db {
 }
 
 model ShippingModel {
-  ShippingId                   Int      @id @default(autoincrement())
-  ShipDate             DateTime?
-  ShipFrom             String?
-  ShipTo               String?
-  Title                String
-  ShippingInvoicePrice      Float?
-  ShippingInvoiceCurrency      String?
-  TradeTerm            String?
-  AcquisitionDate      DateTime?
-  AcquisitionPrice     Float?
-  BookValue     Float?
-  Defrayer             String?
-  Comment              String?
-  CommentAboutSale     String?
-  Gx          String?
-  CommentAboutAcquisition String?
-  InvoiceNo            String?
-  Carrier              String?
-  AwbNo                String?
-  ExportPermission     String?
-  ShippingFileMapping                 ShippingFileMapping[]
+  Id                   Int      @id @default(autoincrement())
+  ShipDate             String?
+  Title                String?
+  ShippingInvoicePrice Float?
+  ShippingFileMappings ShippingFileMapping[]
 }
 
 model ShippingFileMapping {
   ShippingId Int
-  FileId Int
-  ShippingModel   ShippingModel  @relation(fields: [ShippingId], references: [ShippingId])
-  FileModel   FileModel  @relation(fields: [FileId], references: [FileId])
+  FileId     Int
+  ShippingModel   ShippingModel  @relation(fields: [ShippingId], references: [Id])
+  FileModel       FileModel      @relation(fields: [FileId], references: [FileId])
 
   @@id([ShippingId, FileId])
   @@index([ShippingId, FileId], name: "ItemFileMapping_index")
 }
+
 model FileModel{
   FileId          Int               @id @default(autoincrement())
   FileName        String?
   FilePath        String?
   UploadTimestamp DateTime @default(now())
-  ShippingFileMapping ShippingFileMapping[]
+  ShippingFileMappings ShippingFileMapping[]
 }
-
-
-
 
 generator client {
   provider = "prisma-client-js"

@@ -6,7 +6,7 @@ import { ControlledTextField } from "./controlled-text-field"
 export type ShipData = {
   ShipDate: string,
   Title: string,
-  ShippingInvoicePrice: number,
+  ShippingInvoicePrice: string,
 }
 
 type ShippingFormProps = {
@@ -19,14 +19,11 @@ function ShippingForm({ initialData, onChange }: ShippingFormProps) {
     defaultValues: initialData
   });
 
-  useEffect(() => {
-    const data = watch();
-    const parsedData = {
-      ...data,
-      ShippingInvoicePrice: parseFloat(data.ShippingInvoicePrice as unknown as string)
-    };
-    onChange(parsedData);
-  }, [watch]);
+  const handleFieldChange = (v: any) => {
+    const data = watch()
+    onChange(data);
+  };
+
   return (
     <form >
       <ControlledTextField
@@ -35,6 +32,7 @@ function ShippingForm({ initialData, onChange }: ShippingFormProps) {
         defaultValue={initialData.ShippingInvoicePrice}
         type="number"
         label="ShippingInvoicePrice"
+        onChangeValue={handleFieldChange}
       />
       <ControlledTextField
         name="Title"
@@ -42,6 +40,7 @@ function ShippingForm({ initialData, onChange }: ShippingFormProps) {
         defaultValue={initialData.Title}
         type="text"
         label="Title"
+        onChangeValue={handleFieldChange}
       />
       <ControlledTextField
         name="ShipDate"
@@ -49,6 +48,7 @@ function ShippingForm({ initialData, onChange }: ShippingFormProps) {
         defaultValue={initialData.ShipDate}
         type="date"
         label="ShipDate"
+        onChangeValue={handleFieldChange}
       />
     </form>
   );

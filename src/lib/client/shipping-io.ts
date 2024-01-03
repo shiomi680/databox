@@ -7,24 +7,23 @@ import {
   ShippingListReturn
 } from '../api/shipping-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
+import { globalConsts } from '@/consts'
+import path from 'path'
+
+const SHIPPING_URL = globalConsts.api.shipping
+const SHIPPINGLIST_URL = globalConsts.api.shippings
 
 type ShippingReturn = UnwrapPromise<ReturnType<typeof getShipping>>
 
 export const getShipping = async (shippingId: number) => {
-  const data = await fetchData<ShippingApiReturn>(`/api/shipping/${shippingId}`)
-  const rtn = {
-    ...data,
-    AcquisitionDate: data.AcquisitionDate ? new Date(data.AcquisitionDate) : null,
-    ShipDate: data.ShipDate ? new Date(data.ShipDate) : null
-  }
-
-  return rtn
+  const data = await fetchData<ShippingApiReturn>(path.join(SHIPPING_URL, shippingId.toString()))
+  return data
 }
 
 //送信ボタンを押したとき
 export const updateShipping = async (item: PostShippingApiParams) => {
   const data = await postData<UpdateShippingReturn, PostShippingApiParams>(
-    `/api/shipping/`,
+    SHIPPING_URL,
     item,
   )
   return data
@@ -32,7 +31,7 @@ export const updateShipping = async (item: PostShippingApiParams) => {
 
 
 export async function getShippingList(): Promise<ShippingListReturn> {
-  const data = await fetchData<ShippingListReturn>(`/api/shippings/`)
+  const data = await fetchData<ShippingListReturn>(`${SHIPPINGLIST_URL}`)
   return data
 }
 

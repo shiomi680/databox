@@ -52,11 +52,10 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
   return (
     <div {...getRootProps()}>
-      <input {...getInputProps()} />
+      <input {...getInputProps({ onChange: handleFileChange })} />
       <Container>
         <Button variant="contained" component="label">
           Upload File
-          <input type="file" multiple hidden onChange={handleFileChange} />
         </Button>
 
         {isUploading && <CircularProgress />}
@@ -64,7 +63,14 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
           {uploadedFiles.map((file) => (
             <ListItem key={file.FileId}>
               <a href={file.Url} download>{file.FileName}</a>
-              <Button startIcon={<DeleteIcon />} variant="outlined" color="secondary" onClick={() => handleDelete(file.FileId)}>
+              <Button startIcon={<DeleteIcon />}
+                variant="outlined"
+                color="secondary"
+                onClick={(event: any) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  handleDelete(file.FileId);
+                }}>
                 Delete
               </Button>
             </ListItem>
