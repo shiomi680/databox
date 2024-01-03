@@ -4,15 +4,8 @@ import { DataGrid, GridToolbar, GridColDef, GridColumnVisibilityModel } from '@m
 import Link from 'next/link'
 import { Box } from '@mui/material'
 import { useState, useEffect } from 'react'
-import { getShipping,getShippingList,ShippingListElement,ShippingListReturn } from '@/lib/client/shipping-io'
-type Item = {
-  ItemID: number
-  ItemName: string
-  ItemDescription: string
-  Cost: number
-  SalePrice: number
-  CategoryID: number
-}
+import { getShipping, getShippingList, ShippingListElement, ShippingListReturn } from '@/lib/client/shipping-io'
+
 
 type TablePartProps = {
   modeLink: boolean
@@ -35,8 +28,8 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
     fetchData()
   }, [])
 
-    const [columnVisibility, setColumnVisibility] = useState<GridColumnVisibilityModel>({
-    ShipDate:true,
+  const [columnVisibility, setColumnVisibility] = useState<GridColumnVisibilityModel>({
+    ShipDate: true,
     ShipFrom: false,
     ShipTo: false,
     Title: true,
@@ -57,13 +50,12 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
     ExportPermission: false,
   });
 
-  const columns:GridColDef[] = [
+  const columns: GridColDef[] = [
 
     {
-      field:"ShipDate",
-      headerName:"発送日",
-      hideable:true,
-      
+      field: "ShipDate",
+      headerName: "発送日",
+
     },
     {
       field: 'Title',
@@ -72,7 +64,7 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
       renderCell: (params: any) => {
         if (modeLink) {
           return (
-            <Link href={`/pages/shipping/${params.row.ShippingId}`}>
+            <Link href={`/pages/shipping/${params.row.Id}`}>
               {params.row.Title}
             </Link>
           )
@@ -82,12 +74,12 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
       },
     },
     {
-      field:"ShipFrom",
-      headerName:"発送会社",
+      field: "ShipFrom",
+      headerName: "発送会社",
     },
     {
-      field:"ShipTo",
-      headerName:"宛先会社",
+      field: "ShipTo",
+      headerName: "宛先会社",
     },
 
     {
@@ -146,15 +138,15 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           columnVisibilityModel={columnVisibility}
-                    onColumnVisibilityModelChange={(newModel) =>
+          onColumnVisibilityModelChange={(newModel) =>
             setColumnVisibility(newModel)
           }
           rows={items}
           columns={columns}
           onRowClick={(params: any) =>
-            onSelect ? onSelect(params.row.ShippingId) : ''
+            onSelect ? onSelect(params.row.Id) : ''
           }
-          getRowId={(row) => row.ShippingId}
+          getRowId={(row) => row.Id}
           slots={{ toolbar: GridToolbar }}
           slotProps={{
             toolbar: {
