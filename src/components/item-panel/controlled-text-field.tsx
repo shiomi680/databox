@@ -10,17 +10,26 @@ type ControlledTextFieldProps = {
   type: string,
   label: string,
   onChangeValue: (value: string | number) => void,
+  fullWidth?: boolean; // Add this line
 }
 
-export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({ name, control, defaultValue, type, label, onChangeValue }) => (
+export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({ name, control, defaultValue, type, label, onChangeValue, fullWidth }) => (
+
   <Controller
+
     name={name}
     control={control}
     defaultValue={defaultValue}
-    render={({ field }) => <TextField {...field} type={type} label={label} onChange={(e => {
-      field.onChange(e)
-      onChangeValue(e.target.value)
-    })} />}
+    render={({ field }) =>
+      <TextField
+        {...field}
+        type={type}
+        label={label}
+        fullWidth={fullWidth} // And this line
+        onChange={(e => {
+          field.onChange(e)
+          onChangeValue(e.target.value)
+        })} />}
   />
 );
 

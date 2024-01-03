@@ -46,37 +46,44 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
     onDrop: (acceptedFiles) => {
       uploadFileHandle(acceptedFiles[0])
     },
+    noClick: true
+
   });
 
 
 
   return (
-    <div {...getRootProps()}>
-      <input {...getInputProps({ onChange: handleFileChange })} />
-      <Container>
-        <Button variant="contained" component="label">
-          Upload File
-        </Button>
-
-        {isUploading && <CircularProgress />}
-        <List>
-          {uploadedFiles.map((file) => (
-            <ListItem key={file.FileId}>
-              <a href={file.Url} download>{file.FileName}</a>
-              <Button startIcon={<DeleteIcon />}
-                variant="outlined"
-                color="secondary"
-                onClick={(event: any) => {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  handleDelete(file.FileId);
-                }}>
-                Delete
-              </Button>
-            </ListItem>
-          ))}
-        </List>
-      </Container>
+    <div>
+      <Button variant="contained" component="label">
+        Upload File
+        <input type="file"
+          style={{ display: 'none' }} // hide the input
+          onChange={handleFileChange}
+        />
+      </Button>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        <Container>
+          {isUploading && <CircularProgress />}
+          <List>
+            {uploadedFiles.map((file) => (
+              <ListItem key={file.FileId}>
+                <a href={file.Url} download>{file.FileName}</a>
+                <Button startIcon={<DeleteIcon />}
+                  variant="outlined"
+                  color="secondary"
+                  onClick={(event: any) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    handleDelete(file.FileId);
+                  }}>
+                  Delete
+                </Button>
+              </ListItem>
+            ))}
+          </List>
+        </Container>
+      </div>
     </div>
   );
 }

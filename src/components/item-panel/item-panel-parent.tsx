@@ -1,12 +1,13 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ShippingForm, { ShipData } from './item-panel';
+import ShippingForm from './item-panel';
 import { FileUploadComponent } from '../panels/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
 import { Button } from '@mui/material';
 import { getShipping, updateShipping, ShippingReturn } from '@/lib/client/shipping-io';
 import ShipHandle from '@/lib/client/casts/ship-casts';
+import { ShipFormData } from '@/lib/client/casts/ship-casts';
 interface ParentComponentProps {
   shipId: string;
 }
@@ -16,7 +17,7 @@ function ParentComponent({ shipId }: ParentComponentProps) {
   const isNew = shipId === 'new';
   const shipIdInt = parseInt(shipId)
 
-  const [formData, setFormData] = useState<ShipData>();
+  const [formData, setFormData] = useState<ShipFormData>();
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
   const { initFormData, initUploadedFiles, loading } = useFetchData(shipId, isNew)
 
@@ -36,7 +37,7 @@ function ParentComponent({ shipId }: ParentComponentProps) {
     }
   }
 
-  const onSubmit = async (formData: ShipData, fileInfos: FileInfo[]) => {
+  const onSubmit = async (formData: ShipFormData, fileInfos: FileInfo[]) => {
     const fileIds = fileInfos.map(f => f.FileId);
     try {
       const data = {
@@ -65,7 +66,7 @@ function ParentComponent({ shipId }: ParentComponentProps) {
 // Define your custom hook
 const useFetchData = (shipId: string, isNew: boolean) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [initFormData, setInitFormData] = useState<ShipData>();
+  const [initFormData, setInitFormData] = useState<ShipFormData>();
   const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
 
   useEffect(() => {
