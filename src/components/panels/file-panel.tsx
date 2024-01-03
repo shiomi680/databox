@@ -13,6 +13,7 @@ type FileUploadProps = {
 export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [dragging, setDragging] = useState<boolean>(false);
 
   // // ファイルアップロード
   const uploadFileHandle = async (file: File) => {
@@ -45,6 +46,13 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       uploadFileHandle(acceptedFiles[0])
+      setDragging(false)
+    },
+    onDragEnter: (event) => {
+      setDragging(true)
+    },
+    onDragLeave: (event) => {
+      setDragging(false)
     },
     noClick: true
 
@@ -53,7 +61,8 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
 
   return (
-    <div>
+    <div >
+
       <Button variant="contained" component="label">
         Upload File
         <input type="file"
@@ -61,20 +70,46 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
           onChange={handleFileChange}
         />
       </Button>
-      <div {...getRootProps()}>
+      <div {...getRootProps()}
+        style={{
+          padding: '20px',
+          border: '2px dashed #cccccc',
+          backgroundColor: dragging ? '#f0f0f0' : 'transparent',
+          cursor: 'pointer',
+        }}>
         <input {...getInputProps()} />
         <Container>
           {isUploading && <CircularProgress />}
-          <List>
+          <List style={{ marginTop: 20 }}>
             {uploadedFiles.map((file) => (
-              <ListItem key={file.FileId}>
-                <a href={file.Url} download>{file.FileName}</a>
+              <ListItem
+                key={file.FileId}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '10px 0',
+                  borderBottom: '1px solid #f0f0f0',
+                  // backgroundColor: '#f9f9f9',
+                }}>
+                <a
+                  href={file.Url}
+                  download
+                  style={{ flex: 1, display: 'flex', alignItems: 'center' }}
+                >
+                  <Typography variant="body1" style={{ marginRight: 10 }}>
+                    <span role="img" aria-label="file">
+                      📄
+                    </span>{' '}
+                    {file.FileName}
+                  </Typography>
+
+                </a>
                 <Button startIcon={<DeleteIcon />}
                   variant="outlined"
                   color="secondary"
                   onClick={(event: any) => {
-                    event.stopPropagation();
-                    event.preventDefault();
+                    // event.stopPropagation();
+                    // event.preventDefault();
                     handleDelete(file.FileId);
                   }}>
                   Delete
@@ -84,6 +119,6 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
           </List>
         </Container>
       </div>
-    </div>
+    </div >
   );
 }
