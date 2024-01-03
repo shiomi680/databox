@@ -1,8 +1,7 @@
 "use client"
-import ParentComponent from "@/components/item-panel/item-panel-parent"
-
+import ShipPage from "@/components/ship-page/ship-page"
 
 
 export default function Page({ params }: { params: { shipId: string } }) {
-  return <ParentComponent shipId={params.shipId} />
+  return <ShipPage shipId={params.shipId} />
 }

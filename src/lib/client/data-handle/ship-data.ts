@@ -1,5 +1,6 @@
 import { ShippingModel } from "@prisma/client";
 import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
+import { FieldParam } from "@/components/atom/gridTextField";
 
 export type ShipFormData = {
   ShipDate: string,
@@ -11,27 +12,22 @@ enum fieldType {
   number = "number",
   text = "text"
 }
-type fieldParam = {
-  name: string,
-  type: string,
-  size: number
-}
 
-export const componentInfo: fieldParam[] = [
+export const componentInfo: FieldParam[] = [
   {
     name: "ShipDate",
     type: fieldType.date,
-    size: 12
+    gridSize: 12
   },
   {
     name: "Title",
     type: fieldType.text,
-    size: 12
+    gridSize: 12
   },
   {
     name: "ShippingInvoicePrice",
     type: fieldType.number,
-    size: 12
+    gridSize: 12
   }
 ]
 

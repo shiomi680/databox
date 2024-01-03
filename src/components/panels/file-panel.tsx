@@ -61,64 +61,63 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
 
   return (
-    <div >
-
-      <Button variant="contained" component="label">
+    <div {...getRootProps()}
+      style={{
+        padding: '20px',
+        border: '2px dashed #cccccc',
+        backgroundColor: dragging ? '#f0f0f0' : 'transparent',
+        cursor: 'pointer',
+      }}>
+      <Button variant="contained" component="label" style={{
+        marginBottom: "2px"
+      }}>
         Upload File
         <input type="file"
           style={{ display: 'none' }} // hide the input
           onChange={handleFileChange}
         />
       </Button>
-      <div {...getRootProps()}
-        style={{
-          padding: '20px',
-          border: '2px dashed #cccccc',
-          backgroundColor: dragging ? '#f0f0f0' : 'transparent',
-          cursor: 'pointer',
-        }}>
-        <input {...getInputProps()} />
-        <Container>
-          {isUploading && <CircularProgress />}
-          <List style={{ marginTop: 20 }}>
-            {uploadedFiles.map((file) => (
-              <ListItem
-                key={file.FileId}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '10px 0',
-                  borderBottom: '1px solid #f0f0f0',
-                  // backgroundColor: '#f9f9f9',
-                }}>
-                <a
-                  href={file.Url}
-                  download
-                  style={{ flex: 1, display: 'flex', alignItems: 'center' }}
-                >
-                  <Typography variant="body1" style={{ marginRight: 10 }}>
-                    <span role="img" aria-label="file">
-                      📄
-                    </span>{' '}
-                    {file.FileName}
-                  </Typography>
+      <input {...getInputProps()} />
+      <Container>
+        {isUploading && <CircularProgress />}
+        <List style={{ marginTop: 20 }}>
+          {uploadedFiles.map((file) => (
+            <ListItem
+              key={file.FileId}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '10px 0',
+                borderBottom: '1px solid #f0f0f0',
+                // backgroundColor: '#f9f9f9',
+              }}>
+              <a
+                href={file.Url}
+                download
+                style={{ flex: 1, display: 'flex', alignItems: 'center' }}
+              >
+                <Typography variant="body1" style={{ marginRight: 10 }}>
+                  <span role="img" aria-label="file">
+                    📄
+                  </span>{' '}
+                  {file.FileName}
+                </Typography>
 
-                </a>
-                <Button startIcon={<DeleteIcon />}
-                  variant="outlined"
-                  color="secondary"
-                  onClick={(event: any) => {
-                    // event.stopPropagation();
-                    // event.preventDefault();
-                    handleDelete(file.FileId);
-                  }}>
-                  Delete
-                </Button>
-              </ListItem>
-            ))}
-          </List>
-        </Container>
-      </div>
-    </div >
+              </a>
+              <Button startIcon={<DeleteIcon />}
+                variant="outlined"
+                color="secondary"
+                onClick={(event: any) => {
+                  // event.stopPropagation();
+                  // event.preventDefault();
+                  handleDelete(file.FileId);
+                }}>
+                Delete
+              </Button>
+            </ListItem>
+          ))}
+        </List>
+      </Container>
+    </div>
   );
 }
