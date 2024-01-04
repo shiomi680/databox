@@ -10,7 +10,8 @@ export const globalConsts = {
     shippingPage: "/pages/shipping/",
     item: "/api/item/",
     items: "/api/items/",
-    itemPage: "/pages/item/"
+    itemPage: "/pages/item/",
+    tags: "/api/tags/"
 
   }
 }

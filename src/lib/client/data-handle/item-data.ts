@@ -43,6 +43,11 @@ export const gridColumnsDef: ColumnsDef[] = [
     field: "SalePrice",
     headerName: "Sale Price",
   },
+  {
+    field: "Tags",
+    headerName: "Tags",
+  },
+
 ]
 
 export type ItemFormData = {
@@ -107,9 +112,10 @@ type toPostDataParams = {
   itemData: ItemFormData,
   id: number | undefined,
   files: number[] | undefined
+  tags: string[] | undefined
 }
 
-export function toPostData({ itemData, id, files }: toPostDataParams) {
+export function toPostData({ itemData, id, files, tags }: toPostDataParams) {
   const param: PostItemApiParams = {
     Id: id,
     ModelNumber: itemData?.ModelNumber,
@@ -117,7 +123,8 @@ export function toPostData({ itemData, id, files }: toPostDataParams) {
     ItemDescription: itemData?.ItemDescription,
     Cost: itemData?.Cost ? new Prisma.Decimal(parseFloat(itemData?.Cost)) : new Prisma.Decimal(0),
     SalePrice: itemData?.SalePrice ? new Prisma.Decimal(parseFloat(itemData?.SalePrice)) : new Prisma.Decimal(0),
-    Files: files
+    Files: files,
+    Tags: tags
   }
   return param
 }

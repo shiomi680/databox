@@ -36,7 +36,26 @@ model ItemModel {
   Cost            Decimal?
   SalePrice       Decimal?
   ItemFileMappings ItemFileMapping[]
+  ItemTagMappings    ItemTagMapping[]
 }
+
+model TagModel {
+  Id    Int              @id @default(autoincrement())
+  TagName  String           @unique
+  ItemTagMappings    ItemTagMapping[]
+}
+
+model ItemTagMapping {
+  ItemId  Int
+  TagId   Int
+  ItemModel    ItemModel  @relation(fields: [ItemId], references: [Id])
+  TagModel     TagModel   @relation(fields: [TagId], references: [Id])
+
+  @@id([ItemId, TagId])
+  @@index([ItemId, TagId], name: "ItemTagMapping_index")
+}
+
+
 
 model ItemFileMapping {
   ItemId Int
