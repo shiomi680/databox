@@ -2,6 +2,106 @@ import { ShippingModel } from "@prisma/client";
 import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
 import { FieldParam } from "@/components/atom/gridTextField";
 
+export const defaultGridColumnVisibility = {
+  ShipDate: true,
+  ShipFrom: false,
+  ShipTo: false,
+  Title: true,
+  ShippingInvoicePrice: false,
+  ShippingInvoiceCurrency: false,
+  TradeTerm: false,
+  AcquisitionDate: false,
+  AcquisitionPrice: false,
+  BookValue: false,
+  Defrayer: false,
+  Comment: false,
+  CommentAboutSale: false,
+  Gx: false,
+  CommentAboutAcquisition: false,
+  InvoiceNo: false,
+  Carrier: false,
+  AwbNo: false,
+  ExportPermission: false,
+}
+
+type ColumnsDef = {
+  field: string,
+  headerName: string,
+  link?: (formData: any) => string
+}
+
+export const gridColumnsDef: ColumnsDef[] = [
+
+  {
+    field: "ShipDate",
+    headerName: "発送日",
+
+  },
+  {
+    field: 'Title',
+    headerName: 'Title',
+    link: (data: any) => `/pages/shipping/${data.Id}`
+  },
+  {
+    field: "ShipFrom",
+    headerName: "発送会社",
+  },
+  {
+    field: "ShipTo",
+    headerName: "宛先会社",
+  },
+
+  {
+    field: 'ShippingInvoiceCurrency',
+    headerName: 'Invoice価格単位',
+  },
+  {
+    field: 'ShippingInvoicePrice',
+    headerName: 'Invoice価格',
+  },
+  {
+    field: 'TradeTerm',
+    headerName: '貿易条件',
+  },
+  {
+    field: 'AcquisitionDate',
+    headerName: '取得日',
+  },
+  {
+    field: 'AcquisitionPrice',
+    headerName: '取得価格',
+  },
+  {
+    field: 'BookValue',
+    headerName: '簿価',
+  },
+  {
+    field: 'Gx',
+    headerName: 'Gx',
+  },
+  {
+    field: 'CommentAboutAcquisition',
+    headerName: '取得に関する備考',
+  },
+  {
+    field: 'InvoiceNo',
+    headerName: 'Invoice No',
+  },
+  {
+    field: 'Carrier',
+    headerName: '輸送方法',
+  },
+  {
+    field: 'AwbNo',
+    headerName: 'AWB No',
+  },
+  {
+    field: 'ExportPermission',
+    headerName: '輸出許可',
+  },
+
+]
+
 export type ShipFormData = {
   ShipDate: string,
   Title: string,

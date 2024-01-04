@@ -52,6 +52,7 @@ function ShipPage({ shipId }: ParentComponentProps) {
     }
   }
 
+  //表示内容
   if (loading || !initFormData) {
     return <div>Loading...</div>; // or a loading spinner
   }
