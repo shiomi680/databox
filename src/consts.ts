@@ -11,7 +11,7 @@ export const globalConsts = {
     item: "/api/item/",
     items: "/api/items/",
     itemPage: "/pages/item/",
-    tags: "/api/tags/"
+    tags: "/api/tags/",
 
   }
 }

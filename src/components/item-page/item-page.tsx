@@ -16,11 +16,7 @@ function ItemPage({ itemId }: ParentComponentProps) {
   return (
     <div style={{ display: 'flex' }}>
       <MenuBar>
-        <Link href={path.join(ITEM_PAGE_URL, "new")}>
-          <Button variant="contained" color="primary">
-            NEW
-          </Button>
-        </Link>
+
         <ItemMenu />
       </MenuBar>
 

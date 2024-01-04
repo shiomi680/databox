@@ -5,6 +5,11 @@ import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../selectors/menu-item-selector'
 import { getShipping, ShippingListElement, getShippingList } from '@/lib/client/shipping-io'
 import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/ship-data'
+import { Button, Link, Divider, Paper, Typography } from "@mui/material";
+import { globalConsts } from '@/consts';
+import path from 'path'
+const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
+
 export const ShipMenu: React.FC = () => {
   const [items, setItems] = useState<ShippingListElement[]>([])
 
@@ -21,7 +26,14 @@ export const ShipMenu: React.FC = () => {
   return (
     <Box>
       <h1>Shipping List</h1>
+      <Link href={path.join(SHIPPING_PAGE_URL, "new")}>
+        <div style={{ marginBottom: '10px' }}>
 
+          <Button variant="contained" color="primary">
+            NEW
+          </Button>
+        </div>
+      </Link>
       <ItemSelectorPanel
         modeLink={true}
         items={items}
