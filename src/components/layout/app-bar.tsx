@@ -58,7 +58,7 @@ export default function ButtonAppBar() {
               Item
             </MenuItem>
             <MenuItem
-              onClick={menuClickGenerate(globalConsts.url.itemPage)}>
+              onClick={menuClickGenerate(globalConsts.url.shippingPage)}>
               Shipping
             </MenuItem>
           </Menu>
