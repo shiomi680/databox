@@ -1,4 +1,5 @@
 import { ShippingModel } from "@prisma/client";
+import { Prisma } from '@prisma/client';
 import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
 import { FieldParam } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
@@ -291,14 +292,15 @@ export function toPostData({ shipData, id, files }: toPostDataParams) {
     Id: id,
     ShipDate: shipData?.ShipDate,
     Title: shipData?.Title,
-    ShippingInvoicePrice: shipData?.ShippingInvoicePrice ? parseFloat(shipData?.ShippingInvoicePrice) : 0,
+    ShippingInvoicePrice: shipData?.ShippingInvoicePrice ? new Prisma.Decimal(shipData?.ShippingInvoicePrice) : new Prisma.Decimal(0),
     ShipFrom: shipData?.ShipFrom,
     ShipTo: shipData?.ShipTo,
     ShippingInvoiceCurrency: shipData?.ShippingInvoiceCurrency,
     TradeTerm: shipData?.TradeTerm,
     AcquisitionDate: shipData?.AcquisitionDate,
-    AcquisitionPrice: shipData?.AcquisitionPrice ? parseFloat(shipData?.AcquisitionPrice) : 0,
-    BookValue: shipData?.BookValue ? parseFloat(shipData?.BookValue) : 0,
+    AcquisitionPrice: shipData?.AcquisitionPrice ? new Prisma.Decimal(shipData?.AcquisitionPrice) : new Prisma.Decimal(0),
+
+    BookValue: shipData?.BookValue ? new Prisma.Decimal(shipData?.BookValue) : new Prisma.Decimal(0),
     Defrayer: shipData?.Defrayer,
     Comment: shipData?.Comment,
     CommentAboutSale: shipData?.CommentAboutSale,
@@ -318,14 +320,14 @@ export function toApiData(data: ShipFormData | null, id: number | undefined = un
     Id: id,
     ShipDate: data?.ShipDate,
     Title: data?.Title,
-    ShippingInvoicePrice: data?.ShippingInvoicePrice ? parseFloat(data?.ShippingInvoicePrice) : 0,
+    ShippingInvoicePrice: data?.ShippingInvoicePrice ? new Prisma.Decimal(data?.ShippingInvoicePrice) : new Prisma.Decimal(0),
     ShipFrom: data?.ShipFrom,
     ShipTo: data?.ShipTo,
     ShippingInvoiceCurrency: data?.ShippingInvoiceCurrency,
     TradeTerm: data?.TradeTerm,
     AcquisitionDate: data?.AcquisitionDate,
-    AcquisitionPrice: data?.AcquisitionPrice ? parseFloat(data?.AcquisitionPrice) : 0,
-    BookValue: data?.BookValue ? parseFloat(data?.BookValue) : 0,
+    AcquisitionPrice: data?.AcquisitionPrice ? new Prisma.Decimal(data?.AcquisitionPrice) : new Prisma.Decimal(0),
+    BookValue: data?.BookValue ? new Prisma.Decimal(data?.BookValue) : new Prisma.Decimal(0),
     Defrayer: data?.Defrayer,
     Comment: data?.Comment,
     CommentAboutSale: data?.CommentAboutSale,

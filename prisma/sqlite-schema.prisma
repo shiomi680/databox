@@ -4,27 +4,27 @@ datasource db {
 }
 
 model ShippingModel {
-  Id                   Int      @id @default(autoincrement())
-  ShipDate             String?
-  ShipFrom             String?
-  ShipTo               String?
-  Title                String?
-  ShippingInvoicePrice      Float?
-  ShippingInvoiceCurrency      String?
-  TradeTerm            String?
-  AcquisitionDate      String?
-  AcquisitionPrice     Float?
-  BookValue     Float?
-  Defrayer             String?
-  Comment              String?
-  CommentAboutSale     String?
-  Gx          String?
+  Id                      Int      @id @default(autoincrement())
+  ShipDate                String?
+  ShipFrom                String?
+  ShipTo                  String?
+  Title                   String?
+  ShippingInvoicePrice    Decimal?
+  ShippingInvoiceCurrency String?
+  TradeTerm               String?
+  AcquisitionDate         String?
+  AcquisitionPrice        Decimal?
+  BookValue               Decimal?
+  Defrayer                String?
+  Comment                 String?
+  CommentAboutSale        String?
+  Gx                      String?
   CommentAboutAcquisition String?
-  InvoiceNo            String?
-  Carrier              String?
-  AwbNo                String?
-  ExportPermission     String?
-  ShippingFileMappings                 ShippingFileMapping[]
+  InvoiceNo               String?
+  Carrier                 String?
+  AwbNo                   String?
+  ExportPermission        String?
+  ShippingFileMappings    ShippingFileMapping[]
 }
 
 
