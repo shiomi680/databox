@@ -26,7 +26,7 @@ export function GeneralForm({ initialData, fieldParams, onChange }: GeneralFormP
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <form >
         <Grid container spacing={3}>
           {fieldParams.map((field: FieldParam) => (

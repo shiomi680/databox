@@ -6,6 +6,6 @@ export const globalConsts = {
   },
   api: {
     shipping: "/api/shipping/",
-    shippings: "api/shippings/"
+    shippings: "/api/shippings/"
   }
 }

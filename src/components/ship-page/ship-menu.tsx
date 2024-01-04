@@ -5,7 +5,7 @@ import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../selectors/menu-item-selector'
 import { getShipping, ShippingListElement, getShippingList } from '@/lib/client/shipping-io'
 import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/ship-data'
-export const ShiipMenu: React.FC = () => {
+export const ShipMenu: React.FC = () => {
   const [items, setItems] = useState<ShippingListElement[]>([])
 
   //データ取得
@@ -32,5 +32,5 @@ export const ShiipMenu: React.FC = () => {
   )
 }
 
-export default ShiipMenu
+export default ShipMenu
 

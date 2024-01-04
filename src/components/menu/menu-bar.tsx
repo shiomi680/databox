@@ -70,11 +70,6 @@ export function MenuBar({ children }: { children: React.ReactNode }) {
           px: [1],
         }}
       >
-        <Link href="/pages/item/new/edit">
-          <Button variant="contained" color="primary">
-            NEW
-          </Button>
-        </Link>
         <IconButton onClick={toggleDrawer}>
           <ChevronLeftIcon />
         </IconButton>

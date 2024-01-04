@@ -24,15 +24,6 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
   selectedCategoryIds,
   onSelect,
 }) => {
-  // const [items, setItems] = useState<ShippingListElement[]>([])
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const newItemList = await getShippingList()
-  //     setItems(newItemList)
-  //   }
-  //   fetchData()
-  // }, [])
 
   const [columnVisibility, setColumnVisibility] = useState<GridColumnVisibilityModel>(defaultGridColumnVisibility);
   const columns: GridColDef[] = gridColumnsDef.map(
