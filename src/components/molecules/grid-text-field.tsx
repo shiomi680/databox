@@ -1,5 +1,5 @@
 'use client'
-import { ControlledTextField } from "../atom/controlled-text-field"
+import { ControlledTextField } from "../atoms/controlled-text-field"
 
 import { Grid } from '@mui/material'
 import { Control } from "react-hook-form"

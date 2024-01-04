@@ -4,8 +4,9 @@ export const globalConsts = {
     downloadApi: "/api/file/download",
     uploadApi: "/api/file/upload"
   },
-  api: {
+  url: {
     shipping: "/api/shipping/",
-    shippings: "/api/shippings/"
+    shippings: "/api/shippings/",
+    shippingPage: "/pages/shipping/"
   }
 }

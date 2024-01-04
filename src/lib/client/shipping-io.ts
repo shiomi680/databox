@@ -10,8 +10,8 @@ import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { globalConsts } from '@/consts'
 import path from 'path'
 
-const SHIPPING_URL = globalConsts.api.shipping
-const SHIPPINGLIST_URL = globalConsts.api.shippings
+const SHIPPING_URL = globalConsts.url.shipping
+const SHIPPINGLIST_URL = globalConsts.url.shippings
 
 type ShippingReturn = UnwrapPromise<ReturnType<typeof getShipping>>
 

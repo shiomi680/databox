@@ -14,11 +14,6 @@ export type PostShippingApiParams = Partial<
   }
 >
 
-
-// export type PostShippingApiParams = Partial<ShippingModel>
-
-
-
 export async function getShippingApi(Id: number) {
   const shippingInfo = await prisma.shippingModel.findUnique({
     where: {

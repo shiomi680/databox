@@ -48,7 +48,7 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
   )
   return (
     <Box>
-      <div style={{ height: 400, width: '100%' }}>
+      <div style={{ height: 1000, width: '100%' }}>
         <DataGrid
           columnVisibilityModel={columnVisibility}
           onColumnVisibilityModelChange={(newModel) =>

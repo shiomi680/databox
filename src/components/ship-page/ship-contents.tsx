@@ -1,14 +1,20 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GeneralForm } from '../panels/general-form-panel';
-import { FileUploadComponent } from '../panels/file-panel';
+import { GeneralForm } from '../organisms/general-form-panel';
+import { FileUploadComponent } from '../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
 import { componentInfo } from "@/lib/client/data-handle/ship-data"
 import { Button } from '@mui/material';
 import { getShipping, updateShipping, ShippingReturn } from '@/lib/client/shipping-io';
 import ShipHandle from '@/lib/client/data-handle/ship-data';
 import { ShipFormData } from '@/lib/client/data-handle/ship-data';
+import AddToast, { toast } from '../molecules/add-toast';
+import { globalConsts } from '@/consts';
+import path from 'path';
+
+const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
+
 interface ParentComponentProps {
   shipId: string;
 }
@@ -46,7 +52,12 @@ function ShipContents({ shipId }: ParentComponentProps) {
         id: isNew ? undefined : shipIdInt,
         files: fileIds
       }
-      const x = await updateShipping(ShipHandle.toPostData(data))
+      const updatedItem = await updateShipping(ShipHandle.toPostData(data))
+      toast.success(('successfully submitted!'))
+      //新規作成時は作成されたアイテムの編集ページへリダイレクト
+      if (isNew) {
+        router.push(path.join(SHIPPING_PAGE_URL, updatedItem.Id.toString()))
+      }
     } catch (error) {
       console.log(error)
     }
@@ -57,15 +68,17 @@ function ShipContents({ shipId }: ParentComponentProps) {
     return <div>Loading...</div>; // or a loading spinner
   }
   return (
-    <form onSubmit={onSubmitForm}>
-      <GeneralForm
-        fieldParams={componentInfo}
-        initialData={initFormData}
-        onChange={setFormData}
-      ></GeneralForm>
-      <FileUploadComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} />
-      <Button type="submit" variant="contained">Submit</Button>
-    </form>
+    <AddToast>
+      <form onSubmit={onSubmitForm}>
+        <GeneralForm
+          fieldParams={componentInfo}
+          initialData={initFormData}
+          onChange={setFormData}
+        ></GeneralForm>
+        <FileUploadComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} />
+        <Button type="submit" variant="contained">Submit</Button>
+      </form>
+    </AddToast>
   );
 }
 

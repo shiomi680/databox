@@ -1,6 +1,6 @@
 import { ShippingModel } from "@prisma/client";
 import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
-import { FieldParam } from "@/components/atom/gridTextField";
+import { FieldParam } from "@/components/molecules/grid-text-field";
 
 export const defaultGridColumnVisibility = {
   ShipDate: true,

@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { FieldParam, GridTextField } from '../atom/gridTextField';
+import { FieldParam, GridTextField } from '../molecules/grid-text-field';
 // MUI imports
 import { Container, Grid } from '@mui/material'
 
