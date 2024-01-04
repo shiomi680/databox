@@ -2,7 +2,6 @@ import { ShippingModel } from '@prisma/client'
 import { prisma } from './prisma'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { toFileInfo } from './file-api/file-api'
-import { updateShipping } from '../client/shipping-io'
 
 export type ShippingApiReturn = UnwrapPromise<ReturnType<typeof getShippingApi>>
 export type UpdateShippingReturn = UnwrapPromise<ReturnType<typeof createOrUpdateShipping>>
@@ -54,7 +53,10 @@ export async function createOrUpdateShipping(shipping: PostShippingApiParams) {
     });
   } else {
     updatedShip = await prisma.shippingModel.create({
-      data: inputData,
+      data: {
+        ...inputData,
+        Title: inputData.Title || 'no data'
+      },
     });
   }
 

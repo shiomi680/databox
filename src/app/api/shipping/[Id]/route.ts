@@ -4,11 +4,11 @@ import { errorHandledApi } from '@/lib/api/response-type'
 
 export async function GET(
   req: NextRequest,
-  context: { params: { shippingId: string } },
+  context: { params: { Id: string } },
 ) {
   return await errorHandledApi(async () => {
     const x = req.url
     console.log(x)
-    return await getShippingApi(Number(context.params.shippingId))
+    return await getShippingApi(Number(context.params.Id))
   })
 }

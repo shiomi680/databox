@@ -28,6 +28,25 @@ model ShippingModel {
 }
 
 
+model ItemModel {
+  Id          Int               @id @default(autoincrement())
+  ModelNumber     String?
+  ItemName        String?
+  ItemDescription String?
+  Cost            Decimal?
+  SalePrice       Decimal?
+  ItemFileMappings ItemFileMapping[]
+}
+
+model ItemFileMapping {
+  ItemId Int
+  FileId     Int
+  ItemModel   ItemModel  @relation(fields: [ItemId], references: [Id])
+  FileModel       FileModel      @relation(fields: [FileId], references: [FileId])
+
+  @@id([ItemId, FileId])
+  @@index([ItemId, FileId], name: "ItemFileMapping_index")
+}
 
 model ShippingFileMapping {
   ShippingId Int
@@ -36,15 +55,15 @@ model ShippingFileMapping {
   FileModel       FileModel      @relation(fields: [FileId], references: [FileId])
 
   @@id([ShippingId, FileId])
-  @@index([ShippingId, FileId], name: "ItemFileMapping_index")
+  @@index([ShippingId, FileId], name: "ShippingFileMapping_index") // changed index name here
 }
-
 model FileModel{
   FileId          Int               @id @default(autoincrement())
   FileName        String?
   FilePath        String?
   UploadTimestamp DateTime @default(now())
   ShippingFileMappings ShippingFileMapping[]
+  ItemFileMappings ItemFileMapping[]
 }
 
 generator client {

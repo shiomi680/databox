@@ -7,6 +7,10 @@ export const globalConsts = {
   url: {
     shipping: "/api/shipping/",
     shippings: "/api/shippings/",
-    shippingPage: "/pages/shipping/"
+    shippingPage: "/pages/shipping/",
+    item: "/api/item/",
+    items: "/api/items/",
+    itemPage: "/pages/item/"
+
   }
 }

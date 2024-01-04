@@ -4,76 +4,68 @@ import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../organisms/general-form-panel';
 import { FileUploadComponent } from '../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
-import { componentInfo } from "@/lib/client/data-handle/ship-data"
+import { componentInfo } from "@/lib/client/data-handle/item-data"
 import { Button } from '@mui/material';
-import { getShipping, updateShipping, ShippingReturn } from '@/lib/client/shipping-io';
-import ShipHandle from '@/lib/client/data-handle/ship-data';
-import { ShipFormData } from '@/lib/client/data-handle/ship-data';
+import { getItem, updateItem, ItemReturn } from '@/lib/client/item-io';
+import ItemHandle from '@/lib/client/data-handle/item-data';
+import { ItemFormData } from '@/lib/client/data-handle/item-data';
 import AddToast, { toast } from '../molecules/add-toast';
 import { globalConsts } from '@/consts';
 import path from 'path';
 
-const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
+const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
-  shipId: string;
+  itemId: string;
 }
 
-function ShipContents({ shipId }: ParentComponentProps) {
+function ItemContents({ itemId }: ParentComponentProps) {
   const router = useRouter();
-  const isNew = shipId === 'new';
-  const shipIdInt = parseInt(shipId)
+  const isNew = itemId === 'new';
+  const itemIdInt = parseInt(itemId)
 
-  const [formData, setFormData] = useState<ShipFormData>();
+  const [formData, setFormData] = useState<ItemFormData>();
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
-  const { initFormData, initUploadedFiles, loading } = useFetchData(shipId, isNew)
+  const { initFormData, initUploadedFiles, loading } = useFetchData(itemId, isNew)
 
-
-  //初期化が終わったらformDataとuploadedFilesを設定
-  //formが変更されるまでformDataに値が入っていないと、onSubmit時にデータがない
   useEffect(() => {
     setFormData(initFormData)
     setUploadedFiles(initUploadedFiles)
   }, [initFormData, initUploadedFiles]);
 
-  //ハンドラー
   const onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
     if (formData) {
       onSubmit(formData, uploadedFiles);
     }
   }
-  //送信処理
-  const onSubmit = async (formData: ShipFormData, fileInfos: FileInfo[]) => {
-    if (!formData.Title || formData.Title == "") {
-      toast.error("tiltle is required")
-      return
-    }
+
+  const onSubmit = async (formData: ItemFormData, fileInfos: FileInfo[]) => {
+
     const fileIds = fileInfos.map(f => f.FileId);
     try {
       const data = {
-        shipData: formData,
-        id: isNew ? undefined : shipIdInt,
+        itemData: formData,
+        id: isNew ? undefined : itemIdInt,
         files: fileIds
       }
-      const updatedItem = await updateShipping(ShipHandle.toPostData(data))
+      const updatedItem = await updateItem(ItemHandle.toPostData(data))
       toast.success(('successfully submitted!'))
-      //新規作成時は作成されたアイテムの編集ページへリダイレクト
       if (isNew) {
-        router.push(path.join(SHIPPING_PAGE_URL, updatedItem.Id.toString()))
+        router.push(path.join(ITEM_PAGE_URL, updatedItem.Id.toString()))
       }
     } catch (error) {
       console.log(error)
     }
   }
 
-  //表示内容
   if (loading) {
-    return <div>Loading...</div>; // or a loading spinner
+    return <div>Loading...</div>;
   }
   return (
     <AddToast>
       <form onSubmit={onSubmitForm}>
+
         <GeneralForm
           fieldParams={componentInfo}
           initialData={initFormData}
@@ -90,21 +82,20 @@ function ShipContents({ shipId }: ParentComponentProps) {
   );
 }
 
-//初期化用の値を取得
-const useFetchData = (shipId: string, isNew: boolean) => {
+const useFetchData = (itemId: string, isNew: boolean) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [initFormData, setInitFormData] = useState<ShipFormData>();
+  const [initFormData, setInitFormData] = useState<ItemFormData>();
   const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (isNew) {
-        const data = ShipHandle.toFormData(null)
+        const data = ItemHandle.toFormData(null)
         setInitFormData(data)
         setLoading(false)
       } else {
-        const apiData = await getShipping(parseInt(shipId));
-        const data = ShipHandle.toFormData(apiData)
+        const apiData = await getItem(parseInt(itemId));
+        const data = ItemHandle.toFormData(apiData)
         setInitFormData(data)
         if (apiData?.Files) {
           setInitUploadedFiles(apiData.Files)
@@ -113,11 +104,9 @@ const useFetchData = (shipId: string, isNew: boolean) => {
       }
     }
     fetchData();
-  }, [shipId, isNew]);
+  }, [itemId, isNew]);
 
   return { initFormData, initUploadedFiles, loading };
 };
 
-
-
-export default ShipContents;
+export default ItemContents;

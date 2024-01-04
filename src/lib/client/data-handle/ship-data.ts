@@ -1,6 +1,10 @@
 import { ShippingModel } from "@prisma/client";
 import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
 import { FieldParam } from "@/components/molecules/grid-text-field";
+import { globalConsts } from "@/consts";
+import path from "path";
+
+const SHIP_PAGE_URL = globalConsts.url.shippingPage
 
 export const defaultGridColumnVisibility = {
   ShipDate: true,
@@ -40,7 +44,7 @@ export const gridColumnsDef: ColumnsDef[] = [
   {
     field: 'Title',
     headerName: 'Title',
-    link: (data: any) => `/pages/shipping/${data.Id}`
+    link: (data: any) => path.join(SHIP_PAGE_URL, data.Id.toString())
   },
   {
     field: "ShipFrom",

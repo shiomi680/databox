@@ -5,12 +5,20 @@ import Link from 'next/link'
 import { Box } from '@mui/material'
 import { useState, useEffect } from 'react'
 
+
+type ColumnsDef = {
+  field: string,
+  headerName: string,
+  link?: (formData: any) => string
+}
+
+
 type TablePartProps = {
   modeLink: boolean
   items: any[]
 
   defaultGridColumnVisibility: GridColumnVisibilityModel
-  gridColumnsDef: any[]
+  gridColumnsDef: ColumnsDef[]
   //選択中のCategoryID　子も含めて選択中にするなら全ての子のID
   selectedCategoryIds?: number[] | null
   onSelect?: (itemId: number) => void
@@ -34,7 +42,7 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
           ...rest,
           renderCell: (params: any) => (
             <Link href={link(params.row)} >
-              {params.row.Title}
+              {params.row[columnsDef.field]}
             </Link >
           )
         }
