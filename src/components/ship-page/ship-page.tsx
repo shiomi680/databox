@@ -3,7 +3,9 @@ import ShipContents from "./ship-contents";
 import { MenuBar } from "../organisms/menu-bar";
 import ShipMenu from "./ship-menu";
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
-
+import { globalConsts } from "@/consts";
+import path from "path";
+const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
 interface ParentComponentProps {
   shipId: string;
 }
@@ -11,7 +13,7 @@ interface ParentComponentProps {
 function ShipPage({ shipId }: ParentComponentProps) {
   return (<div style={{ display: 'flex' }}>
     <MenuBar>
-      <Link href="/pages/item/new/edit">
+      <Link href={path.join(SHIPPING_PAGE_URL, "new")}>
         <Button variant="contained" color="primary">
           NEW
         </Button>

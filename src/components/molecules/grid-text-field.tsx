@@ -8,7 +8,8 @@ import { Control } from "react-hook-form"
 export type FieldParam = {
   name: string,
   type: string,
-  gridSize: number
+  gridSize: number,
+  title?: string,
 }
 export type GridTextFieldParams = {
   fieldParam: FieldParam,
@@ -27,7 +28,7 @@ export function GridTextField({ fieldParam, initialData, handleFieldChange, cont
         control={control}
         defaultValue={initialData}
         type={fieldParam.type}
-        label={fieldParam.name}
+        label={fieldParam.title ? fieldParam.title : fieldParam.name}
         fullWidth
         onChangeValue={handleFieldChange}
       />

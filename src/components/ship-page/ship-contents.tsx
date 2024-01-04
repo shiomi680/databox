@@ -45,6 +45,10 @@ function ShipContents({ shipId }: ParentComponentProps) {
   }
   //送信処理
   const onSubmit = async (formData: ShipFormData, fileInfos: FileInfo[]) => {
+    if (!formData.Title || formData.Title == "") {
+      toast.error("tiltle is required")
+      return
+    }
     const fileIds = fileInfos.map(f => f.FileId);
     try {
       const data = {
@@ -64,7 +68,7 @@ function ShipContents({ shipId }: ParentComponentProps) {
   }
 
   //表示内容
-  if (loading || !initFormData) {
+  if (loading) {
     return <div>Loading...</div>; // or a loading spinner
   }
   return (
@@ -91,6 +95,8 @@ const useFetchData = (shipId: string, isNew: boolean) => {
   useEffect(() => {
     const fetchData = async () => {
       if (isNew) {
+        const data = ShipHandle.toFormData(null)
+        setInitFormData(data)
         setLoading(false)
       } else {
         const apiData = await getShipping(parseInt(shipId));

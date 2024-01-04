@@ -133,96 +133,118 @@ enum fieldType {
 export const componentInfo: FieldParam[] = [
   {
     name: "ShipDate",
+    title: "発送日",
     type: fieldType.date,
     gridSize: 12
   },
   {
     name: "Title",
+    title: "Title *",
     type: fieldType.text,
     gridSize: 12
   },
-  {
-    name: "ShippingInvoicePrice",
-    type: fieldType.number,
-    gridSize: 12
-  },
+
   {
     name: "ShipFrom",
+    title: "発送会社",
     type: fieldType.text,
-    gridSize: 12
+    gridSize: 6
   },
   {
     name: "ShipTo",
     type: fieldType.text,
-    gridSize: 12
+    gridSize: 6
   },
   {
     name: "ShippingInvoiceCurrency",
+    title: "Invoice価格単位",
     type: fieldType.text,
-    gridSize: 12
+    gridSize: 3
   },
   {
+    name: "ShippingInvoicePrice",
+    title: "Invoice価格",
+    type: fieldType.number,
+    gridSize: 9
+  },
+
+  {
     name: "TradeTerm",
+    title: "貿易条件",
     type: fieldType.text,
     gridSize: 12
   },
   {
     name: "AcquisitionDate",
+    title: "取得日",
     type: fieldType.date,
     gridSize: 12
   },
   {
     name: "AcquisitionPrice",
+    title: "取得価格(円)",
     type: fieldType.number,
-    gridSize: 12
+    gridSize: 6
   },
   {
     name: "BookValue",
+    title: "簿価(円)",
     type: fieldType.number,
-    gridSize: 12
+    gridSize: 6
   },
   {
     name: "Defrayer",
+    title: "費用負担",
     type: fieldType.text,
     gridSize: 12
   },
-  {
-    name: "Comment",
-    type: fieldType.text,
-    gridSize: 12
-  },
-  {
-    name: "CommentAboutSale",
-    type: fieldType.text,
-    gridSize: 12
-  },
+
   {
     name: "Gx",
+    title: "Gx",
     type: fieldType.text,
     gridSize: 12
   },
-  {
-    name: "CommentAboutAcquisition",
-    type: fieldType.text,
-    gridSize: 12
-  },
+
   {
     name: "InvoiceNo",
+    title: "Invoice No",
     type: fieldType.text,
     gridSize: 12
   },
   {
     name: "Carrier",
+    title: "輸送方法",
     type: fieldType.text,
     gridSize: 12
   },
   {
     name: "AwbNo",
+    title: "AWB No",
     type: fieldType.text,
     gridSize: 12
   },
   {
     name: "ExportPermission",
+    title: "輸出許可",
+    type: fieldType.text,
+    gridSize: 12
+  },
+  {
+    name: "Comment",
+    title: "備考",
+    type: fieldType.text,
+    gridSize: 12
+  },
+  {
+    name: "CommentAboutSale",
+    title: "販売に関する備考",
+    type: fieldType.text,
+    gridSize: 12
+  },
+  {
+    name: "CommentAboutAcquisition",
+    title: "取得に関する備考",
     type: fieldType.text,
     gridSize: 12
   },
