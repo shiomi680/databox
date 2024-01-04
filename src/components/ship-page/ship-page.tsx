@@ -1,6 +1,6 @@
 "use client"
 import ShipContents from "./ship-contents";
-import { MenuBar } from "../organisms/menu-bar";
+import { MenuBar } from "../layout/menu-bar";
 import ShipMenu from "./ship-menu";
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from "@/consts";
