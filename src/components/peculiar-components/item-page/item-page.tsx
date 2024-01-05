@@ -1,6 +1,6 @@
 "use client"
 import ItemContents from "./item-contents";
-import { MenuBar } from "../layout/menu-bar";
+import { MenuBar } from "../../layout/menu-bar";
 import ItemMenu from "./item-menu";
 import { Button, Link, Paper, Typography } from "@mui/material";
 import { globalConsts } from "@/consts";

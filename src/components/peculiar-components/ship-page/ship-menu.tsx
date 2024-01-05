@@ -1,28 +1,32 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
-import { ItemSelectorPanel } from '../selectors/menu-item-selector'
-import { getItem, ItemListElement, getItemList } from '@/lib/client/item-io'
-import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/item-data'
+import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
+import { getShipping, ShippingListElement, getShippingList } from '@/lib/client/shipping-io'
+import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/ship-data'
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from '@/consts';
 import path from 'path'
-const ITEM_PAGE_URL = globalConsts.url.itemPage
+const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
 
-export const ItemMenu: React.FC = () => {
-  const [items, setItems] = useState<ItemListElement[]>([])
+export const ShipMenu: React.FC = () => {
+  const [items, setItems] = useState<ShippingListElement[]>([])
 
+  //データ取得
   useEffect(() => {
     const dataFetch = async () => {
-      const newItemList = await getItemList()
+      const newItemList = await getShippingList()
       setItems(newItemList)
     }
     dataFetch()
   }, [])
 
+  //表示
   return (
     <Box>
-      <h1>Item List</h1>
-      <Link href={path.join(ITEM_PAGE_URL, "new")}>
+      <h1>Shipping List</h1>
+      <Link href={path.join(SHIPPING_PAGE_URL, "new")}>
         <div style={{ marginBottom: '10px' }}>
 
           <Button variant="contained" color="primary">
@@ -40,4 +44,5 @@ export const ItemMenu: React.FC = () => {
   )
 }
 
-export default ItemMenu
+export default ShipMenu
+

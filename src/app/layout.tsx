@@ -3,7 +3,7 @@ import { Providers } from './providers'
 // import './globals.css'
 
 import type { Metadata } from 'next'
-import ButtonAppBar from '@/components/layout/app-bar'
+import DataboxAppBar from '@/components/peculiar-components/layout/databox-appbar'
 
 import { Inter } from 'next/font/google'
 
@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <ButtonAppBar />
+          <DataboxAppBar />
           {children}</Providers>
       </body>
     </html>

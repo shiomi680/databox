@@ -1,15 +1,15 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GeneralForm } from '../organisms/general-form-panel';
-import { FileUploadComponent } from '../organisms/file-panel';
+import { GeneralForm } from '../../organisms/general-form-panel';
+import { FileUploadComponent } from '../../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
 import { componentInfo } from "@/lib/client/data-handle/ship-data"
 import { Button } from '@mui/material';
 import { getShipping, updateShipping, ShippingReturn } from '@/lib/client/shipping-io';
 import ShipHandle from '@/lib/client/data-handle/ship-data';
 import { ShipFormData } from '@/lib/client/data-handle/ship-data';
-import AddToast, { toast } from '../molecules/add-toast';
+import AddToast, { toast } from '../../molecules/add-toast';
 import { globalConsts } from '@/consts';
 import path from 'path';
 

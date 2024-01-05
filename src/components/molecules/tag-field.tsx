@@ -23,7 +23,7 @@ export const TagsField: React.FC<TagsFieldProps> = ({
       freeSolo
       renderTags={(value: readonly string[], getTagProps) =>
         value.map((option: string, index: number) => (
-          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          <Chip variant="outlined" label={option} {...getTagProps({ index })} key={option} />
         ))
       }
       renderInput={(params: any) => (

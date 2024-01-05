@@ -4,16 +4,23 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Link from 'next/link';
-import { globalConsts } from '@/consts';
 import { useRouter } from 'next/navigation';
 
-export default function ButtonAppBar() {
+export type MenuParams = {
+  title: string
+  url: string
+}
+
+export type ButtonAppBarProperties = {
+  title: string
+  menuParams: MenuParams[]
+}
+
+export default function ButtonAppBar({ title, menuParams }: ButtonAppBarProperties) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const route = useRouter()
 
@@ -52,20 +59,17 @@ export default function ButtonAppBar() {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem
-              onClick={menuClickGenerate(globalConsts.url.itemPage)}
+            {menuParams.map(p =>
+            (<MenuItem
+              onClick={menuClickGenerate(p.url)}
             >
-              Item
-            </MenuItem>
-            <MenuItem
-              onClick={menuClickGenerate(globalConsts.url.shippingPage)}>
-              Shipping
-            </MenuItem>
+              {p.title}
+            </MenuItem>)
+            )}
           </Menu>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Data box
+            {title}
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
