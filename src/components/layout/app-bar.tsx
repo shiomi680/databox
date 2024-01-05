@@ -61,6 +61,7 @@ export default function ButtonAppBar({ title, menuParams }: ButtonAppBarProperti
           >
             {menuParams.map(p =>
             (<MenuItem
+              key={p.title}
               onClick={menuClickGenerate(p.url)}
             >
               {p.title}
