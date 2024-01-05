@@ -29,23 +29,28 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
 
   // // ファイルアップロード
-  const uploadFileHandle = async (file: File) => {
-    setIsUploading(true);
-    const uploaded: FileInfo = await uploadFiles(file);
-
-    if (uploaded && 'FileId' in uploaded) { // Check if uploaded is a FileModel
-      const newFiles = [...uploadedFiles, uploaded];
-      setUploadedFiles(newFiles)
-      onChange(newFiles)
+  const uploadFileHandle = async (files: File[]) => {
+    try {
+      setIsUploading(true);
+      const comingFiles: FileInfo[] = await Promise.all(files.map(async f => await uploadFiles(f)))
+      if (comingFiles) {
+        const newFiles = [...uploadedFiles, ...comingFiles];
+        setUploadedFiles(newFiles);
+        onChange(newFiles);
+      }
+    } catch (error) {
+      console.error("Upload failed", error);
+      // Handle the error state in the UI
+    } finally {
+      setIsUploading(false);
     }
-    setIsUploading(false);
-  }
+  };
 
   //アップロードボタンを押したときのハンドラー
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
-      return await uploadFileHandle(filesArray[0])
+      return await uploadFileHandle(filesArray)
     }
   };
   //ファイル削除
@@ -57,8 +62,8 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
   //D&D設定
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      uploadFileHandle(acceptedFiles[0])
+    onDrop: async (acceptedFiles) => {
+      await uploadFileHandle(acceptedFiles)
       setDragging(false)
     },
     onDragEnter: (event) => {
@@ -84,16 +89,17 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
       }}>
         Upload File
         <input type="file"
+          multiple
           style={{ display: 'none' }} // hide the input
           onChange={handleFileChange}
         />
       </Button>
       <Switch
         checked={showAllFiles}
-        onChange={() => setShowAllFiles(!showAllFiles)}
+        onChange={() => setShowAllFiles((prevShowAllFiles) => !prevShowAllFiles)}
         color="primary"
         name="showAllFilesSwitch"
-        inputProps={{ 'aria-label': 'primary checkbox' }}
+        inputProps={{ 'aria-label': 'Toggle file visibility' }}
       />
       Show all
       <input {...getInputProps()} />
@@ -115,7 +121,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
               <a
                 href={file.Url}
                 download
-                style={{ flex: 1, display: 'flex', alignItems: 'center', textDecoration: file.Visible || showAllFiles ? 'none' : 'line-through' }}
+                style={{ flex: 1, display: 'flex', alignItems: 'center', }}
               >
                 <Typography variant="body1" style={{ marginRight: 10 }}>
                   <span role="img" aria-label="file">
