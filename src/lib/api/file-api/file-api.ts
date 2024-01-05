@@ -10,12 +10,15 @@ import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { generateUniqueFilePath, absPathToRelPath, relPathToAbsPath, generateUrl } from './path-parse'
 
 
-export type FileInfo = UnwrapPromise<ReturnType<typeof saveFile>>
-
-export function toFileInfo(fileModel: FileModel) {
-  const rtn: FileInfo = {
+export type FileInfo = FileModel & {
+  Url: string;
+  Visible: boolean;
+}
+export function toFileInfo(fileModel: FileModel, visible: boolean = true) {
+  const rtn = {
     ...fileModel,
-    Url: generateUrl(fileModel)
+    Url: generateUrl(fileModel),
+    Visible: visible
   }
   return rtn
 }
@@ -47,7 +50,7 @@ export async function createDownloadResponse(fileId: number) {
   return res;
 }
 
-export async function saveFile(file: File) {
+export async function saveFile(file: File): Promise<FileInfo> {
   //ファイルを適切な名前で保存してFileModelを登録する
 
   const fileArrayBuffer = await file.arrayBuffer()
@@ -63,9 +66,10 @@ export async function saveFile(file: File) {
       FilePath: relPath,
     },
   })
-  const rtn = {
+  const rtn: FileInfo = {
     ...fileTable,
-    Url: generateUrl(fileTable)
+    Url: generateUrl(fileTable),
+    Visible: true
   }
 
   return rtn

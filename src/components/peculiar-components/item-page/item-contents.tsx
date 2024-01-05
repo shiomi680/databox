@@ -52,7 +52,7 @@ function ItemContents({ itemId }: ParentComponentProps) {
       const data = {
         itemData: formData,
         id: isNew ? undefined : itemIdInt,
-        files: fileInfos.map(f => f.FileId),
+        files: fileInfos,
         tags: tags
       }
       const updatedItem = await updateItem(ItemHandle.toPostData(data))

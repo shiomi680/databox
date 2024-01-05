@@ -49,12 +49,11 @@ function ShipContents({ shipId }: ParentComponentProps) {
       toast.error("tiltle is required")
       return
     }
-    const fileIds = fileInfos.map(f => f.FileId);
     try {
       const data = {
         shipData: formData,
         id: isNew ? undefined : shipIdInt,
-        files: fileIds
+        files: fileInfos
       }
       const updatedItem = await updateShipping(ShipHandle.toPostData(data))
       toast.success(('successfully submitted!'))

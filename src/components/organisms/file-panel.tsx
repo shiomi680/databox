@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FileInfo } from '@/lib/client/file-io';
-import { Button, List, ListItem, CircularProgress, Container, Typography } from '@mui/material';
+import { Button, List, ListItem, CircularProgress, Container, Typography, IconButton, Switch } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { uploadFiles } from '@/lib/client/file-io';
 import { useDropzone } from 'react-dropzone';
-
 type FileUploadProps = {
   initialFiles: FileInfo[],
   onChange: (files: FileInfo[]) => void,
@@ -14,6 +15,18 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
+  const [showAllFiles, setShowAllFiles] = useState<boolean>(false); // New state for show all toggle
+
+
+  // visbleボタンを押したとき
+  const toggleFileVisibility = (fileId: number) => {
+    const newFiles = uploadedFiles.map(file =>
+      file.FileId === fileId ? { ...file, Visible: !file.Visible } : file
+    );
+    setUploadedFiles(newFiles);
+    onChange(newFiles);
+  };
+
 
   // // ファイルアップロード
   const uploadFileHandle = async (file: File) => {
@@ -58,8 +71,6 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
   });
 
-
-
   return (
     <div {...getRootProps()}
       style={{
@@ -77,11 +88,19 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
           onChange={handleFileChange}
         />
       </Button>
+      <Switch
+        checked={showAllFiles}
+        onChange={() => setShowAllFiles(!showAllFiles)}
+        color="primary"
+        name="showAllFilesSwitch"
+        inputProps={{ 'aria-label': 'primary checkbox' }}
+      />
+      Show all
       <input {...getInputProps()} />
       <Container>
         {isUploading && <CircularProgress />}
         <List style={{ marginTop: 20 }}>
-          {uploadedFiles.map((file) => (
+          {uploadedFiles.filter(file => showAllFiles || file.Visible).map((file) => (
             <ListItem
               key={file.FileId}
               style={{
@@ -89,12 +108,14 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
                 alignItems: 'center',
                 padding: '10px 0',
                 borderBottom: '1px solid #f0f0f0',
-                // backgroundColor: '#f9f9f9',
               }}>
+              <IconButton onClick={() => toggleFileVisibility(file.FileId)}>
+                {file.Visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
               <a
                 href={file.Url}
                 download
-                style={{ flex: 1, display: 'flex', alignItems: 'center' }}
+                style={{ flex: 1, display: 'flex', alignItems: 'center', textDecoration: file.Visible || showAllFiles ? 'none' : 'line-through' }}
               >
                 <Typography variant="body1" style={{ marginRight: 10 }}>
                   <span role="img" aria-label="file">
@@ -102,16 +123,11 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
                   </span>{' '}
                   {file.FileName}
                 </Typography>
-
               </a>
               <Button startIcon={<DeleteIcon />}
                 variant="outlined"
                 color="secondary"
-                onClick={(event: any) => {
-                  // event.stopPropagation();
-                  // event.preventDefault();
-                  handleDelete(file.FileId);
-                }}>
+                onClick={() => handleDelete(file.FileId)}>
                 Delete
               </Button>
             </ListItem>
@@ -119,5 +135,5 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
         </List>
       </Container>
     </div>
-  );
+  )
 }

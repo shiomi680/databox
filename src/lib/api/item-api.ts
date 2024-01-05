@@ -6,9 +6,13 @@ import { UnwrapPromise } from '@prisma/client/runtime/library'
 export type ItemApiReturn = UnwrapPromise<ReturnType<typeof getItemApi>>
 export type UpdateItemReturn = UnwrapPromise<ReturnType<typeof createOrUpdateItem>>
 
+
 export type PostItemApiParams = Partial<
   ItemModel & {
-    Files: number[]
+    Files: {
+      FileId: number,
+      Visible: boolean
+    }[]
     Tags: string[]
   }
 >
@@ -35,7 +39,7 @@ export async function getItemApi(Id: number) {
     const { ItemFileMappings, ItemTagMappings, ...rest } = itemInfo
     const rtn = {
       ...rest,
-      Files: ItemFileMappings.map(m => toFileInfo(m.FileModel)),
+      Files: ItemFileMappings.map(m => toFileInfo(m.FileModel, m.Visible)),
       Tags: ItemTagMappings.map(m => m.TagModel.TagName) // Map ItemTagMappings to get related TagModel
     }
 
@@ -73,14 +77,16 @@ export async function createOrUpdateItem(item: PostItemApiParams) {
         }
       }))
     if (Files) {
-      const fileMappings = Files.map(fileId => ({
+      const fileMappings = Files.map(file => ({
         ItemId: updatedItem.Id,
-        FileId: fileId,
+        FileId: file.FileId,
+        Visible: file.Visible
+
       }));
       fileMappings.forEach(fileMapping => {
         operations.push(
           prisma.itemFileMapping.create({
-            data: fileMapping,
+            data: fileMapping
           })
         );
       });
@@ -136,7 +142,7 @@ export async function getItemListApi() {
     const { ItemFileMappings, ItemTagMappings, ...rest } = item
     return {
       ...rest,
-      Files: ItemFileMappings.map(m => toFileInfo(m.FileModel)),
+      // Files: ItemFileMappings.map(m => toFileInfo(m.FileModel)),
       Tags: ItemTagMappings.map(m => m.TagModel.TagName)
     }
   })

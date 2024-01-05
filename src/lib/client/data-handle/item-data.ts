@@ -4,6 +4,7 @@ import { ItemReturn, ItemListReturn, PostItemApiParams } from "@/lib/client/item
 import { FieldParam } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";
+import { FileInfo } from "../file-io";
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 export const defaultGridColumnVisibility = {
@@ -111,7 +112,7 @@ export function toFormData(data: ItemReturn | null) {
 type toPostDataParams = {
   itemData: ItemFormData,
   id: number | undefined,
-  files: number[] | undefined
+  files: FileInfo[] | undefined
   tags: string[] | undefined
 }
 
@@ -123,7 +124,10 @@ export function toPostData({ itemData, id, files, tags }: toPostDataParams) {
     ItemDescription: itemData?.ItemDescription,
     Cost: itemData?.Cost ? new Prisma.Decimal(parseFloat(itemData?.Cost)) : new Prisma.Decimal(0),
     SalePrice: itemData?.SalePrice ? new Prisma.Decimal(parseFloat(itemData?.SalePrice)) : new Prisma.Decimal(0),
-    Files: files,
+    Files: files?.map(f => ({
+      FileId: f.FileId,
+      Visible: f.Visible
+    })) || [],
     Tags: tags
   }
   return param

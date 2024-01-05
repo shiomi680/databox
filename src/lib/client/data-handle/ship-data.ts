@@ -4,6 +4,7 @@ import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib
 import { FieldParam } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";
+import { FileInfo } from "../file-io";
 
 const SHIP_PAGE_URL = globalConsts.url.shippingPage
 
@@ -284,7 +285,7 @@ export function toFormData(data: ShippingReturn | null) {
 type toPostDataParams = {
   shipData: ShipFormData,
   id: number | undefined,
-  files: number[] | undefined
+  files: FileInfo[]
 }
 
 export function toPostData({ shipData, id, files }: toPostDataParams) {
@@ -310,7 +311,10 @@ export function toPostData({ shipData, id, files }: toPostDataParams) {
     Carrier: shipData?.Carrier,
     AwbNo: shipData?.AwbNo,
     ExportPermission: shipData?.ExportPermission,
-    Files: files
+    Files: files.map(f => ({
+      FileId: f.FileId,
+      Visible: f.Visible
+    }))
   }
   return param
 }

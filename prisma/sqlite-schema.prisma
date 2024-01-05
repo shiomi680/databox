@@ -59,9 +59,10 @@ model ItemTagMapping {
 
 model ItemFileMapping {
   ItemId Int
-  FileId     Int
-  ItemModel   ItemModel  @relation(fields: [ItemId], references: [Id])
-  FileModel       FileModel      @relation(fields: [FileId], references: [FileId])
+  FileId Int
+  Visible Boolean @default(true)
+  ItemModel ItemModel @relation(fields: [ItemId], references: [Id])
+  FileModel FileModel @relation(fields: [FileId], references: [FileId])
 
   @@id([ItemId, FileId])
   @@index([ItemId, FileId], name: "ItemFileMapping_index")
@@ -69,13 +70,15 @@ model ItemFileMapping {
 
 model ShippingFileMapping {
   ShippingId Int
-  FileId     Int
-  ShippingModel   ShippingModel  @relation(fields: [ShippingId], references: [Id])
-  FileModel       FileModel      @relation(fields: [FileId], references: [FileId])
+  FileId Int
+  Visible Boolean @default(true)
+  ShippingModel ShippingModel @relation(fields: [ShippingId], references: [Id])
+  FileModel FileModel @relation(fields: [FileId], references: [FileId])
 
   @@id([ShippingId, FileId])
   @@index([ShippingId, FileId], name: "ShippingFileMapping_index") // changed index name here
 }
+
 model FileModel{
   FileId          Int               @id @default(autoincrement())
   FileName        String?

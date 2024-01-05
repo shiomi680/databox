@@ -8,7 +8,10 @@ export type UpdateShippingReturn = UnwrapPromise<ReturnType<typeof createOrUpdat
 
 export type PostShippingApiParams = Partial<
   ShippingModel & {
-    Files: number[]
+    Files: {
+      FileId: number,
+      Visible: boolean
+    }[]
 
   }
 >
@@ -30,7 +33,7 @@ export async function getShippingApi(Id: number) {
     const { ShippingFileMappings, ...rest } = shippingInfo
     const rtn = {
       ...rest,
-      Files: ShippingFileMappings.map(m => toFileInfo(m.FileModel))
+      Files: ShippingFileMappings.map(m => toFileInfo(m.FileModel, m.Visible))
     }
 
     return rtn
@@ -69,9 +72,10 @@ export async function createOrUpdateShipping(shipping: PostShippingApiParams) {
         }
       }))
     if (Files) {
-      const fileMappings = Files.map(fileId => ({
+      const fileMappings = Files.map(f => ({
         ShippingId: updatedShip.Id,
-        FileId: fileId,
+        FileId: f.FileId,
+        Visible: f.Visible
       }));
       fileMappings.forEach(fileMapping => {
         operations.push(
