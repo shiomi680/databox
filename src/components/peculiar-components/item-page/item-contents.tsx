@@ -15,6 +15,7 @@ import path from 'path';
 import TagsField from '../../molecules/tag-field';
 import { getTagList } from '@/lib/client/tag-io';
 import { Container, Grid } from '@mui/material'
+import ItemPage from './item-page';
 
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
@@ -42,28 +43,19 @@ function ItemContents({ itemId }: ParentComponentProps) {
   const onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
     if (formData) {
-      onSubmit(formData, uploadedFiles);
+      try {
+        const updatedItem = await postDataApi(formData, uploadedFiles, tags, isNew, itemIdInt);
+        toast.success(("sucessfully submitted!"))
+        if (isNew) {
+          router.push(path.join(ITEM_PAGE_URL, updatedItem.Id.toString()))
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
-  const onSubmit = async (formData: ItemFormData, fileInfos: FileInfo[]) => {
 
-    try {
-      const data = {
-        itemData: formData,
-        id: isNew ? undefined : itemIdInt,
-        files: fileInfos,
-        tags: tags
-      }
-      const updatedItem = await updateItem(ItemHandle.toPostData(data))
-      toast.success(('successfully submitted!'))
-      if (isNew) {
-        router.push(path.join(ITEM_PAGE_URL, updatedItem.Id.toString()))
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -129,5 +121,15 @@ const useFetchData = (itemId: string, isNew: boolean) => {
 
   return { initFormData, initUploadedFiles, initTags, tagOptions, loading };
 };
+const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: string[], createNew: boolean, id?: number) => {
+  const data = {
+    itemData: formData,
+    id: createNew ? undefined : id,
+    files: fileInfos,
+    tags: tags
+  }
+  const updatedItem = await updateItem(ItemHandle.toPostData(data))
+  return updatedItem
+}
 
 export default ItemContents;
