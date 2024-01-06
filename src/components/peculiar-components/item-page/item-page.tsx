@@ -10,7 +10,7 @@ const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
   itemId: string;
-  copy: boolean;
+  copy?: boolean;
 }
 
 function ItemPage({ itemId, copy = false }: ParentComponentProps) {
