@@ -36,33 +36,20 @@ function ShipContents({ shipId }: ParentComponentProps) {
     setUploadedFiles(initUploadedFiles)
   }, [initFormData, initUploadedFiles]);
 
-  //ハンドラー
+
+  //送信処理
   const onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
     if (formData) {
-      onSubmit(formData, uploadedFiles);
-    }
-  }
-  //送信処理
-  const onSubmit = async (formData: ShipFormData, fileInfos: FileInfo[]) => {
-    if (!formData.Title || formData.Title == "") {
-      toast.error("tiltle is required")
-      return
-    }
-    try {
-      const data = {
-        shipData: formData,
-        id: isNew ? undefined : shipIdInt,
-        files: fileInfos
+      try {
+        const updatedItem = await postDataApi(formData, uploadedFiles, isNew, shipIdInt);
+        toast.success(("sucessfully submitted!"))
+        if (isNew) {
+          router.push(path.join(SHIPPING_PAGE_URL, updatedItem.Id.toString()))
+        }
+      } catch (error) {
+        console.log(error)
       }
-      const updatedItem = await updateShipping(ShipHandle.toPostData(data))
-      toast.success(('successfully submitted!'))
-      //新規作成時は作成されたアイテムの編集ページへリダイレクト
-      if (isNew) {
-        router.push(path.join(SHIPPING_PAGE_URL, updatedItem.Id.toString()))
-      }
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -116,6 +103,15 @@ const useFetchData = (shipId: string, isNew: boolean) => {
 
   return { initFormData, initUploadedFiles, loading };
 };
+const postDataApi = async (formData: ShipFormData, fileInfos: FileInfo[], createNew: boolean, id?: number) => {
+  const data = {
+    shipData: formData,
+    id: createNew ? undefined : id,
+    files: fileInfos
+  }
+  const updatedItem = await updateShipping(ShipHandle.toPostData(data))
+  return updatedItem
+}
 
 
 
