@@ -1,7 +1,7 @@
 import { ShippingModel } from "@prisma/client";
 import { Prisma } from '@prisma/client';
 import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
-import { FieldParam } from "@/components/molecules/grid-text-field";
+import { FieldParam, FieldType } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";
 import { FileInfo } from "../file-io";
@@ -130,128 +130,129 @@ export type ShipFormData = {
   ExportPermission: string,
 }
 
-enum fieldType {
-  date = "date",
-  number = "number",
-  text = "text"
-}
+
 
 export const componentInfo: FieldParam[] = [
   {
     name: "ShipDate",
     title: "発送日",
-    type: fieldType.date,
+    type: FieldType.date,
     gridSize: 12
   },
   {
     name: "Title",
     title: "Title *",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
 
   {
     name: "ShipFrom",
     title: "発送会社",
-    type: fieldType.text,
+    type: FieldType.select,
+    choices: ["AGG", "AMK", "ANG", "AGM", "AGS", "AGP",],
     gridSize: 6
   },
   {
     name: "ShipTo",
-    type: fieldType.text,
+    title: "受取会社",
+    type: FieldType.select,
+    choices: ["AGG", "AMK", "ANG", "AGM", "AGS", "AGP",],
     gridSize: 6
   },
   {
     name: "ShippingInvoiceCurrency",
     title: "Invoice価格単位",
-    type: fieldType.text,
+    type: FieldType.select,
+    choices: ["JPY", "USD", "HKD", "SGD", "EUR",],
     gridSize: 3
   },
   {
     name: "ShippingInvoicePrice",
     title: "Invoice価格",
-    type: fieldType.number,
+    type: FieldType.number,
     gridSize: 9
   },
 
   {
     name: "TradeTerm",
     title: "貿易条件",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "AcquisitionDate",
     title: "取得日",
-    type: fieldType.date,
+    type: FieldType.date,
     gridSize: 12
   },
   {
     name: "AcquisitionPrice",
     title: "取得価格(円)",
-    type: fieldType.number,
+    type: FieldType.number,
     gridSize: 6
   },
   {
     name: "BookValue",
     title: "簿価(円)",
-    type: fieldType.number,
+    type: FieldType.number,
     gridSize: 6
   },
   {
     name: "Defrayer",
     title: "費用負担",
-    type: fieldType.text,
+    type: FieldType.select,
+    choices: ["有償", "無償",],
     gridSize: 12
   },
 
   {
     name: "Gx",
     title: "Gx",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
 
   {
     name: "InvoiceNo",
     title: "Invoice No",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "Carrier",
     title: "輸送方法",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "AwbNo",
     title: "AWB No",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "ExportPermission",
     title: "輸出許可",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "Comment",
     title: "備考",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "CommentAboutSale",
     title: "販売に関する備考",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "CommentAboutAcquisition",
     title: "取得に関する備考",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
 ]
