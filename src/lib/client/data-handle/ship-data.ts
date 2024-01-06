@@ -241,19 +241,22 @@ export const componentInfo: FieldParam[] = [
     name: "Comment",
     title: "備考",
     type: FieldType.text,
-    gridSize: 12
+    gridSize: 12,
+    rows: 4
   },
   {
     name: "CommentAboutSale",
     title: "販売に関する備考",
     type: FieldType.text,
-    gridSize: 12
+    gridSize: 12,
+    rows: 2
   },
   {
     name: "CommentAboutAcquisition",
     title: "取得に関する備考",
     type: FieldType.text,
-    gridSize: 12
+    gridSize: 12,
+    rows: 2
   },
 ]
 

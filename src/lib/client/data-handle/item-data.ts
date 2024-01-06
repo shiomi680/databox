@@ -82,7 +82,8 @@ export const componentInfo: FieldParam[] = [
     name: "ItemDescription",
     title: "Item Description",
     type: fieldType.text,
-    gridSize: 12
+    gridSize: 12,
+    rows: 4
   },
   {
     name: "Cost",

@@ -17,6 +17,7 @@ export type FieldParam = {
   gridSize: number,
   title?: string,
   choices?: string[]
+  rows?: number
 }
 export type GridTextFieldParams = {
   fieldParam: FieldParam,
@@ -52,6 +53,8 @@ export function GridTextField({ fieldParam, initialData, handleFieldChange, cont
           label={fieldParam.title ? fieldParam.title : fieldParam.name}
           fullWidth
           onChangeValue={handleFieldChange}
+          rows={fieldParam.rows}
+
         />
       </Grid>
 
