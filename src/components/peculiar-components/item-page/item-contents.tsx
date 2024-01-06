@@ -14,20 +14,20 @@ import { globalConsts } from '@/consts';
 import path from 'path';
 import TagsField from '../../molecules/tag-field';
 import { getTagList } from '@/lib/client/tag-io';
-import { Container, Grid } from '@mui/material'
-import ItemPage from './item-page';
-
+import { Container, Grid, Link } from '@mui/material'
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
   itemId: string;
+  copy: boolean
 }
 
-function ItemContents({ itemId }: ParentComponentProps) {
+function ItemContents({ itemId, copy = false }: ParentComponentProps) {
   const router = useRouter();
   const isNew = itemId === 'new';
   const itemIdInt = parseInt(itemId)
+
 
   const [formData, setFormData] = useState<ItemFormData>();
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
@@ -44,9 +44,10 @@ function ItemContents({ itemId }: ParentComponentProps) {
     event.preventDefault();
     if (formData) {
       try {
-        const updatedItem = await postDataApi(formData, uploadedFiles, tags, isNew, itemIdInt);
+        const creation = isNew || copy
+        const updatedItem = await postDataApi(formData, uploadedFiles, tags, creation, itemIdInt);
         toast.success(("sucessfully submitted!"))
-        if (isNew) {
+        if (creation) {
           router.push(path.join(ITEM_PAGE_URL, updatedItem.Id.toString()))
         }
       } catch (error) {
@@ -63,6 +64,7 @@ function ItemContents({ itemId }: ParentComponentProps) {
   return (
     <AddToast>
       <Container maxWidth="lg">
+
         <form onSubmit={onSubmitForm}>
           <GeneralForm
             fieldParams={componentInfo}

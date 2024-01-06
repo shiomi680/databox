@@ -10,9 +10,10 @@ const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
   itemId: string;
+  copy: boolean;
 }
 
-function ItemPage({ itemId }: ParentComponentProps) {
+function ItemPage({ itemId, copy = false }: ParentComponentProps) {
   return (
     <div style={{ display: 'flex' }}>
       <MenuBar>
@@ -32,7 +33,17 @@ function ItemPage({ itemId }: ParentComponentProps) {
         <Typography variant="h4" gutterBottom>
           Item form
         </Typography>
-        <ItemContents itemId={itemId} />
+        {itemId !== "new" && (
+          <Link href={path.join(ITEM_PAGE_URL, "copy", itemId)} >
+            <div style={{ marginBottom: '20px' }} >
+              <Button variant="contained" color="primary" >
+                COPY
+              </Button>
+            </div>
+          </Link>
+        )}
+
+        <ItemContents itemId={itemId} copy={copy} />
       </Paper>
     </div>
   );
