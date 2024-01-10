@@ -3,8 +3,12 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model ShippingModel {
-  Id                      Int      @id @default(autoincrement())
+model ShippingRevision {
+  ShippingRevisionId                      Int      @id @default(autoincrement())
+  ShippingModel           ShippingModel @relation(fields: [ShippingModelId], references: [ShippingId])
+  ShippingModelId         Int
+  createdAt DateTime @default(now())
+  CommitComment  String
   ShipDate                String?
   ShipFrom                String?
   ShipTo                  String?
@@ -27,9 +31,18 @@ model ShippingModel {
   ShippingFileMappings    ShippingFileMapping[]
 }
 
+model ShippingModel {
+  ShippingId                      Int      @id @default(autoincrement())
+  ShippingRevisions       ShippingRevision[]
 
-model ItemModel {
-  Id          Int               @id @default(autoincrement())
+}
+
+model ItemRevision{
+  ItemRevisionId                      Int      @id @default(autoincrement())
+  ItemModel               ItemModel @relation(fields: [ItemModelId], references: [ItemModelId])
+  ItemModelId             Int
+  CommitComment String
+  createdAt DateTime @default(now())
   ModelNumber     String?
   ItemName        String?
   ItemDescription String?
@@ -39,44 +52,49 @@ model ItemModel {
   ItemTagMappings    ItemTagMapping[]
 }
 
+model ItemModel {
+  ItemModelId          Int               @id @default(autoincrement())
+  ItemRevisions           ItemRevision[]
+}
+
 model TagModel {
-  Id    Int              @id @default(autoincrement())
+  TagId    Int              @id @default(autoincrement())
   TagName  String           @unique
   ItemTagMappings    ItemTagMapping[]
 }
 
 model ItemTagMapping {
-  ItemId  Int
+  ItemRevisionId  Int
   TagId   Int
-  ItemModel    ItemModel  @relation(fields: [ItemId], references: [Id])
-  TagModel     TagModel   @relation(fields: [TagId], references: [Id])
+  ItemRevision    ItemRevision  @relation(fields: [ItemRevisionId], references: [ItemRevisionId])
+  TagModel     TagModel   @relation(fields: [TagId], references: [TagId])
 
-  @@id([ItemId, TagId])
-  @@index([ItemId, TagId], name: "ItemTagMapping_index")
+  @@id([ItemRevisionId, TagId])
+  @@index([ItemRevisionId, TagId], name: "ItemTagMapping_index")
 }
 
 
 
 model ItemFileMapping {
-  ItemId Int
+  ItemRevisionId Int
   FileId Int
   Visible Boolean @default(true)
-  ItemModel ItemModel @relation(fields: [ItemId], references: [Id])
+  ItemRevision ItemRevision @relation(fields: [ItemRevisionId], references: [ItemRevisionId])
   FileModel FileModel @relation(fields: [FileId], references: [FileId])
 
-  @@id([ItemId, FileId])
-  @@index([ItemId, FileId], name: "ItemFileMapping_index")
+  @@id([ItemRevisionId, FileId])
+  @@index([ItemRevisionId, FileId], name: "ItemFileMapping_index")
 }
 
 model ShippingFileMapping {
-  ShippingId Int
+  ShippingRevisionId Int
   FileId Int
   Visible Boolean @default(true)
-  ShippingModel ShippingModel @relation(fields: [ShippingId], references: [Id])
+  ShippingRevision        ShippingRevision @relation(fields: [ShippingRevisionId], references: [ShippingRevisionId])
   FileModel FileModel @relation(fields: [FileId], references: [FileId])
 
-  @@id([ShippingId, FileId])
-  @@index([ShippingId, FileId], name: "ShippingFileMapping_index") // changed index name here
+  @@id([ShippingRevisionId, FileId])
+  @@index([ShippingRevisionId, FileId], name: "ShippingFileMapping_index") // changed index name here
 }
 
 model FileModel{

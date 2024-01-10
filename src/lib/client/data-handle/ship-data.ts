@@ -294,7 +294,7 @@ type toPostDataParams = {
 
 export function toPostData({ shipData, id, files }: toPostDataParams) {
   const param: PostShippingApiParams = {
-    Id: id,
+    ShippingModelId: id,
     ShipDate: shipData?.ShipDate,
     Title: shipData?.Title,
     ShippingInvoicePrice: shipData?.ShippingInvoicePrice ? new Prisma.Decimal(shipData?.ShippingInvoicePrice) : new Prisma.Decimal(0),
@@ -325,7 +325,7 @@ export function toPostData({ shipData, id, files }: toPostDataParams) {
 
 export function toApiData(data: ShipFormData | null, id: number | undefined = undefined) {
   const param: PostShippingApiParams = {
-    Id: id,
+    ShippingModelId: id,
     ShipDate: data?.ShipDate,
     Title: data?.Title,
     ShippingInvoicePrice: data?.ShippingInvoicePrice ? new Prisma.Decimal(data?.ShippingInvoicePrice) : new Prisma.Decimal(0),

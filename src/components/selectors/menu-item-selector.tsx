@@ -16,6 +16,7 @@ type ColumnsDef = {
 type TablePartProps = {
   modeLink: boolean
   items: any[]
+  idName: String
 
   defaultGridColumnVisibility: GridColumnVisibilityModel
   gridColumnsDef: ColumnsDef[]
@@ -27,10 +28,12 @@ type TablePartProps = {
 export const ItemSelectorPanel: React.FC<TablePartProps> = ({
   modeLink,
   items,
+  idName,
   defaultGridColumnVisibility,
   gridColumnsDef,
   selectedCategoryIds,
   onSelect,
+
 }) => {
 
   const [columnVisibility, setColumnVisibility] = useState<GridColumnVisibilityModel>(defaultGridColumnVisibility);
@@ -65,9 +68,9 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
           rows={items}
           columns={columns}
           onRowClick={(params: any) =>
-            onSelect ? onSelect(params.row.Id) : ''
+            onSelect ? onSelect(params.row[idName as keyof any]) : ''
           }
-          getRowId={(row) => row.Id}
+          getRowId={(row) => row[idName as keyof any]}
           slots={{ toolbar: GridToolbar }}
           slotProps={{
             toolbar: {

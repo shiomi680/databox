@@ -48,7 +48,7 @@ function ItemContents({ itemId, copy = false }: ParentComponentProps) {
         const updatedItem = await postDataApi(formData, uploadedFiles, tags, creation, itemIdInt);
         toast.success(("sucessfully submitted!"))
         if (creation) {
-          router.push(path.join(ITEM_PAGE_URL, updatedItem.Id.toString()))
+          router.push(path.join(ITEM_PAGE_URL, updatedItem.ItemModelId.toString()))
         }
       } catch (error) {
         console.log(error)

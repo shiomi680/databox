@@ -1,86 +1,106 @@
-import { ShippingModel } from '@prisma/client'
+import { ShippingModel, ShippingRevision } from '@prisma/client'
 import { prisma } from './prisma'
-import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { toFileInfo } from './file-api/file-api'
+import { UnwrapPromise } from '@prisma/client/runtime/library'
 
 export type ShippingApiReturn = UnwrapPromise<ReturnType<typeof getShippingApi>>
 export type UpdateShippingReturn = UnwrapPromise<ReturnType<typeof createOrUpdateShipping>>
 
+type ShippingRevisionSubset = Omit<ShippingRevision, 'ShippingRevisionId' | 'createdAt'>;
+
 export type PostShippingApiParams = Partial<
-  ShippingModel & {
+  ShippingRevisionSubset & {
     Files: {
       FileId: number,
       Visible: boolean
     }[]
-
   }
 >
 
 export async function getShippingApi(Id: number) {
   const shippingInfo = await prisma.shippingModel.findUnique({
     where: {
-      Id: Id
+      ShippingId: Id
     },
     include: {
-      ShippingFileMappings: {
+      ShippingRevisions: {
+        orderBy: {
+          createdAt: 'desc'
+        },
         include: {
-          FileModel: true
+          ShippingFileMappings: {
+            include: {
+              FileModel: true
+            }
+          }
         }
       }
     }
   })
-  if (shippingInfo) {
-    const { ShippingFileMappings, ...rest } = shippingInfo
+
+  if (shippingInfo && shippingInfo.ShippingRevisions.length > 0) {
+    const latestRevision = shippingInfo.ShippingRevisions[0];
+    const { ShippingFileMappings, ...rest } = latestRevision;
     const rtn = {
       ...rest,
-      Files: ShippingFileMappings.map(m => toFileInfo(m.FileModel, m.Visible))
+      Files: ShippingFileMappings.map(m => toFileInfo(m.FileModel, m.Visible)),
+      Revisions: shippingInfo.ShippingRevisions.map(rev => ({
+        createdAt: rev.createdAt,
+        CommitComment: rev.CommitComment
+      }))
     }
 
-    return rtn
+    return rtn;
   } else {
-    throw new Error(`${shippingInfo} is not exist`)
+    throw new Error(`Shipping with id ${Id} does not exist or has no revisions`)
   }
 }
 
-
-
 export async function createOrUpdateShipping(shipping: PostShippingApiParams) {
-  const { Id, Files, ...inputData } = shipping
+  const { ShippingModelId, Files, ...inputData } = shipping
 
-  let updatedShip: ShippingModel;
+  let updatedShipping: ShippingModel;
 
-  if (Id) {
-    updatedShip = await prisma.shippingModel.update({
-      where: { Id },
-      data: inputData,
-    });
+  if (ShippingModelId) {
+    const foundShipping = await prisma.shippingModel.findUnique({
+      where: { ShippingId: ShippingModelId }
+    })
+    if (foundShipping) {
+      updatedShipping = foundShipping
+    }
+    else {
+      updatedShipping = await prisma.shippingModel.create({
+        data: {}
+      })
+    }
   } else {
-    updatedShip = await prisma.shippingModel.create({
-      data: {
-        ...inputData,
-        Title: inputData.Title || 'no data'
-      },
-    });
+    updatedShipping = await prisma.shippingModel.create({
+      data: {}
+    })
   }
 
-  const operations = [];
-  if (updatedShip && updatedShip.Id) {
-    operations.push(
-      prisma.shippingFileMapping.deleteMany({
-        where: {
-          ShippingId: updatedShip.Id
-        }
-      }))
+  // Create a new revision
+  const newRevision = await prisma.shippingRevision.create({
+    data: {
+      ...inputData,
+      ShippingModelId: updatedShipping.ShippingId,
+      CommitComment: inputData.CommitComment || '',
+    }
+  });
+
+  // Update file mappings
+  const operations: any = [];
+  if (newRevision && newRevision.ShippingRevisionId) {
     if (Files) {
-      const fileMappings = Files.map(f => ({
-        ShippingId: updatedShip.Id,
-        FileId: f.FileId,
-        Visible: f.Visible
+      const fileMappings = Files.map(file => ({
+        ShippingRevisionId: newRevision.ShippingRevisionId,
+        FileId: file.FileId,
+        Visible: file.Visible
       }));
       fileMappings.forEach(fileMapping => {
         operations.push(
           prisma.shippingFileMapping.create({
-            data: fileMapping,
+            data: fileMapping
           })
         );
       });
@@ -88,15 +108,36 @@ export async function createOrUpdateShipping(shipping: PostShippingApiParams) {
 
     await prisma.$transaction(operations);
   }
-  return await getShippingApi(updatedShip.Id)
+  return await getShippingApi(updatedShipping.ShippingId)
 }
-
 
 export type ShippingListReturn = UnwrapPromise<ReturnType<typeof getShippingListApi>>
 export type ShippingListElement = ShippingListReturn[number]
 
 export async function getShippingListApi() {
   const items = await prisma.shippingModel.findMany({
+    include: {
+      ShippingRevisions: {
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: 1,
+        include: {
+          ShippingFileMappings: {
+            include: {
+              FileModel: true
+            }
+          }
+        }
+      },
+    }
   })
-  return items
+  return items.map(item => {
+    const latestRevision = item.ShippingRevisions[0];
+    const { ShippingFileMappings, ...rest } = latestRevision;
+    return {
+      ...rest,
+      Files: ShippingFileMappings.map(m => toFileInfo(m.FileModel, m.Visible))
+    }
+  })
 }

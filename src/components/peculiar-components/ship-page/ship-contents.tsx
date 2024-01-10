@@ -45,7 +45,7 @@ function ShipContents({ shipId }: ParentComponentProps) {
         const updatedItem = await postDataApi(formData, uploadedFiles, isNew, shipIdInt);
         toast.success(("sucessfully submitted!"))
         if (isNew) {
-          router.push(path.join(SHIPPING_PAGE_URL, updatedItem.Id.toString()))
+          router.push(path.join(SHIPPING_PAGE_URL, updatedItem.ShippingModelId.toString()))
         }
       } catch (error) {
         console.log(error)

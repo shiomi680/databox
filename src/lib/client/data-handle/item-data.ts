@@ -1,4 +1,3 @@
-import { ItemModel } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { ItemReturn, ItemListReturn, PostItemApiParams } from "@/lib/client/item-io"
 import { FieldParam } from "@/components/molecules/grid-text-field";
@@ -25,12 +24,12 @@ export const gridColumnsDef: ColumnsDef[] = [
   {
     field: "ModelNumber",
     headerName: "Model Number",
-    link: (data: any) => path.join(ITEM_PAGE_URL, data.Id.toString())
+    link: (data: any) => path.join(ITEM_PAGE_URL, data.ItemModelId.toString())
   },
   {
     field: "ItemName",
     headerName: "Item Name",
-    link: (data: any) => path.join(ITEM_PAGE_URL, data.Id.toString())
+    link: (data: any) => path.join(ITEM_PAGE_URL, data.ItemModelId.toString())
   },
   {
     field: "ItemDescription",
@@ -119,7 +118,7 @@ type toPostDataParams = {
 
 export function toPostData({ itemData, id, files, tags }: toPostDataParams) {
   const param: PostItemApiParams = {
-    Id: id,
+    ItemModelId: id,
     ModelNumber: itemData?.ModelNumber,
     ItemName: itemData?.ItemName,
     ItemDescription: itemData?.ItemDescription,
