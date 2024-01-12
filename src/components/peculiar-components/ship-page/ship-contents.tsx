@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../../organisms/general-form-panel';
 import { FileUploadComponent } from '../../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
-import { componentInfo } from "@/lib/client/data-handle/ship-data"
+import { } from "@/lib/client/data-handle/ship-data"
 import { Button } from '@mui/material';
-import { getShipping, updateShipping, ShippingReturn } from '@/lib/client/shipping-io';
 import ShipHandle from '@/lib/client/data-handle/ship-data';
-import { ShipFormData } from '@/lib/client/data-handle/ship-data';
+import { ShipFormData, componentInfo } from '@/lib/client/data-handle/ship-data';
 import AddToast, { toast } from '../../molecules/add-toast';
+import { getShippingAction, createOrUpdateShippingAction } from '@/lib/actions/ship-actions';
 import { globalConsts } from '@/consts';
 import path from 'path';
 
@@ -44,7 +44,7 @@ function ShipContents({ shipId }: ParentComponentProps) {
       try {
         const updatedItem = await postDataApi(formData, uploadedFiles, isNew, shipIdInt);
         toast.success(("sucessfully submitted!"))
-        if (isNew) {
+        if (isNew && updatedItem?.ShippingModelId) {
           router.push(path.join(SHIPPING_PAGE_URL, updatedItem.ShippingModelId.toString()))
         }
       } catch (error) {
@@ -89,7 +89,7 @@ const useFetchData = (shipId: string, isNew: boolean) => {
         setInitFormData(data)
         setLoading(false)
       } else {
-        const apiData = await getShipping(parseInt(shipId));
+        const apiData = await getShippingAction(parseInt(shipId));
         const data = ShipHandle.toFormData(apiData)
         setInitFormData(data)
         if (apiData?.Files) {
@@ -109,7 +109,7 @@ const postDataApi = async (formData: ShipFormData, fileInfos: FileInfo[], create
     id: createNew ? undefined : id,
     files: fileInfos
   }
-  const updatedItem = await updateShipping(ShipHandle.toPostData(data))
+  const updatedItem = await createOrUpdateShippingAction(ShipHandle.toPostData(data))
   return updatedItem
 }
 

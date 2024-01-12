@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
-import { getShipping, ShippingListElement, getShippingList } from '@/lib/client/shipping-io'
+import { getShippingListAction, ShippingListElement } from '@/lib/actions/ship-actions'
 import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/ship-data'
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from '@/consts';
@@ -16,7 +16,7 @@ export const ShipMenu: React.FC = () => {
   //データ取得
   useEffect(() => {
     const dataFetch = async () => {
-      const newItemList = await getShippingList()
+      const newItemList = await getShippingListAction()
       setItems(newItemList)
     }
     dataFetch()
@@ -35,6 +35,7 @@ export const ShipMenu: React.FC = () => {
         </div>
       </Link>
       <ItemSelectorPanel
+        idName={"ShippingModelId"}
         modeLink={true}
         items={items}
         defaultGridColumnVisibility={defaultGridColumnVisibility}

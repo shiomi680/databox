@@ -1,6 +1,6 @@
-import { ShippingModel } from "@prisma/client";
+import { ShippingModel, ShippingRevision } from "@prisma/client";
+import { ShippingReturn, ShippingListReturn, ShippingListElement, PostShippingApiParams } from "@/lib/actions/ship-actions";
 import { Prisma } from '@prisma/client';
-import { ShippingReturn, ShippingListReturn, PostShippingApiParams } from "@/lib/client/shipping-io"
 import { FieldParam, FieldType } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";
@@ -46,7 +46,7 @@ export const gridColumnsDef: ColumnsDef[] = [
   {
     field: 'Title',
     headerName: 'Title',
-    link: (data: any) => path.join(SHIP_PAGE_URL, data.Id.toString())
+    link: (data: any) => path.join(SHIP_PAGE_URL, data.ShippingModelId.toString())
   },
   {
     field: "ShipFrom",
