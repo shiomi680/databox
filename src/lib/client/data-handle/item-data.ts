@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { ItemReturn, ItemListReturn, PostItemApiParams } from "@/lib/client/item-io"
+import { getItemAction, ItemReturn, PostItemApiParams } from "@/lib/actions/item-action";
 import { FieldParam } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";

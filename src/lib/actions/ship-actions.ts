@@ -114,7 +114,7 @@ export type ShippingListReturn = UnwrapPromise<ReturnType<typeof getShippingList
 export type ShippingListElement = ShippingListReturn[number]
 
 export async function getShippingListAction() {
-  const items = await prisma.shippingModel.findMany({
+  const ships = await prisma.shippingModel.findMany({
     include: {
       ShippingRevisions: {
         orderBy: {
@@ -131,7 +131,7 @@ export async function getShippingListAction() {
       },
     }
   })
-  return items.map(item => {
+  return ships.map(item => {
     const latestRevision = item.ShippingRevisions[0];
     const { ShippingFileMappings, ...rest } = latestRevision;
     return {

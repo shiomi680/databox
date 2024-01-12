@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
-import { getItem, ItemListElement, getItemList } from '@/lib/client/item-io'
+import { getItemListAction, ItemListElement } from '@/lib/actions/item-action'
 import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/item-data'
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from '@/consts';
@@ -13,7 +13,7 @@ export const ItemMenu: React.FC = () => {
 
   useEffect(() => {
     const dataFetch = async () => {
-      const newItemList = await getItemList()
+      const newItemList = await getItemListAction()
       setItems(newItemList)
     }
     dataFetch()

@@ -1,9 +1,10 @@
+"use server"
 import { ItemModel, ItemRevision } from '@prisma/client'
-import { prisma } from './prisma'
-import { toFileInfo } from './file-api/file-api'
+import { prisma } from '../api/prisma'
+import { toFileInfo } from '../api/file-api/file-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 
-export type ItemApiReturn = UnwrapPromise<ReturnType<typeof getItemApi>>
+export type ItemReturn = UnwrapPromise<ReturnType<typeof getItemAction>>
 export type UpdateItemReturn = UnwrapPromise<ReturnType<typeof createOrUpdateItem>>
 
 
@@ -18,48 +19,53 @@ export type PostItemApiParams = Partial<
     Tags: string[]
   }
 >
-export async function getItemApi(Id: number) {
-  const itemInfo = await prisma.itemModel.findUnique({
+export async function getItemAction(Id: number) {
+  const itemRevisions = await prisma.itemRevision.findMany({
     where: {
       ItemModelId: Id
     },
+    orderBy: {
+      createdAt: "desc"
+    },
+    select: {
+      ItemRevisionId: true,
+      CommitComment: true,
+      createdAt: true
+    }
+  })
+  const latest = await prisma.itemRevision.findUnique({
+    where: {
+      ItemRevisionId: itemRevisions[0].ItemRevisionId
+    },
     include: {
-      ItemRevisions: {
-        orderBy: {
-          createdAt: 'desc'
-        },
-        include: {
-          ItemFileMappings: {
-            include: {
-              FileModel: true
-            }
-          },
-          ItemTagMappings: {
-            include: {
-              TagModel: true
-            }
-          }
+      ItemFileMappings: {
+        select: {
+          FileModel: true,
+          Visible: true
+        }
+      },
+      ItemTagMappings: {
+        select: {
+          TagModel: true
         }
       }
     }
   })
-
-  if (itemInfo && itemInfo.ItemRevisions.length > 0) {
-    const latestRevision = itemInfo.ItemRevisions[0];
-    const { ItemFileMappings, ItemTagMappings, ...rest } = latestRevision;
+  if (latest) {
+    const { ItemFileMappings, ItemTagMappings, ...rest } = latest;
     const rtn = {
       ...rest,
       Files: ItemFileMappings.map(m => toFileInfo(m.FileModel, m.Visible)),
       Tags: ItemTagMappings.map(m => m.TagModel.TagName),
-      Revisions: itemInfo.ItemRevisions.map(rev => ({
+      Revisions: itemRevisions.map(rev => ({
+        ItemRevisionId: rev.ItemRevisionId,
         createdAt: rev.createdAt,
         CommitComment: rev.CommitComment
       }))
     }
-
-    return rtn;
+    return rtn
   } else {
-    throw new Error(`Item with id ${Id} does not exist or has no revisions`)
+
   }
 }
 
@@ -140,13 +146,13 @@ export async function createOrUpdateItem(item: PostItemApiParams) {
 
     await prisma.$transaction(operations);
   }
-  return await getItemApi(updatedItem.ItemModelId)
+  return await getItemAction(updatedItem.ItemModelId)
 }
 
-export type ItemListReturn = UnwrapPromise<ReturnType<typeof getItemListApi>>
+export type ItemListReturn = UnwrapPromise<ReturnType<typeof getItemListAction>>
 export type ItemListElement = ItemListReturn[number]
 
-export async function getItemListApi() {
+export async function getItemListAction() {
   const items = await prisma.itemModel.findMany({
     include: {
       ItemRevisions: {

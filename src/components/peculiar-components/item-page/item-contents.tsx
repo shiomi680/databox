@@ -6,7 +6,7 @@ import { FileUploadComponent } from '../../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
 import { componentInfo } from "@/lib/client/data-handle/item-data"
 import { Button } from '@mui/material';
-import { getItem, updateItem, ItemReturn } from '@/lib/client/item-io';
+import { getItemAction, ItemReturn, createOrUpdateItem } from '@/lib/actions/item-action';
 import ItemHandle from '@/lib/client/data-handle/item-data';
 import { ItemFormData } from '@/lib/client/data-handle/item-data';
 import AddToast, { toast } from '../../molecules/add-toast';
@@ -47,7 +47,7 @@ function ItemContents({ itemId, copy = false }: ParentComponentProps) {
         const creation = isNew || copy
         const updatedItem = await postDataApi(formData, uploadedFiles, tags, creation, itemIdInt);
         toast.success(("sucessfully submitted!"))
-        if (creation) {
+        if (creation && updatedItem) {
           router.push(path.join(ITEM_PAGE_URL, updatedItem.ItemModelId.toString()))
         }
       } catch (error) {
@@ -106,10 +106,10 @@ const useFetchData = (itemId: string, isNew: boolean) => {
         setInitFormData(data)
         setLoading(false)
       } else {
-        const apiData = await getItem(parseInt(itemId));
+        const apiData = await getItemAction(parseInt(itemId));
         const data = ItemHandle.toFormData(apiData)
         setInitFormData(data)
-        setInitTags(apiData.Tags)
+        setInitTags(apiData?.Tags ? apiData?.Tags : [])
         if (apiData?.Files) {
           setInitUploadedFiles(apiData.Files)
         }
@@ -130,7 +130,7 @@ const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: 
     files: fileInfos,
     tags: tags
   }
-  const updatedItem = await updateItem(ItemHandle.toPostData(data))
+  const updatedItem = await createOrUpdateItem(ItemHandle.toPostData(data))
   return updatedItem
 }
 
