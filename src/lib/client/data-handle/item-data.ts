@@ -114,10 +114,12 @@ type toPostDataParams = {
   id: number | undefined,
   files: FileInfo[] | undefined
   tags: string[] | undefined
+  commitComment: string
 }
 
-export function toPostData({ itemData, id, files, tags }: toPostDataParams) {
+export function toPostData({ itemData, id, files, tags, commitComment }: toPostDataParams) {
   const param: PostItemApiParams = {
+    CommitComment: commitComment,
     ItemModelId: id,
     ModelNumber: itemData?.ModelNumber,
     ItemName: itemData?.ItemName,
