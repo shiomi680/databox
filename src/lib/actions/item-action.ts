@@ -19,7 +19,8 @@ export type PostItemApiParams = Partial<
     Tags: string[]
   }
 >
-export async function getItemAction(Id: number) {
+export async function getItemAction(Id: number, revisonId?: number) {
+
   const itemRevisions = await prisma.itemRevision.findMany({
     where: {
       ItemModelId: Id
@@ -33,9 +34,10 @@ export async function getItemAction(Id: number) {
       createdAt: true
     }
   })
+  const targetRevision = revisonId || itemRevisions[0].ItemRevisionId
   const latest = await prisma.itemRevision.findUnique({
     where: {
-      ItemRevisionId: itemRevisions[0].ItemRevisionId
+      ItemRevisionId: targetRevision
     },
     include: {
       ItemFileMappings: {
@@ -69,8 +71,9 @@ export async function getItemAction(Id: number) {
   }
 }
 
+
 export async function createOrUpdateItem(item: PostItemApiParams) {
-  const { ItemModelId, Files, Tags, ...inputData } = item
+  const { ItemModelId, Files, Tags, CommitComment, ...inputData } = item
 
   let updatedItem: ItemModel;
 
@@ -99,7 +102,7 @@ export async function createOrUpdateItem(item: PostItemApiParams) {
     data: {
       ...inputData,
       ItemModelId: updatedItem.ItemModelId,
-      CommitComment: inputData.CommitComment || '',
+      CommitComment: CommitComment || '',
     }
   });
 
