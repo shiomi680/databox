@@ -1,7 +1,7 @@
 "use server"
 import { ShippingModel, ShippingRevision } from '@prisma/client'
-import { prisma } from '../api/prisma'
-import { toFileInfo } from '../api/file-api/file-api'
+import { prisma } from '../prisma'
+import { toFileInfo } from '../file-api/file-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 
 export type UpdateShippingReturn = UnwrapPromise<ReturnType<typeof createOrUpdateShippingAction>>

@@ -1,5 +1,5 @@
 import { ShippingModel, ShippingRevision } from "@prisma/client";
-import { ShippingReturn, ShippingListReturn, ShippingListElement, PostShippingApiParams } from "@/lib/actions/ship-actions";
+import { ShippingReturn, ShippingListReturn, ShippingListElement, PostShippingApiParams } from "@/lib/api/actions/ship-actions";
 import { Prisma } from '@prisma/client';
 import { FieldParam, FieldType } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";

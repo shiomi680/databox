@@ -1,7 +1,7 @@
 "use server"
 import { ItemModel, ItemRevision } from '@prisma/client'
-import { prisma } from '../api/prisma'
-import { toFileInfo } from '../api/file-api/file-api'
+import { prisma } from '../../api/prisma'
+import { toFileInfo } from '../../api/file-api/file-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 
 export type ItemReturn = UnwrapPromise<ReturnType<typeof getItemAction>>

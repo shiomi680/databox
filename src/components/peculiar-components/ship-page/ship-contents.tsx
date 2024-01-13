@@ -9,7 +9,7 @@ import { Button } from '@mui/material';
 import ShipHandle from '@/lib/client/data-handle/ship-data';
 import { ShipFormData, componentInfo } from '@/lib/client/data-handle/ship-data';
 import AddToast, { toast } from '../../molecules/add-toast';
-import { getShippingAction, createOrUpdateShippingAction } from '@/lib/actions/ship-actions';
+import { getShippingAction, createOrUpdateShippingAction } from '@/lib/api/actions/ship-actions';
 import { globalConsts } from '@/consts';
 import path from 'path';
 

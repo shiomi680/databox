@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
-import { getShippingListAction, ShippingListElement } from '@/lib/actions/ship-actions'
+import { getShippingListAction, ShippingListElement } from '@/lib/api/actions/ship-actions'
 import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/ship-data'
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from '@/consts';
