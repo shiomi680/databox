@@ -10,10 +10,11 @@ const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
   itemId: string;
+  revisionId?: string;
   copy?: boolean;
 }
 
-function ItemPage({ itemId, copy = false }: ParentComponentProps) {
+function ItemPage({ itemId, revisionId, copy = false }: ParentComponentProps) {
   return (
     <div style={{ display: 'flex' }}>
       <MenuBar>
@@ -43,7 +44,7 @@ function ItemPage({ itemId, copy = false }: ParentComponentProps) {
           </Link>
         )}
 
-        <ItemContents itemId={itemId} copy={copy} />
+        <ItemContents itemId={itemId} revisionId={revisionId} copy={copy} />
       </Paper>
     </div>
   );

@@ -15,24 +15,29 @@ import path from 'path';
 import TagsField from '../../molecules/tag-field';
 import { getTagList } from '@/lib/client/tag-io';
 import { Container, Grid, Link } from '@mui/material'
+import { TextField } from '@mui/material';
+import { Select, MenuItem } from '@mui/material';
+import RevisionSelector, { Revision } from '../../molecules/revision-selector';
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
   itemId: string;
+  revisionId?: string;
   copy: boolean
 }
 
-function ItemContents({ itemId, copy = false }: ParentComponentProps) {
+function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps) {
   const router = useRouter();
   const isNew = itemId === 'new';
   const itemIdInt = parseInt(itemId)
 
 
   const [formData, setFormData] = useState<ItemFormData>();
+  const [commitComment, setCommitComment] = useState<string>("")
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
   const [tags, setTags] = useState<string[]>([])
-  const { initFormData, initUploadedFiles, initTags, tagOptions, loading } = useFetchData(itemId, isNew)
+  const { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading } = useFetchData(itemId, isNew)
 
   useEffect(() => {
     setFormData(initFormData)
@@ -45,7 +50,7 @@ function ItemContents({ itemId, copy = false }: ParentComponentProps) {
     if (formData) {
       try {
         const creation = isNew || copy
-        const updatedItem = await postDataApi(formData, uploadedFiles, tags, creation, itemIdInt);
+        const updatedItem = await postDataApi(formData, uploadedFiles, tags, commitComment, creation, itemIdInt);
         toast.success(("sucessfully submitted!"))
         if (creation && updatedItem) {
           router.push(path.join(ITEM_PAGE_URL, updatedItem.ItemModelId.toString()))
@@ -58,14 +63,23 @@ function ItemContents({ itemId, copy = false }: ParentComponentProps) {
 
 
 
+  const handleRevisionChange = (revisionId: number) => {
+    // router.push(Item)
+  };
   if (loading) {
     return <div>Loading...</div>;
   }
   return (
     <AddToast>
       <Container maxWidth="lg">
+        <RevisionSelector
+          revisions={revisions}
+          onRevisionChange={handleRevisionChange}
+        />
+        <form onSubmit={onSubmitForm} action={(x: FormData) => {
+          console.log(x)
 
-        <form onSubmit={onSubmitForm}>
+        }}>
           <GeneralForm
             fieldParams={componentInfo}
             initialData={initFormData}
@@ -83,7 +97,10 @@ function ItemContents({ itemId, copy = false }: ParentComponentProps) {
           <div style={{ marginTop: '20px' }}>
             <FileUploadComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} />
           </div>
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>
+            <TextField label="Update message" style={{ marginRight: '10px' }} onChange={(e) => {
+              setCommitComment(e.target.value)
+            }} />
             <Button type="submit" variant="contained">Submit</Button>
           </div>
         </form>
@@ -92,8 +109,9 @@ function ItemContents({ itemId, copy = false }: ParentComponentProps) {
   );
 }
 
-const useFetchData = (itemId: string, isNew: boolean) => {
+const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [revisions, setRevisions] = useState<Revision[]>([])
   const [initFormData, setInitFormData] = useState<ItemFormData>();
   const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
   const [initTags, setInitTags] = useState<string[]>([]);
@@ -113,6 +131,13 @@ const useFetchData = (itemId: string, isNew: boolean) => {
         if (apiData?.Files) {
           setInitUploadedFiles(apiData.Files)
         }
+        if (apiData?.Revisions) {
+          setRevisions(apiData.Revisions.map(revision => ({
+            id: revision.ItemRevisionId,
+            comment: revision.CommitComment,
+            createdAt: revision.createdAt.toISOString(),
+          })));
+        }
         setLoading(false);
       }
       const tags = await getTagList()
@@ -121,14 +146,15 @@ const useFetchData = (itemId: string, isNew: boolean) => {
     fetchData();
   }, [itemId, isNew]);
 
-  return { initFormData, initUploadedFiles, initTags, tagOptions, loading };
+  return { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading };
 };
-const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: string[], createNew: boolean, id?: number) => {
+const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: string[], commitComment: string, createNew: boolean, id?: number) => {
   const data = {
     itemData: formData,
     id: createNew ? undefined : id,
     files: fileInfos,
-    tags: tags
+    tags: tags,
+    commitComment: commitComment
   }
   const updatedItem = await createOrUpdateItem(ItemHandle.toPostData(data))
   return updatedItem
