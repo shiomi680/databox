@@ -17,6 +17,9 @@ interface RevisionSelectorProps {
 }
 
 const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisionChange, initialSelectId }) => {
+  if (revisions.length == 0) {
+    return (<div></div>)
+  }
   const selectedId = initialSelectId || revisions[0].id
   const [selectedRevision, setSelectedRevision] = useState(selectedId);
 
