@@ -31,13 +31,14 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
   const router = useRouter();
   const isNew = itemId === 'new';
   const itemIdInt = parseInt(itemId)
+  const revisionIdInt = revisionId ? parseInt(revisionId) : undefined
 
 
   const [formData, setFormData] = useState<ItemFormData>();
   const [commitComment, setCommitComment] = useState<string>("")
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
   const [tags, setTags] = useState<string[]>([])
-  const { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading } = useFetchData(itemId, isNew)
+  const { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading } = useFetchData(itemId, isNew, revisionId)
 
   useEffect(() => {
     setFormData(initFormData)
@@ -64,6 +65,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
 
   const handleRevisionChange = (revisionId: number) => {
+    router.push(path.join(ITEM_PAGE_URL, itemId.toString(), revisionId.toString()))
     // router.push(Item)
   };
   if (loading) {
@@ -75,6 +77,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
         <RevisionSelector
           revisions={revisions}
           onRevisionChange={handleRevisionChange}
+          initialSelectId={revisionIdInt}
         />
         <form onSubmit={onSubmitForm} action={(x: FormData) => {
           console.log(x)
@@ -124,7 +127,8 @@ const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
         setInitFormData(data)
         setLoading(false)
       } else {
-        const apiData = await getItemAction(parseInt(itemId));
+        const revisionIdInt = revisionId ? parseInt(revisionId) : undefined
+        const apiData = await getItemAction(parseInt(itemId), revisionIdInt);
         const data = ItemHandle.toFormData(apiData)
         setInitFormData(data)
         setInitTags(apiData?.Tags ? apiData?.Tags : [])

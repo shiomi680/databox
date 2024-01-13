@@ -3,7 +3,6 @@ import { ShippingModel, ShippingRevision } from '@prisma/client'
 import { prisma } from '../api/prisma'
 import { toFileInfo } from '../api/file-api/file-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
-import { TtyRounded } from '@mui/icons-material'
 
 export type UpdateShippingReturn = UnwrapPromise<ReturnType<typeof createOrUpdateShippingAction>>
 export type ShippingReturn = UnwrapPromise<ReturnType<typeof getShippingAction>>
