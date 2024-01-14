@@ -13,7 +13,7 @@ import AddToast, { toast } from '../../molecules/add-toast';
 import { globalConsts } from '@/consts';
 import path from 'path';
 import TagsField from '../../molecules/tag-field';
-import { getTagList } from '@/lib/client/tag-io';
+import { getTagList } from '@/lib/data-handle/tag/tag-action';
 import { Container, Grid, Link } from '@mui/material'
 import { TextField } from '@mui/material';
 import { Select, MenuItem } from '@mui/material';
