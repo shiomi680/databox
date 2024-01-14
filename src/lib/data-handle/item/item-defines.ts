@@ -84,3 +84,19 @@ export const itemComponentInfo: FieldParam[] = [
     gridSize: 6
   },
 ]
+
+export type ItemFormData = {
+  ModelNumber: string,
+  ItemName: string,
+  ItemDescription: string,
+  Cost: string,
+  SalePrice: string,
+}
+
+export const itemFormDefault: ItemFormData = {
+  ModelNumber: "",
+  ItemName: "",
+  ItemDescription: "",
+  Cost: "",
+  SalePrice: "",
+}

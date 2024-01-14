@@ -1,18 +1,9 @@
 import { Prisma } from "@prisma/client";
-import { getItemAction, ItemReturn, PostItemApiParams } from "@/lib/data-handle/item/item-action";
-import { FieldParam } from "@/components/molecules/grid-text-field";
-import { globalConsts } from "@/consts";
-import path from "path";
-import { FileInfo } from "../../client/file-io";
-import { itemComponentInfo } from "./item-defines";
+import { ItemReturn, PostItemApiParams } from "@/lib/data-handle/item/item-action";
 
-export type ItemFormData = {
-  ModelNumber: string,
-  ItemName: string,
-  ItemDescription: string,
-  Cost: string,
-  SalePrice: string,
-}
+import { FileInfo } from "../../client/file-io";
+import { itemComponentInfo, ItemFormData } from "./item-defines";
+
 
 export function toFormData(data: ItemReturn | null) {
   const param: ItemFormData = {
@@ -29,7 +20,7 @@ type toPostDataParams = {
   itemData: ItemFormData,
   id: number | undefined,
   files: FileInfo[] | undefined
-  tags: string[] | undefined
+  tags: string[]
   commitComment: string
 }
 
@@ -53,8 +44,7 @@ export function toPostData({ itemData, id, files, tags, commitComment }: toPostD
 
 const ItemHandle = {
   toFormData,
-  toPostData,
-  itemComponentInfo
+  toPostData
 }
 
 export default ItemHandle

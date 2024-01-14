@@ -3,56 +3,37 @@ import { ItemModel, ItemRevision } from '@prisma/client'
 import { prisma } from '../../api/prisma'
 import { toFileInfo } from '../../api/file-api/file-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
+import { readItemRevisions, readTargetRevisionData } from './item-crud'
+import { createOrUpdateItem } from './item-crud'
 
 export type ItemReturn = UnwrapPromise<ReturnType<typeof getItemAction>>
 export type UpdateItemReturn = UnwrapPromise<ReturnType<typeof createOrUpdateItem>>
 
 
-type ItemRevisionSubset = Omit<ItemRevision, 'ItemRevisionId' | 'createdAt'>;
+type ItemRevisionSubset = Omit<ItemRevision, 'ItemRevisionId' | 'createdAt' | "ItemModelId">;
 
-export type PostItemApiParams = Partial<
+export type PostItemApiParams =
   ItemRevisionSubset & {
+    ItemModelId?: number,
     Files: {
       FileId: number,
       Visible: boolean
     }[]
     Tags: string[]
   }
->
+
 export async function getItemAction(Id: number, revisonId?: number) {
 
-  const itemRevisions = await prisma.itemRevision.findMany({
-    where: {
-      ItemModelId: Id
-    },
-    orderBy: {
-      createdAt: "desc"
-    },
-    select: {
-      ItemRevisionId: true,
-      CommitComment: true,
-      createdAt: true
-    }
-  })
+  const itemRevisions = await readItemRevisions(Id)
+  //リビジョンがなかったらItemが存在しない
+  if (itemRevisions.length == 0) {
+    return
+  }
+  //リビジョン指定があればそのリビジョンを取得。なければ最新
   const targetRevision = revisonId || itemRevisions[0].ItemRevisionId
-  const latest = await prisma.itemRevision.findUnique({
-    where: {
-      ItemRevisionId: targetRevision
-    },
-    include: {
-      ItemFileMappings: {
-        select: {
-          FileModel: true,
-          Visible: true
-        }
-      },
-      ItemTagMappings: {
-        select: {
-          TagModel: true
-        }
-      }
-    }
-  })
+  const latest = await readTargetRevisionData(targetRevision)
+
+  //データのフォーマット変換
   if (latest) {
     const { ItemFileMappings, ItemTagMappings, ...rest } = latest;
     const rtn = {
@@ -72,39 +53,9 @@ export async function getItemAction(Id: number, revisonId?: number) {
 }
 
 
-export async function createOrUpdateItem(item: PostItemApiParams) {
-  const { ItemModelId, Files, Tags, CommitComment, ...inputData } = item
-
-  let updatedItem: ItemModel;
-
-  if (ItemModelId) {
-    const foundItem = await prisma.itemModel.findUnique({
-      where: { ItemModelId: ItemModelId }
-    })
-    if (foundItem) {
-      updatedItem = foundItem
-    }
-    else {
-      updatedItem = await prisma.itemModel.create({
-        data: {
-        }
-      })
-    }
-  } else {
-    updatedItem = await prisma.itemModel.create({
-      data: {
-
-      }
-    })
-  }
-  // Create a new revision
-  const newRevision = await prisma.itemRevision.create({
-    data: {
-      ...inputData,
-      ItemModelId: updatedItem.ItemModelId,
-      CommitComment: CommitComment || '',
-    }
-  });
+export async function postItem(item: PostItemApiParams) {
+  const { ItemModelId, Files, Tags, ...inputData } = item
+  const newRevision = await createOrUpdateItem(inputData, ItemModelId);
 
   // Update file mappings
   const operations = [];
@@ -149,7 +100,7 @@ export async function createOrUpdateItem(item: PostItemApiParams) {
 
     await prisma.$transaction(operations);
   }
-  return await getItemAction(updatedItem.ItemModelId)
+  return await getItemAction(newRevision.ItemModelId)
 }
 
 export type ItemListReturn = UnwrapPromise<ReturnType<typeof getItemListAction>>

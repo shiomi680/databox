@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
 import { getItemListAction, ItemListElement } from '@/lib/data-handle/item/item-action'
-import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/data-handle/item/item-data'
+import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/data-handle/item/item-defines'
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from '@/consts';
 import path from 'path'

@@ -4,11 +4,11 @@ import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../../organisms/general-form-panel';
 import { FileUploadComponent } from '../../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
-import { componentInfo } from "@/lib/data-handle/item/item-data"
+import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 import { Button } from '@mui/material';
-import { getItemAction, ItemReturn, createOrUpdateItem } from '@/lib/data-handle/item/item-action';
-import ItemHandle from '@/lib/data-handle/item/item-data';
-import { ItemFormData } from '@/lib/data-handle/item/item-data';
+import { getItemAction, ItemReturn, postItem } from '@/lib/data-handle/item/item-action';
+import ItemHandle from '@/lib/data-handle/item/item-convert';
+import { ItemFormData } from '@/lib/data-handle/item/item-defines';
 import AddToast, { toast } from '../../molecules/add-toast';
 import { globalConsts } from '@/consts';
 import path from 'path';
@@ -79,12 +79,9 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
           onRevisionChange={handleRevisionChange}
           initialSelectId={revisionIdInt}
         />
-        <form onSubmit={onSubmitForm} action={(x: FormData) => {
-          console.log(x)
-
-        }}>
+        <form onSubmit={onSubmitForm} >
           <GeneralForm
-            fieldParams={componentInfo}
+            fieldParams={itemComponentInfo}
             initialData={initFormData}
             onChange={setFormData}
           />
@@ -160,7 +157,7 @@ const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: 
     tags: tags,
     commitComment: commitComment
   }
-  const updatedItem = await createOrUpdateItem(ItemHandle.toPostData(data))
+  const updatedItem = await postItem(ItemHandle.toPostData(data))
   return updatedItem
 }
 
