@@ -5,13 +5,8 @@ export const globalConsts = {
     uploadApi: "/api/file/upload"
   },
   url: {
-    shipping: "/api/shipping/",
-    shippings: "/api/shippings/",
     shippingPage: "/pages/shipping/",
-    item: "/api/item/",
-    items: "/api/items/",
     itemPage: "/pages/item/",
-    tags: "/api/tags/",
 
   }
 }

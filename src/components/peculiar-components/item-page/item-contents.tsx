@@ -5,8 +5,8 @@ import { GeneralForm } from '../../organisms/general-form-panel';
 import { FileUploadComponent } from '../../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
 import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
-import { Button } from '@mui/material';
-import { getItemAction, ItemReturn, postItem } from '@/lib/data-handle/item/item-action';
+import { Button, Container, TextField } from '@mui/material';
+import { getItemAction, postItem } from '@/lib/data-handle/item/item-action';
 import ItemHandle from '@/lib/data-handle/item/item-convert';
 import { ItemFormData } from '@/lib/data-handle/item/item-defines';
 import AddToast, { toast } from '../../molecules/add-toast';
@@ -14,9 +14,6 @@ import { globalConsts } from '@/consts';
 import path from 'path';
 import TagsField from '../../molecules/tag-field';
 import { getTagList } from '@/lib/data-handle/tag/tag-action';
-import { Container, Grid, Link } from '@mui/material'
-import { TextField } from '@mui/material';
-import { Select, MenuItem } from '@mui/material';
 import RevisionSelector, { Revision } from '../../molecules/revision-selector';
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
@@ -33,7 +30,6 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
   const itemIdInt = parseInt(itemId)
   const revisionIdInt = revisionId ? parseInt(revisionId) : undefined
 
-
   const [formData, setFormData] = useState<ItemFormData>();
   const [commitComment, setCommitComment] = useState<string>("")
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
@@ -45,6 +41,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
     setUploadedFiles(initUploadedFiles)
     setTags(initTags)
   }, [initFormData, initUploadedFiles, initTags]);
+
 
   const onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -66,8 +63,8 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
   const handleRevisionChange = (revisionId: number) => {
     router.push(path.join(ITEM_PAGE_URL, itemId.toString(), revisionId.toString()))
-    // router.push(Item)
   };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -110,6 +107,8 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
     </AddToast >
   );
 }
+
+
 
 const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
   const [loading, setLoading] = useState<boolean>(true);
