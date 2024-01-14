@@ -41,7 +41,7 @@ export async function getItemAction(Id: number, revisonId?: number) {
       Tags: ItemTagMappings.map(m => m.TagModel.TagName),
       Revisions: itemRevisions.map(rev => ({
         ItemRevisionId: rev.ItemRevisionId,
-        createdAt: rev.createdAt,
+        createdAt: rev.createdAt.toISOString().slice(0, 19).replace('T', ' '),
         CommitComment: rev.CommitComment
       }))
     }

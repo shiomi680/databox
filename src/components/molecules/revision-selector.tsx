@@ -36,8 +36,9 @@ const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisi
       style={{ marginRight: '10px' }}
     >
       {revisions.map((revision) => (
-        <MenuItem key={revision.id} value={revision.id}>
-          {`${revision.comment} (Created at: ${revision.createdAt})`}
+        <MenuItem key={revision.id} value={revision.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ marginRight: '30px' }}>{revision.comment}</span>
+          <span>{` ${revision.createdAt}`}</span>
         </MenuItem>
       ))}
     </Select>

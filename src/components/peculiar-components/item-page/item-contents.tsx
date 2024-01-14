@@ -74,11 +74,13 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
   return (
     <AddToast>
       <Container maxWidth="lg">
-        <RevisionSelector
-          revisions={revisions}
-          onRevisionChange={handleRevisionChange}
-          initialSelectId={revisionIdInt}
-        />
+        <div style={{ marginBottom: "20px" }}>
+          <RevisionSelector
+            revisions={revisions}
+            onRevisionChange={handleRevisionChange}
+            initialSelectId={revisionIdInt}
+          />
+        </div>
         <form onSubmit={onSubmitForm} >
           <GeneralForm
             fieldParams={itemComponentInfo}
@@ -136,7 +138,7 @@ const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
           setRevisions(apiData.Revisions.map(revision => ({
             id: revision.ItemRevisionId,
             comment: revision.CommitComment,
-            createdAt: revision.createdAt.toISOString(),
+            createdAt: revision.createdAt,
           })));
         }
         setLoading(false);
