@@ -78,3 +78,29 @@ async function createItemId() {
   })
   return item.ItemModelId
 }
+
+
+export async function findManyItemModel() {
+  return await prisma.itemModel.findMany({
+    include: {
+      ItemRevisions: {
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: 1,
+        include: {
+          ItemFileMappings: {
+            include: {
+              FileModel: true
+            }
+          },
+          ItemTagMappings: {
+            include: {
+              TagModel: true
+            }
+          }
+        }
+      },
+    }
+  });
+}

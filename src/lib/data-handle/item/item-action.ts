@@ -3,8 +3,7 @@ import { ItemModel, ItemRevision } from '@prisma/client'
 import { prisma } from '../../api/prisma'
 import { toFileInfo } from '../../api/file-api/file-api'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
-import { readItemRevisions, readTargetRevisionData } from './item-crud'
-import { createOrUpdateItem } from './item-crud'
+import { readItemRevisions, readTargetRevisionData, createOrUpdateItem, findManyItemModel } from './item-crud'
 
 export type ItemReturn = UnwrapPromise<ReturnType<typeof getItemAction>>
 export type UpdateItemReturn = UnwrapPromise<ReturnType<typeof createOrUpdateItem>>
@@ -107,28 +106,7 @@ export type ItemListReturn = UnwrapPromise<ReturnType<typeof getItemListAction>>
 export type ItemListElement = ItemListReturn[number]
 
 export async function getItemListAction() {
-  const items = await prisma.itemModel.findMany({
-    include: {
-      ItemRevisions: {
-        orderBy: {
-          createdAt: 'desc'
-        },
-        take: 1,
-        include: {
-          ItemFileMappings: {
-            include: {
-              FileModel: true
-            }
-          },
-          ItemTagMappings: {
-            include: {
-              TagModel: true
-            }
-          }
-        }
-      },
-    }
-  })
+  const items = await findManyItemModel();
   return items.map(item => {
     const latestRevision = item.ItemRevisions[0];
     const { ItemFileMappings, ItemTagMappings, ...rest } = latestRevision;
