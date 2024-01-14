@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
-import { getShippingListAction, ShippingListElement } from '@/lib/api/actions/ship-actions'
-import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/client/data-handle/ship-data'
+import { getShippingListAction, ShippingListElement } from '@/lib/data-handle/ship/ship-actions'
+import { shipDefaultGridColumnVisibility, shipGridColumnsDef } from "@/lib/data-handle/ship/ship-defines"
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from '@/consts';
 import path from 'path'
@@ -38,8 +38,8 @@ export const ShipMenu: React.FC = () => {
         idName={"ShippingModelId"}
         modeLink={true}
         items={items}
-        defaultGridColumnVisibility={defaultGridColumnVisibility}
-        gridColumnsDef={gridColumnsDef}
+        defaultGridColumnVisibility={shipDefaultGridColumnVisibility}
+        gridColumnsDef={shipGridColumnsDef}
       />
     </Box>
   )

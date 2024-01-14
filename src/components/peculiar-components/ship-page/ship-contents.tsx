@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../../organisms/general-form-panel';
 import { FileUploadComponent } from '../../organisms/file-panel';
 import { FileInfo } from '@/lib/client/file-io';
-import { } from "@/lib/client/data-handle/ship-data"
 import { Button } from '@mui/material';
-import ShipHandle from '@/lib/client/data-handle/ship-data';
-import { ShipFormData, componentInfo } from '@/lib/client/data-handle/ship-data';
+import { ShipFormData, componentInfo } from '@/lib/data-handle/ship/ship-defines';
 import AddToast, { toast } from '../../molecules/add-toast';
-import { getShippingAction, createOrUpdateShippingAction } from '@/lib/api/actions/ship-actions';
+import { getShippingAction, createOrUpdateShippingAction } from '@/lib/data-handle/ship/ship-actions';
 import { globalConsts } from '@/consts';
 import path from 'path';
+import { toFormData, toPostData } from '@/lib/data-handle/ship/ship-convert';
+
 
 const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
 
@@ -85,12 +85,12 @@ const useFetchData = (shipId: string, isNew: boolean) => {
   useEffect(() => {
     const fetchData = async () => {
       if (isNew) {
-        const data = ShipHandle.toFormData(null)
+        const data = toFormData(null)
         setInitFormData(data)
         setLoading(false)
       } else {
         const apiData = await getShippingAction(parseInt(shipId));
-        const data = ShipHandle.toFormData(apiData)
+        const data = toFormData(apiData)
         setInitFormData(data)
         if (apiData?.Files) {
           setInitUploadedFiles(apiData.Files)
@@ -105,11 +105,12 @@ const useFetchData = (shipId: string, isNew: boolean) => {
 };
 const postDataApi = async (formData: ShipFormData, fileInfos: FileInfo[], createNew: boolean, id?: number) => {
   const data = {
+    commitComment: "",
     shipData: formData,
     id: createNew ? undefined : id,
     files: fileInfos
   }
-  const updatedItem = await createOrUpdateShippingAction(ShipHandle.toPostData(data))
+  const updatedItem = await createOrUpdateShippingAction(toPostData(data))
   return updatedItem
 }
 

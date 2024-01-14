@@ -1,14 +1,11 @@
-import { ShippingModel, ShippingRevision } from "@prisma/client";
-import { ShippingReturn, ShippingListReturn, ShippingListElement, PostShippingApiParams } from "@/lib/api/actions/ship-actions";
-import { Prisma } from '@prisma/client';
 import { FieldParam, FieldType } from "@/components/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";
-import { FileInfo } from "../file-io";
+import { ColumnsDef } from "../general-defines";
 
 const SHIP_PAGE_URL = globalConsts.url.shippingPage
 
-export const defaultGridColumnVisibility = {
+export const shipDefaultGridColumnVisibility = {
   ShipDate: true,
   ShipFrom: false,
   ShipTo: false,
@@ -30,13 +27,8 @@ export const defaultGridColumnVisibility = {
   ExportPermission: false,
 }
 
-type ColumnsDef = {
-  field: string,
-  headerName: string,
-  link?: (formData: any) => string
-}
 
-export const gridColumnsDef: ColumnsDef[] = [
+export const shipGridColumnsDef: ColumnsDef[] = [
 
   {
     field: "ShipDate",
@@ -108,6 +100,7 @@ export const gridColumnsDef: ColumnsDef[] = [
 
 ]
 
+
 export type ShipFormData = {
   ShipDate: string,
   Title: string,
@@ -129,8 +122,6 @@ export type ShipFormData = {
   AwbNo: string,
   ExportPermission: string,
 }
-
-
 
 export const componentInfo: FieldParam[] = [
   {
@@ -259,101 +250,3 @@ export const componentInfo: FieldParam[] = [
     rows: 2
   },
 ]
-
-export function toFormData(data: ShippingReturn | null) {
-  const param: ShipFormData = {
-    Title: data?.Title || "",
-    ShippingInvoicePrice: data?.ShippingInvoicePrice?.toString() || "0",
-    ShipDate: data?.ShipDate || "",
-    ShipFrom: data?.ShipFrom || "",
-    ShipTo: data?.ShipTo || "",
-    ShippingInvoiceCurrency: data?.ShippingInvoiceCurrency || "",
-    TradeTerm: data?.TradeTerm || "",
-    AcquisitionDate: data?.AcquisitionDate || "",
-    AcquisitionPrice: data?.AcquisitionPrice?.toString() || "0",
-    BookValue: data?.BookValue?.toString() || "0",
-    Defrayer: data?.Defrayer || "",
-    Comment: data?.Comment || "",
-    CommentAboutSale: data?.CommentAboutSale || "",
-    Gx: data?.Gx || "",
-    CommentAboutAcquisition: data?.CommentAboutAcquisition || "",
-    InvoiceNo: data?.InvoiceNo || "",
-    Carrier: data?.Carrier || "",
-    AwbNo: data?.AwbNo || "",
-    ExportPermission: data?.ExportPermission || "",
-
-  }
-  return param
-}
-
-type toPostDataParams = {
-  shipData: ShipFormData,
-  id: number | undefined,
-  files: FileInfo[]
-}
-
-export function toPostData({ shipData, id, files }: toPostDataParams) {
-  const param: PostShippingApiParams = {
-    ShippingModelId: id,
-    ShipDate: shipData?.ShipDate,
-    Title: shipData?.Title,
-    ShippingInvoicePrice: shipData?.ShippingInvoicePrice ? new Prisma.Decimal(shipData?.ShippingInvoicePrice) : new Prisma.Decimal(0),
-    ShipFrom: shipData?.ShipFrom,
-    ShipTo: shipData?.ShipTo,
-    ShippingInvoiceCurrency: shipData?.ShippingInvoiceCurrency,
-    TradeTerm: shipData?.TradeTerm,
-    AcquisitionDate: shipData?.AcquisitionDate,
-    AcquisitionPrice: shipData?.AcquisitionPrice ? new Prisma.Decimal(shipData?.AcquisitionPrice) : new Prisma.Decimal(0),
-
-    BookValue: shipData?.BookValue ? new Prisma.Decimal(shipData?.BookValue) : new Prisma.Decimal(0),
-    Defrayer: shipData?.Defrayer,
-    Comment: shipData?.Comment,
-    CommentAboutSale: shipData?.CommentAboutSale,
-    Gx: shipData?.Gx,
-    CommentAboutAcquisition: shipData?.CommentAboutAcquisition,
-    InvoiceNo: shipData?.InvoiceNo,
-    Carrier: shipData?.Carrier,
-    AwbNo: shipData?.AwbNo,
-    ExportPermission: shipData?.ExportPermission,
-    Files: files.map(f => ({
-      FileId: f.FileId,
-      Visible: f.Visible
-    }))
-  }
-  return param
-}
-
-export function toApiData(data: ShipFormData | null, id: number | undefined = undefined) {
-  const param: PostShippingApiParams = {
-    ShippingModelId: id,
-    ShipDate: data?.ShipDate,
-    Title: data?.Title,
-    ShippingInvoicePrice: data?.ShippingInvoicePrice ? new Prisma.Decimal(data?.ShippingInvoicePrice) : new Prisma.Decimal(0),
-    ShipFrom: data?.ShipFrom,
-    ShipTo: data?.ShipTo,
-    ShippingInvoiceCurrency: data?.ShippingInvoiceCurrency,
-    TradeTerm: data?.TradeTerm,
-    AcquisitionDate: data?.AcquisitionDate,
-    AcquisitionPrice: data?.AcquisitionPrice ? new Prisma.Decimal(data?.AcquisitionPrice) : new Prisma.Decimal(0),
-    BookValue: data?.BookValue ? new Prisma.Decimal(data?.BookValue) : new Prisma.Decimal(0),
-    Defrayer: data?.Defrayer,
-    Comment: data?.Comment,
-    CommentAboutSale: data?.CommentAboutSale,
-    Gx: data?.Gx,
-    CommentAboutAcquisition: data?.CommentAboutAcquisition,
-    InvoiceNo: data?.InvoiceNo,
-    Carrier: data?.Carrier,
-    AwbNo: data?.AwbNo,
-    ExportPermission: data?.ExportPermission,
-  }
-  return param
-}
-
-const ShipHandle = {
-  toFormData,
-  toPostData,
-  toApiData,
-  componentInfo
-}
-
-export default ShipHandle

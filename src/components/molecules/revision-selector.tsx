@@ -17,10 +17,8 @@ interface RevisionSelectorProps {
 }
 
 const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisionChange, initialSelectId }) => {
-  if (revisions.length == 0) {
-    return (<div></div>)
-  }
-  const selectedId = initialSelectId || revisions[0].id
+  const selectedId = initialSelectId || (revisions.length > 0 ? revisions[0].id : null);
+
   const [selectedRevision, setSelectedRevision] = useState(selectedId);
 
   const handleRevisionChange = (event: SelectChangeEvent<number>) => {
@@ -28,7 +26,9 @@ const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisi
     setSelectedRevision(revisionId);
     onRevisionChange(revisionId);
   };
-
+  if (!selectedRevision) {
+    return <div></div>;
+  }
   return (
     <Select
       value={selectedRevision}
