@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileInfo } from '@/lib/client/file-io';
+import { FileAtatchment } from '@/lib/data-handle/file/file.model';
 import { Button, List, ListItem, CircularProgress, Container, Typography, IconButton, Switch } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -7,19 +7,19 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { uploadFiles } from '@/lib/client/file-io';
 import { useDropzone } from 'react-dropzone';
 type FileUploadProps = {
-  initialFiles: FileInfo[],
-  onChange: (files: FileInfo[]) => void,
+  initialFiles: FileAtatchment[],
+  onChange: (files: FileAtatchment[]) => void,
 }
 
 export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps) {
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialFiles);
+  const [uploadedFiles, setUploadedFiles] = useState<FileAtatchment[]>(initialFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
   const [showAllFiles, setShowAllFiles] = useState<boolean>(false); // New state for show all toggle
 
 
   // visbleボタンを押したとき
-  const toggleFileVisibility = (fileId: number) => {
+  const toggleFileVisibility = (fileId: string) => {
     const newFiles = uploadedFiles.map(file =>
       file.FileId === fileId ? { ...file, Visible: !file.Visible } : file
     );
@@ -32,9 +32,10 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
   const uploadFileHandle = async (files: File[]) => {
     try {
       setIsUploading(true);
-      const comingFiles: FileInfo[] = await Promise.all(files.map(async f => await uploadFiles(f)))
+      const comingFiles = await Promise.all(files.map(async f => await uploadFiles(f)))
       if (comingFiles) {
-        const newFiles = [...uploadedFiles, ...comingFiles];
+        const attachedFiles: FileAtatchment[] = comingFiles.map(f => ({ ...f, Visible: true }))
+        const newFiles = [...uploadedFiles, ...attachedFiles];
         setUploadedFiles(newFiles);
         onChange(newFiles);
       }
@@ -54,7 +55,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
     }
   };
   //ファイル削除
-  const handleDelete = async (fileId: number) => {
+  const handleDelete = async (fileId: string) => {
     const newFiles = uploadedFiles.filter((file) => file.FileId !== fileId);
     setUploadedFiles(newFiles)
     onChange(newFiles)

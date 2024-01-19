@@ -6,7 +6,6 @@ export async function GET(
   request: NextRequest,
   context: { params: { fileId: string } },
 ): Promise<NextResponse> {
-  const fileId = parseInt(context.params.fileId)
-  const res = await createDownloadResponse(fileId)
+  const res = await createDownloadResponse(context.params.fileId)
   return res
 }

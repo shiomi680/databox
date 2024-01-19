@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../../organisms/general-form-panel';
+import { FileAtatchment } from '@/lib/data-handle/file/file.model';
 import { FileUploadComponent } from '../../organisms/file-panel';
-import { FileInfo } from '@/lib/client/file-io';
 import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 import { Button, Container, TextField } from '@mui/material';
 import { getItemAction, postItem } from '@/lib/data-handle/item/item-action';
@@ -32,7 +32,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
   const [formData, setFormData] = useState<ItemFormData>();
   const [commitComment, setCommitComment] = useState<string>("")
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<FileAtatchment[]>([]);
   const [tags, setTags] = useState<string[]>([])
   const { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading } = useFetchData(itemId, isNew, revisionId)
 
@@ -114,7 +114,7 @@ const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [revisions, setRevisions] = useState<Revision[]>([])
   const [initFormData, setInitFormData] = useState<ItemFormData>();
-  const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
+  const [initUploadedFiles, setInitUploadedFiles] = useState<FileAtatchment[]>([]);
   const [initTags, setInitTags] = useState<string[]>([]);
   const [tagOptions, setTagOptions] = useState<string[]>([])
 
@@ -150,7 +150,7 @@ const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
 
   return { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading };
 };
-const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: string[], commitComment: string, createNew: boolean, id?: number) => {
+const postDataApi = async (formData: ItemFormData, fileInfos: FileAtatchment[], tags: string[], commitComment: string, createNew: boolean, id?: number) => {
   const data = {
     itemData: formData,
     id: createNew ? undefined : id,
@@ -160,6 +160,7 @@ const postDataApi = async (formData: ItemFormData, fileInfos: FileInfo[], tags: 
   }
   const updatedItem = await postItem(ItemHandle.toPostData(data))
   return updatedItem
+
 }
 
 export default ItemContents;

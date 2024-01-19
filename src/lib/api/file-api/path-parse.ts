@@ -2,8 +2,8 @@
 import fs from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
-import { FileModel } from '@prisma/client'
 import { globalConsts } from '@/consts'
+import { File as FileModel } from '@/lib/data-handle/file/file.model'
 
 
 const STORAGE_DIR = globalConsts.localStorage.storageDir
@@ -33,8 +33,6 @@ export function relPathToAbsPath(relPath: string) {
 
 export function generateUrl(fileModel: FileModel) {
   return path.join(DOWNLOAD_API, fileModel.FileId.toString())
-
-
 }
 
 //被らない名前を付ける

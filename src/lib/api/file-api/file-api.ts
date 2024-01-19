@@ -3,17 +3,17 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import { existsSync, createReadStream } from 'fs'
 import path from 'path'
-import { FileModel } from '@prisma/client'
 import { ReadableOptions } from 'stream'
-import { prisma } from '../prisma'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { generateUniqueFilePath, absPathToRelPath, relPathToAbsPath, generateUrl } from './path-parse'
+import { File as FileModel } from '@/lib/data-handle/file/file.model'
+import { insertFileData, readFileData } from "@/lib/data-handle/file/file.operation"
 
 
-export type FileInfo = FileModel & {
+export type UploadResponse = FileModel & {
   Url: string;
-  Visible: boolean;
 }
+
 export function toFileInfo(fileModel: FileModel, visible: boolean = true) {
   const rtn = {
     ...fileModel,
@@ -23,12 +23,8 @@ export function toFileInfo(fileModel: FileModel, visible: boolean = true) {
   return rtn
 }
 
-export async function createDownloadResponse(fileId: number) {
-  const fileModel = await prisma.fileModel.findUnique({
-    where: {
-      FileId: fileId
-    }
-  })
+export async function createDownloadResponse(fileId: string) {
+  const fileModel = await readFileData(fileId)
   if (!fileModel || !fileModel.FilePath) {
     return NextResponse.json({ error: 'file is not found' })
   }
@@ -50,7 +46,7 @@ export async function createDownloadResponse(fileId: number) {
   return res;
 }
 
-export async function saveFile(file: File): Promise<FileInfo> {
+export async function saveFile(file: File) {
   //ファイルを適切な名前で保存してFileModelを登録する
 
   const fileArrayBuffer = await file.arrayBuffer()
@@ -59,19 +55,11 @@ export async function saveFile(file: File): Promise<FileInfo> {
   await fs.writeFile(filePath, Buffer.from(fileArrayBuffer))
 
   const relPath = absPathToRelPath(filePath)
-
-  const fileTable = await prisma.fileModel.create({
-    data: {
-      FileName: file.name,
-      FilePath: relPath,
-    },
-  })
-  const rtn: FileInfo = {
-    ...fileTable,
-    Url: generateUrl(fileTable),
-    Visible: true
+  const fileInfo = await insertFileData(file.name, relPath)
+  const rtn = {
+    ...fileInfo,
+    Url: generateUrl(fileInfo),
   }
-
   return rtn
 }
 

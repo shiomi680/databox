@@ -1,9 +1,9 @@
 
 import { globalConsts } from '@/consts'
-import { FileInfo } from "../api/file-api/file-api";
+import { UploadResponse } from "../api/file-api/file-api";
 const UPLOAD_URL = globalConsts.localStorage.uploadApi
 
-export async function uploadFiles(file: File): Promise<FileInfo> {
+export async function uploadFiles(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
   try {
@@ -11,7 +11,7 @@ export async function uploadFiles(file: File): Promise<FileInfo> {
       method: "POST",
       body: formData
     });
-    const rtn: FileInfo = await response.json()
+    const rtn: UploadResponse = await response.json()
     return rtn
   } catch (error) {
     console.error(error);
@@ -19,4 +19,4 @@ export async function uploadFiles(file: File): Promise<FileInfo> {
   }
 }
 
-export type { FileInfo }
+export type { UploadResponse }
