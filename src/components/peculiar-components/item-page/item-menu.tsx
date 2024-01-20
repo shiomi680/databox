@@ -32,7 +32,7 @@ export const ItemMenu: React.FC = () => {
       <ItemSelectorPanel
         modeLink={true}
         items={items}
-        idName={"ItemModelId"}
+        idName={"id"}
         defaultGridColumnVisibility={defaultGridColumnVisibility}
         gridColumnsDef={gridColumnsDef}
       />

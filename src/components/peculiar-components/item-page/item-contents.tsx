@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../../organisms/general-form-panel';
-import { FileAtatchment } from '@/lib/data-handle/file/file.model';
+import { FileAttachment } from '@/lib/db/file/file.model';
 import { FileUploadComponent } from '../../organisms/file-panel';
 import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 import { Button, Container, TextField } from '@mui/material';
-import { getItemAction, postItem } from '@/lib/data-handle/item/item-action';
+import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
 import ItemHandle from '@/lib/data-handle/item/item-convert';
 import { ItemFormData } from '@/lib/data-handle/item/item-defines';
 import AddToast, { toast } from '../../molecules/add-toast';
@@ -14,27 +14,26 @@ import { globalConsts } from '@/consts';
 import path from 'path';
 import TagsField from '../../molecules/tag-field';
 import { getTagList } from '@/lib/data-handle/tag/tag-action';
-import RevisionSelector, { Revision } from '../../molecules/revision-selector';
+import RevisionSelector from '../../molecules/revision-selector';
+import { RevisionInfo } from '@/lib/db/item/item.operation';
+import { Item, ItemInput } from '@/lib/db/item/item.model';
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
-  itemId: string;
+  itemId?: string;
   revisionId?: string;
   copy: boolean
 }
 
 function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps) {
-  const router = useRouter();
-  const isNew = itemId === 'new';
-  const itemIdInt = parseInt(itemId)
-  const revisionIdInt = revisionId ? parseInt(revisionId) : undefined
-
   const [formData, setFormData] = useState<ItemFormData>();
   const [commitComment, setCommitComment] = useState<string>("")
-  const [uploadedFiles, setUploadedFiles] = useState<FileAtatchment[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<FileAttachment[]>([]);
   const [tags, setTags] = useState<string[]>([])
-  const { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading } = useFetchData(itemId, isNew, revisionId)
+  const { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading } = useFetchData(itemId, revisionId)
+  const isNew = itemId ? false : true;
+  const router = useRouter();
 
   useEffect(() => {
     setFormData(initFormData)
@@ -44,14 +43,16 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
 
   const onSubmitForm = async (event: React.FormEvent) => {
+
     event.preventDefault();
     if (formData) {
       try {
-        const creation = isNew || copy
-        const updatedItem = await postDataApi(formData, uploadedFiles, tags, commitComment, creation, itemIdInt);
+        const creation = (isNew || copy)
+        const postId = creation ? undefined : itemId
+        const updatedItem = await postDataApi(formData, uploadedFiles, tags, commitComment, postId);
         toast.success(("sucessfully submitted!"))
-        if (creation && updatedItem) {
-          router.push(path.join(ITEM_PAGE_URL, updatedItem.ItemModelId.toString()))
+        if (creation && updatedItem && updatedItem?.id) {
+          router.push(path.join(ITEM_PAGE_URL, updatedItem.id.toString()))
         }
       } catch (error) {
         console.log(error)
@@ -61,8 +62,10 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
 
 
-  const handleRevisionChange = (revisionId: number) => {
-    router.push(path.join(ITEM_PAGE_URL, itemId.toString(), revisionId.toString()))
+  const handleRevisionChange = (revisionId: string) => {
+    if (itemId) {
+      router.push(path.join(ITEM_PAGE_URL, itemId, revisionId))
+    }
   };
 
   if (loading) {
@@ -75,7 +78,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
           <RevisionSelector
             revisions={revisions}
             onRevisionChange={handleRevisionChange}
-            initialSelectId={revisionIdInt}
+            initialSelectId={revisionId}
           />
         </div>
         <form onSubmit={onSubmitForm} >
@@ -110,23 +113,22 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
 
 
-const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
+const useFetchData = (itemId?: string, revisionId?: string) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [revisions, setRevisions] = useState<Revision[]>([])
+  const [revisions, setRevisions] = useState<RevisionInfo[]>([])
   const [initFormData, setInitFormData] = useState<ItemFormData>();
-  const [initUploadedFiles, setInitUploadedFiles] = useState<FileAtatchment[]>([]);
+  const [initUploadedFiles, setInitUploadedFiles] = useState<FileAttachment[]>([]);
   const [initTags, setInitTags] = useState<string[]>([]);
   const [tagOptions, setTagOptions] = useState<string[]>([])
-
+  const isNew = itemId ? false : true
   useEffect(() => {
     const fetchData = async () => {
-      if (isNew) {
+      if (isNew || !itemId) {
         const data = ItemHandle.toFormData(null)
         setInitFormData(data)
         setLoading(false)
       } else {
-        const revisionIdInt = revisionId ? parseInt(revisionId) : undefined
-        const apiData = await getItemAction(parseInt(itemId), revisionIdInt);
+        const apiData = await getItemAction(itemId, revisionId);
         const data = ItemHandle.toFormData(apiData)
         setInitFormData(data)
         setInitTags(apiData?.Tags ? apiData?.Tags : [])
@@ -134,11 +136,7 @@ const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
           setInitUploadedFiles(apiData.Files)
         }
         if (apiData?.Revisions) {
-          setRevisions(apiData.Revisions.map(revision => ({
-            id: revision.ItemRevisionId,
-            comment: revision.CommitComment,
-            createdAt: revision.createdAt,
-          })));
+          setRevisions(apiData.Revisions)
         }
         setLoading(false);
       }
@@ -150,17 +148,20 @@ const useFetchData = (itemId: string, isNew: boolean, revisionId?: string) => {
 
   return { initFormData, initUploadedFiles, initTags, tagOptions, revisions, loading };
 };
-const postDataApi = async (formData: ItemFormData, fileInfos: FileAtatchment[], tags: string[], commitComment: string, createNew: boolean, id?: number) => {
-  const data = {
-    itemData: formData,
-    id: createNew ? undefined : id,
-    files: fileInfos,
-    tags: tags,
-    commitComment: commitComment
+const postDataApi = async (formData: ItemFormData, fileInfos: FileAttachment[], tags: string[], commitComment: string, id?: string) => {
+  const item: ItemInput = {
+    id: id,
+    Cost: parseFloat(formData.Cost),
+    ItemName: formData.ItemName,
+    SalePrice: parseFloat(formData.SalePrice),
+    ModelNumber: formData.ModelNumber,
+    ItemDescription: formData.ItemDescription,
+    Files: fileInfos,
+    Tags: tags
   }
-  const updatedItem = await postItem(ItemHandle.toPostData(data))
-  return updatedItem
 
+  const updatedItem = await postItemAction(item, commitComment)
+  return updatedItem
 }
 
 export default ItemContents;

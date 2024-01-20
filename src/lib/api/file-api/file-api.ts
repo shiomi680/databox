@@ -6,15 +6,15 @@ import path from 'path'
 import { ReadableOptions } from 'stream'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { generateUniqueFilePath, absPathToRelPath, relPathToAbsPath, generateUrl } from './path-parse'
-import { File as FileModel } from '@/lib/data-handle/file/file.model'
-import { insertFileData, readFileData } from "@/lib/data-handle/file/file.operation"
+import { File as FileClass, FileAttachment } from '@/lib/db/file/file.model'
+import { insertFileData, readFileData } from "@/lib/db/file/file.operation"
 
 
-export type UploadResponse = FileModel & {
+export type UploadResponse = FileClass & {
   Url: string;
 }
 
-export function toFileInfo(fileModel: FileModel, visible: boolean = true) {
+export function toFileInfo(fileModel: FileClass, visible: boolean = true) {
   const rtn = {
     ...fileModel,
     Url: generateUrl(fileModel),

@@ -1,3 +1,4 @@
+
 import { ColumnsDef } from "../general-defines"
 import path from "path";
 import { FieldParam } from "@/components/molecules/grid-text-field";
@@ -9,12 +10,12 @@ export const gridColumnsDef: ColumnsDef[] = [
   {
     field: "ModelNumber",
     headerName: "Model Number",
-    link: (data: any) => path.join(ITEM_PAGE_URL, data.ItemModelId.toString())
+    link: (data: any) => path.join(ITEM_PAGE_URL, data.id.toString())
   },
   {
     field: "ItemName",
     headerName: "Item Name",
-    link: (data: any) => path.join(ITEM_PAGE_URL, data.ItemModelId.toString())
+    link: (data: any) => path.join(ITEM_PAGE_URL, data.id.toString())
   },
   {
     field: "ItemDescription",

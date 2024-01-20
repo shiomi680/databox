@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileAtatchment } from '@/lib/data-handle/file/file.model';
+import { FileAttachment, File as FileClass } from '@/lib/db/file/file.model';
 import { Button, List, ListItem, CircularProgress, Container, Typography, IconButton, Switch } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -7,12 +7,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { uploadFiles } from '@/lib/client/file-io';
 import { useDropzone } from 'react-dropzone';
 type FileUploadProps = {
-  initialFiles: FileAtatchment[],
-  onChange: (files: FileAtatchment[]) => void,
+  initialFiles: FileAttachment[],
+  onChange: (files: FileAttachment[]) => void,
 }
 
 export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps) {
-  const [uploadedFiles, setUploadedFiles] = useState<FileAtatchment[]>(initialFiles);
+  const [uploadedFiles, setUploadedFiles] = useState<FileAttachment[]>(initialFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
   const [showAllFiles, setShowAllFiles] = useState<boolean>(false); // New state for show all toggle
@@ -34,7 +34,11 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
       setIsUploading(true);
       const comingFiles = await Promise.all(files.map(async f => await uploadFiles(f)))
       if (comingFiles) {
-        const attachedFiles: FileAtatchment[] = comingFiles.map(f => ({ ...f, Visible: true }))
+        const attachedFiles: FileAttachment[] = comingFiles.map(f => ({
+          ...f,
+          FileId: f._id.toString(),
+          Visible: true
+        }))
         const newFiles = [...uploadedFiles, ...attachedFiles];
         setUploadedFiles(newFiles);
         onChange(newFiles);

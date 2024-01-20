@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { globalConsts } from '@/consts'
-import { File as FileModel } from '@/lib/data-handle/file/file.model'
+import { File as FileModel } from '@/lib/data-handle/file/_file.model'
 
 
 const STORAGE_DIR = globalConsts.localStorage.storageDir

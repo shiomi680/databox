@@ -2,27 +2,23 @@
 import React, { useState } from 'react';
 import { Select, MenuItem } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material';
+import { RevisionInfo } from '@/lib/db/item/item.operation';
 
-type Revision = {
-  id: number;
-  comment: string;
-  createdAt: string;
-}
 
 interface RevisionSelectorProps {
-  revisions: Revision[];
+  revisions: RevisionInfo[];
 
-  onRevisionChange: (revisionId: number) => void;
-  initialSelectId?: number;
+  onRevisionChange: (revisionId: string) => void;
+  initialSelectId?: string;
 }
 
 const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisionChange, initialSelectId }) => {
-  const selectedId = initialSelectId || (revisions.length > 0 ? revisions[0].id : null);
+  const selectedId = initialSelectId || (revisions.length > 0 ? revisions[0].id : undefined);
 
   const [selectedRevision, setSelectedRevision] = useState(selectedId);
 
-  const handleRevisionChange = (event: SelectChangeEvent<number>) => {
-    const revisionId = event.target.value as number;
+  const handleRevisionChange = (event: SelectChangeEvent<string>) => {
+    const revisionId = event.target.value as string;
     setSelectedRevision(revisionId);
     onRevisionChange(revisionId);
   };
@@ -37,8 +33,8 @@ const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisi
     >
       {revisions.map((revision) => (
         <MenuItem key={revision.id} value={revision.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ marginRight: '30px' }}>{revision.comment}</span>
-          <span>{` ${revision.createdAt}`}</span>
+          <span style={{ marginRight: '30px' }}>{revision.CommitComment}</span>
+          <span>{` ${revision.CreateAt}`}</span>
         </MenuItem>
       ))}
     </Select>
@@ -46,4 +42,4 @@ const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisi
 };
 
 export default RevisionSelector;
-export type { Revision }
+export type { RevisionInfo }

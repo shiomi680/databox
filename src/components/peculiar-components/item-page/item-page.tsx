@@ -43,8 +43,7 @@ function ItemPage({ itemId, revisionId, copy = false }: ParentComponentProps) {
             </div>
           </Link>
         )}
-
-        <ItemContents itemId={itemId} revisionId={revisionId} copy={copy} />
+        <ItemContents itemId={itemId != "new" ? itemId : undefined} revisionId={revisionId} copy={copy} />
       </Paper>
     </div>
   );

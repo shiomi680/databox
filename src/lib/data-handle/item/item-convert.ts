@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
+import { Item } from "@/lib/db/item/item.model";
 import { ItemReturn, PostItemApiParams } from "@/lib/data-handle/item/item-action";
-
-import { FileInfo } from "../../client/file-io";
 import { itemComponentInfo, ItemFormData } from "./item-defines";
+
+import { FileAttachment } from "@/lib/db/file/file.model";
 
 
 export function toFormData(data: ItemReturn | null) {
@@ -18,31 +18,23 @@ export function toFormData(data: ItemReturn | null) {
 
 type toPostDataParams = {
   itemData: ItemFormData,
-  id: number | undefined,
-  files: FileInfo[] | undefined
-  tags: string[]
-  commitComment: string
+  id: string | undefined,
 }
 
-export function toPostData({ itemData, id, files, tags, commitComment }: toPostDataParams) {
-  const param: PostItemApiParams = {
-    CommitComment: commitComment,
-    ItemModelId: id,
-    ModelNumber: itemData?.ModelNumber,
-    ItemName: itemData?.ItemName,
-    ItemDescription: itemData?.ItemDescription,
-    Cost: itemData?.Cost ? new Prisma.Decimal(parseFloat(itemData?.Cost)) : new Prisma.Decimal(0),
-    SalePrice: itemData?.SalePrice ? new Prisma.Decimal(parseFloat(itemData?.SalePrice)) : new Prisma.Decimal(0),
-    Files: files?.map(f => ({
-      FileId: f.FileId,
-      Visible: f.Visible
-    })) || [],
-    Tags: tags
+export function toPostData(itemData: ItemFormData, id?: string) {
+  const item = {
+    ModelNumber: itemData.ModelNumber,
+    ItemName: itemData.ItemName,
+    ItemDescription: itemData.ItemDescription,
+    Cost: parseFloat(itemData.Cost),
+    SalePrice: parseFloat(itemData.SalePrice),
+    Files: [],
+    Tags: [],
   }
-  return param
+  return item
 }
 
-const ItemHandle = {
+export const ItemHandle = {
   toFormData,
   toPostData
 }
