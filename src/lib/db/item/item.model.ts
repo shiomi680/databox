@@ -12,14 +12,7 @@ import { Types } from 'mongoose';
       virtuals: true,
       versionKey: false,
       transform: function (doc, ret) {
-        const id = ret._id
         delete ret._id;
-        // return {
-        //   ...ret,
-        //   id: id.toString()
-        // }
-
-
       }
     },
     toObject: { virtuals: true }
@@ -56,7 +49,7 @@ export class Item {
 
 }
 
-export type ItemInput = Omit<Item, '_id'>;
+export type ItemInput = Omit<Item, '_id' | "id"> & { id?: string };
 // export const ItemModel = getModelForClass(Item);
 export const ItemModel = (mongoose.models.Item || getModelForClass(Item)) as mongoose.Model<mongoose.Document<unknown, {}> & Item>;
 
@@ -86,7 +79,7 @@ export class RevisionBase {
   @prop()
   ObjectId: string;
 
-  @prop()
+  @prop({ required: true, default: () => new Date().toISOString() })
   CreateAt: string;
 
   @prop()

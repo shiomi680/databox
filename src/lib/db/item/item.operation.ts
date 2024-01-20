@@ -21,7 +21,7 @@ export async function addNewItem(item: ItemInput, commitComment: string) {
   });
   await revision.save();
 
-  return await itemAddRevisions(savedItem.toJSON(), savedItem._id.toString());
+  return await itemAddRevisions(savedItem.toJSON(), savedItem.id);
 
 }
 
@@ -79,7 +79,7 @@ export type RevisionInfo = {
 
 async function getTargetItemsRevisions(objectId: string) {
   await connectDB()
-  const revisions = await ItemRevisionModel.find({ ObjectId: objectId }, "_id CommitComment CreateAt");
+  const revisions = await ItemRevisionModel.find({ ObjectId: objectId }, "_id CommitComment CreateAt").sort('-CreateAt');
   const rtn: RevisionInfo[] = revisions.map(x => x.toJSON())
   return rtn
 }
@@ -89,6 +89,7 @@ async function itemAddRevisions(item: Item, objectId: string) {
   const revisions = await getTargetItemsRevisions(objectId)
   return {
     ...item,
+    id: item.id,
     Revisions: revisions
   };
 }

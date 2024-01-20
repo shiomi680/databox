@@ -51,7 +51,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
         const postId = creation ? undefined : itemId
         const updatedItem = await postDataApi(formData, uploadedFiles, tags, commitComment, postId);
         toast.success(("sucessfully submitted!"))
-        if (creation && updatedItem && updatedItem?.id) {
+        if (creation && updatedItem && updatedItem.id) {
           router.push(path.join(ITEM_PAGE_URL, updatedItem.id.toString()))
         }
       } catch (error) {
