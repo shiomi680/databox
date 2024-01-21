@@ -13,7 +13,7 @@ export async function addNewShipping(ship: ShippingInput, commitComment: string)
   });
   await revision.save();
 
-  return await shipAddRevisions(savedShipping.toJSON(), savedShipping.id);
+  return await shipAddRevisions(savedShipping.toJSON(), savedShipping.Id);
 }
 
 export async function updateShipping(id: string, ship: ShippingInput, commitComment: string) {
@@ -25,12 +25,12 @@ export async function updateShipping(id: string, ship: ShippingInput, commitComm
 
   const revision = new ShippingRevisionModel({
     Shipping: updatedShipping,
-    ObjectId: updatedShipping.id,
+    ObjectId: updatedShipping.Id,
     CommitComment: commitComment
   });
   await revision.save();
 
-  return await shipAddRevisions(updatedShipping.toJSON(), updatedShipping.id);
+  return await shipAddRevisions(updatedShipping.toJSON(), updatedShipping.Id);
 }
 
 export async function readShippingList() {
@@ -61,7 +61,7 @@ export async function readShippingByRevision(shipId: string, revisionId: string)
 }
 
 export type RevisionInfo = {
-  id: string,
+  Id: string,
   CommitComment: string,
   CreateAt: string
 }
@@ -78,7 +78,7 @@ async function shipAddRevisions(ship: Shipping, objectId: string) {
   const revisions = await getTargetShippingsRevisions(objectId)
   return {
     ...ship,
-    id: ship.id,
+    id: ship.Id,
     Revisions: revisions
   };
 }

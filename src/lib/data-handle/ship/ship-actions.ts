@@ -18,8 +18,8 @@ export async function getShippingAction(Id: string, revisonId?: string) {
 }
 
 export async function postShippingAction(ship: ShippingInput, commitComment: string) {
-  if (ship.id) {
-    return await updateShipping(ship.id.toString(), ship, commitComment)
+  if (ship.Id) {
+    return await updateShipping(ship.Id.toString(), ship, commitComment)
   } else {
     return await addNewShipping(ship, commitComment)
   }

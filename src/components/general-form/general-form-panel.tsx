@@ -1,45 +1,30 @@
 'use client'
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { FieldParam, GridTextField } from './molecules/grid-text-field';
+import { useForm, Control } from 'react-hook-form';
+import { FieldParam, GridTextField } from "./molecules/grid-text-field"
 // MUI imports
 import { Container, Grid } from '@mui/material'
 
 
 type GeneralFormProps = {
-  initialData: any,
   fieldParams: FieldParam[]
-  onChange: (data: any) => void,
+  control: Control<any, any>
 
 }
 
 export type { FieldParam }
 
-export function GeneralForm({ initialData, fieldParams, onChange }: GeneralFormProps) {
-  const { control, watch } = useForm<any>({
-    defaultValues: initialData
-  });
-
-  const handleFieldChange = (v: any) => {
-    const data = watch()
-    onChange(data);
-  };
-
+export const GeneralForm: React.FC<GeneralFormProps> = (
+  { fieldParams, control }) => {
   return (
-    <Container maxWidth="lg">
-      <form >
-        <Grid container spacing={3}>
-          {fieldParams.map((field: FieldParam) => (
-            <GridTextField
-              key={field.name}
-              fieldParam={field}
-              control={control}
-              handleFieldChange={handleFieldChange}
-              initialData={initialData[field.name]}
-            />
-          ))}
-        </Grid>
-      </form >
-    </Container >
+    <Grid container spacing={3}>
+      {fieldParams.map((field: FieldParam) => (
+        <GridTextField
+          key={field.name}
+          fieldParam={field}
+          control={control}
+        />
+      ))}
+    </Grid>
   );
 }

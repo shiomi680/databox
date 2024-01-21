@@ -20,7 +20,7 @@ export class Shipping {
   @prop({ default: () => new Types.ObjectId() })
   _id: Types.ObjectId;
 
-  public get id() {
+  public get Id() {
     return this._id.toString()
   }
 
@@ -87,7 +87,7 @@ export class Shipping {
 }
 
 
-export type ShippingInput = Omit<Shipping, '_id' | "id"> & { id?: string };
+export type ShippingInput = Omit<Shipping, '_id' | "Id"> & { Id?: string };
 export const ShippingModel = (mongoose.models.Shipping || getModelForClass(Shipping)) as mongoose.Model<mongoose.Document<unknown, {}> & Shipping>;
 
 @modelOptions({

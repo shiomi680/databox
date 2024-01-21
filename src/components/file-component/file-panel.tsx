@@ -22,14 +22,14 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
   const toggleFileVisibility = useCallback((fileId: string) => {
     const newFiles = uploadedFiles.map(file =>
-      file.id === fileId ? { ...file, Visible: !file.Visible } : file
+      file.Id === fileId ? { ...file, Visible: !file.Visible } : file
     );
     setUploadedFiles(newFiles);
     onChange(newFiles);
   }, [uploadedFiles, onChange]);
 
   const handleDelete = useCallback((fileId: string) => {
-    const newFiles = uploadedFiles.filter((file) => file.id !== fileId);
+    const newFiles = uploadedFiles.filter((file) => file.Id !== fileId);
     setUploadedFiles(newFiles)
     onChange(newFiles)
   }, [uploadedFiles, onChange]);
@@ -41,7 +41,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
       if (comingFiles) {
         const attachedFiles: FileAttachment[] = comingFiles.map(f => ({
           ...f,
-          id: f.id,
+          Id: f.Id,
           Visible: true
         }))
         const newFiles = [...uploadedFiles, ...attachedFiles];
@@ -101,7 +101,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
         <List style={{ marginTop: 20 }}>
           {visibleFiles.map((file) => (
             <FileItem
-              key={file.id}
+              key={file.Id}
               file={file}
               onToggleVisibility={toggleFileVisibility}
               onDelete={handleDelete}

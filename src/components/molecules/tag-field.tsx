@@ -1,41 +1,50 @@
 'use client'
 import React from 'react'
 import { Autocomplete, Chip, TextField } from '@mui/material'
+import { Controller } from 'react-hook-form'
 
 export type TagsFieldProps = {
   tagOptions: string[]
-  initialTags?: string[]
-  onTagsChange: (tags: string[]) => void
+  control: any
+  name: string
 }
-
 export const TagsField: React.FC<TagsFieldProps> = ({
   tagOptions,
-  initialTags = [],
-  onTagsChange,
+  control,
+  name
 }) => {
   return (
-    <Autocomplete
-      multiple
-      id="tags-filled"
-      options={tagOptions}
-      onChange={(event, newValue) => onTagsChange(newValue)}
-      defaultValue={initialTags}
-      freeSolo
-      renderTags={(value: readonly string[], getTagProps) =>
-        value.map((option: string, index: number) => (
-          <Chip variant="outlined" label={option} {...getTagProps({ index })} key={option} />
-        ))
-      }
-      renderInput={(params: any) => (
-        <TextField
-          {...params}
-          variant="filled"
-          label="tags"
-          placeholder="Favorites"
+    <Controller
+      name={name}
+      control={control}
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <Autocomplete
+          multiple
+          id="tags-filled"
+          options={tagOptions}
+          freeSolo
+          value={value || []}
+          onChange={(event, newValue) => {
+            onChange(newValue);
+          }}
+          renderTags={(value: readonly string[], getTagProps) =>
+            value.map((option: string, index: number) => (
+              <Chip variant="outlined" label={option} {...getTagProps({ index })} key={option} />
+            ))
+          }
+          renderInput={(params: any) => (
+            <TextField
+              {...params}
+              variant="filled"
+              label="tags"
+              placeholder="Favorites"
+            />
+          )}
         />
       )}
     />
   )
 }
+
 
 export default TagsField

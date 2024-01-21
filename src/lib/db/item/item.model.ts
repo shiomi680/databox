@@ -3,9 +3,7 @@ import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
 import { RevisionBase } from '../common/revision.model';
 
-// @post<Item>('save', function (doc) {
-//   doc.id = doc._id.toString();
-// })
+
 @modelOptions({
   options: { allowMixed: Severity.ALLOW },
   schemaOptions: {
@@ -23,7 +21,7 @@ export class Item {
   @prop({ default: () => new Types.ObjectId() })
   _id: Types.ObjectId;
 
-  public get id() {
+  public get Id() {
     return this._id.toString()
   }
 
@@ -50,7 +48,7 @@ export class Item {
 
 }
 
-export type ItemInput = Omit<Item, '_id' | "id"> & { id?: string };
+export type ItemInput = Omit<Item, '_id' | "Id"> & { Id?: string };
 // export const ItemModel = getModelForClass(Item);
 export const ItemModel = (mongoose.models.Item || getModelForClass(Item)) as mongoose.Model<mongoose.Document<unknown, {}> & Item>;
 

@@ -26,15 +26,15 @@ const linkStyle = {
 
 export const FileItem: React.FC<FileItemProps> = ({ file, onToggleVisibility, onDelete }) => {
   const handleToggleVisibility = useCallback(() => {
-    onToggleVisibility(file.id);
-  }, [file.id, onToggleVisibility]);
+    onToggleVisibility(file.Id);
+  }, [file.Id, onToggleVisibility]);
 
   const handleDelete = useCallback(() => {
-    onDelete(file.id);
-  }, [file.id, onDelete]);
+    onDelete(file.Id);
+  }, [file.Id, onDelete]);
 
   return (
-    <ListItem key={file.id} style={listItemStyle}>
+    <ListItem key={file.Id} style={listItemStyle}>
       <IconButton onClick={handleToggleVisibility}>
         {file.Visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
       </IconButton>

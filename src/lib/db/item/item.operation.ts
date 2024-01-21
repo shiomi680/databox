@@ -21,7 +21,7 @@ export async function addNewItem(item: ItemInput, commitComment: string) {
   });
   await revision.save();
 
-  return await itemAddRevisions(savedItem.toJSON(), savedItem.id);
+  return await itemAddRevisions(savedItem.toJSON(), savedItem.Id);
 
 }
 
@@ -34,12 +34,12 @@ export async function updateItem(id: string, item: ItemInput, commitComment: str
 
   const revision = new ItemRevisionModel({
     Item: updatedItem,
-    ObjectId: updatedItem.id,
+    ObjectId: updatedItem.Id,
     CommitComment: commitComment
   });
   await revision.save();
 
-  return await itemAddRevisions(updatedItem.toJSON(), updatedItem.id);
+  return await itemAddRevisions(updatedItem.toJSON(), updatedItem.Id);
 }
 
 export async function readItemList() {
@@ -71,7 +71,7 @@ export async function readItemByRevision(itemId: string, revisionId: string) {
 }
 
 export type RevisionInfo = {
-  id: string,
+  Id: string,
   CommitComment: string,
   CreateAt: string
 }
@@ -89,7 +89,7 @@ async function itemAddRevisions(item: Item, objectId: string) {
   const revisions = await getTargetItemsRevisions(objectId)
   return {
     ...item,
-    id: item.id,
+    Id: item.Id,
     Revisions: revisions
   };
 }

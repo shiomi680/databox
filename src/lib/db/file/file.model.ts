@@ -1,4 +1,4 @@
-import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre } from '@typegoose/typegoose';
+import { prop, getModelForClass, modelOptions, Severity, mongoose, pre } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
 
 @modelOptions({
@@ -15,7 +15,7 @@ export class File {
   @prop({ default: () => new Types.ObjectId() })
   _id: Types.ObjectId;
 
-  public get id() {
+  public get Id() {
     return this._id.toString()
   }
 
@@ -37,7 +37,7 @@ export const FileModel = (mongoose.models.File || getModelForClass(File)) as mon
 // @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class FileAttachment {
   @prop()
-  id: string;
+  Id: string;
 
   @prop()
   Url: string;

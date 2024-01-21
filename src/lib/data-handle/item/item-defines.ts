@@ -3,6 +3,7 @@ import { ColumnsDef } from "../general-defines"
 import path from "path";
 import { FieldParam } from "@/components/general-form/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
+import { FileAttachment } from "@/lib/db/file/file.model";
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 //左のテーブル
@@ -10,12 +11,12 @@ export const gridColumnsDef: ColumnsDef[] = [
   {
     field: "ModelNumber",
     headerName: "Model Number",
-    link: (data: any) => path.join(ITEM_PAGE_URL, data.id.toString())
+    link: (data: any) => path.join(ITEM_PAGE_URL, data.Id.toString())
   },
   {
     field: "ItemName",
     headerName: "Item Name",
-    link: (data: any) => path.join(ITEM_PAGE_URL, data.id.toString())
+    link: (data: any) => path.join(ITEM_PAGE_URL, data.Id.toString())
   },
   {
     field: "ItemDescription",
@@ -92,6 +93,8 @@ export type ItemFormData = {
   ItemDescription: string,
   Cost: string,
   SalePrice: string,
+  Files: FileAttachment[],
+  Tags: string[]
 }
 
 export const itemFormDefault: ItemFormData = {
@@ -100,4 +103,6 @@ export const itemFormDefault: ItemFormData = {
   ItemDescription: "",
   Cost: "",
   SalePrice: "",
+  Files: [],
+  Tags: []
 }

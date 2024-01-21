@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { ShippingReturn, PostShippingApiParams } from "@/lib/data-handle/ship/ship-actions";
-import { FileAttachment } from "@/lib/db/file/file.model";
-
+import { FileInfo } from "../../client/file-io";
 import { componentInfo, ShipFormData } from "./ship-defines";
 
 export function toFormData(data: ShippingReturn | null) {
@@ -32,23 +31,26 @@ export function toFormData(data: ShippingReturn | null) {
 
 type toPostDataParams = {
   shipData: ShipFormData,
-  id: string | undefined,
-  files: FileAttachment[],
+  id: number | undefined,
+  files: FileInfo[],
+  commitComment: string
 }
 
-export function toPostData({ shipData, id, files }: toPostDataParams) {
-  const param = {
+export function toPostData({ shipData, id, files, commitComment }: toPostDataParams) {
+  const param: PostShippingApiParams = {
+    CommitComment: commitComment,
+    ShippingModelId: id,
     ShipDate: shipData?.ShipDate,
     Title: shipData?.Title,
-    ShippingInvoicePrice: shipData?.ShippingInvoicePrice ? parseFloat(shipData?.ShippingInvoicePrice) : 0,
+    ShippingInvoicePrice: shipData?.ShippingInvoicePrice ? new Prisma.Decimal(shipData?.ShippingInvoicePrice) : new Prisma.Decimal(0),
     ShipFrom: shipData?.ShipFrom,
     ShipTo: shipData?.ShipTo,
     ShippingInvoiceCurrency: shipData?.ShippingInvoiceCurrency,
     TradeTerm: shipData?.TradeTerm,
     AcquisitionDate: shipData?.AcquisitionDate,
-    AcquisitionPrice: shipData?.AcquisitionPrice ? parseFloat(shipData?.AcquisitionPrice) : 0,
+    AcquisitionPrice: shipData?.AcquisitionPrice ? new Prisma.Decimal(shipData?.AcquisitionPrice) : new Prisma.Decimal(0),
 
-    BookValue: shipData?.BookValue ? parseFloat(shipData?.BookValue) : 0,
+    BookValue: shipData?.BookValue ? new Prisma.Decimal(shipData?.BookValue) : new Prisma.Decimal(0),
     Defrayer: shipData?.Defrayer,
     Comment: shipData?.Comment,
     CommentAboutSale: shipData?.CommentAboutSale,
@@ -58,7 +60,10 @@ export function toPostData({ shipData, id, files }: toPostDataParams) {
     Carrier: shipData?.Carrier,
     AwbNo: shipData?.AwbNo,
     ExportPermission: shipData?.ExportPermission,
-    Files: files
+    Files: files.map(f => ({
+      FileId: f.FileId,
+      Visible: f.Visible
+    }))
   }
   return param
 }

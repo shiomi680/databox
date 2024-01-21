@@ -1,28 +1,26 @@
-import { Item } from "@/lib/db/item/item.model";
-import { ItemReturn, PostItemApiParams } from "@/lib/data-handle/item/item-action";
-import { itemComponentInfo, ItemFormData } from "./item-defines";
+import { Item, ItemInput } from "@/lib/db/item/item.model";
+import { itemComponentInfo, ItemFormData, itemFormDefault } from "./item-defines";
 
-import { FileAttachment } from "@/lib/db/file/file.model";
-
-
-export function toFormData(data: ItemReturn | null) {
-  const param: ItemFormData = {
-    ModelNumber: data?.ModelNumber || "",
-    ItemName: data?.ItemName || "",
-    ItemDescription: data?.ItemDescription || "",
-    Cost: data?.Cost?.toString() || "0",
-    SalePrice: data?.SalePrice?.toString() || "0",
+export function toFormData(item?: Item) {
+  if (item) {
+    const param: ItemFormData = {
+      ModelNumber: item.ModelNumber,
+      ItemName: item.ItemName,
+      ItemDescription: item.ItemDescription,
+      Cost: item.Cost.toString(),
+      SalePrice: item.SalePrice.toString(),
+      Tags: item.Tags,
+      Files: item.Files
+    }
+    return param
+  } else {
+    return itemFormDefault
   }
-  return param
-}
-
-type toPostDataParams = {
-  itemData: ItemFormData,
-  id: string | undefined,
 }
 
 export function toPostData(itemData: ItemFormData, id?: string) {
-  const item = {
+  const item: ItemInput = {
+    Id: id,
     ModelNumber: itemData.ModelNumber,
     ItemName: itemData.ItemName,
     ItemDescription: itemData.ItemDescription,

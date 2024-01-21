@@ -23,7 +23,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
   // visbleボタンを押したとき
   const toggleFileVisibility = (fileId: string) => {
     const newFiles = uploadedFiles.map(file =>
-      file.id === fileId ? { ...file, Visible: !file.Visible } : file
+      file.Id === fileId ? { ...file, Visible: !file.Visible } : file
     );
     setUploadedFiles(newFiles);
     onChange(newFiles);
@@ -38,7 +38,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
       if (comingFiles) {
         const attachedFiles: FileAttachment[] = comingFiles.map(f => ({
           ...f,
-          id: f.id,
+          id: f.Id,
           Visible: true
         }))
         const newFiles = [...uploadedFiles, ...attachedFiles];
@@ -62,7 +62,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
   };
   //ファイル削除
   const handleDelete = async (fileId: string) => {
-    const newFiles = uploadedFiles.filter((file) => file.id !== fileId);
+    const newFiles = uploadedFiles.filter((file) => file.Id !== fileId);
     setUploadedFiles(newFiles)
     onChange(newFiles)
   }
@@ -88,7 +88,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
       field: 'Visible',
       headerName: 'Visible',
       renderCell: (params) => (
-        <IconButton onClick={() => toggleFileVisibility(params.row.id)}>
+        <IconButton onClick={() => toggleFileVisibility(params.row.Id)}>
           {params.row.Visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
         </IconButton>
       ),
@@ -112,7 +112,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
         <Button startIcon={<DeleteIcon />}
           variant="outlined"
           color="secondary"
-          onClick={() => handleDelete(params.row.id)}>
+          onClick={() => handleDelete(params.row.Id)}>
           Delete
         </Button>
       ),
@@ -153,7 +153,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
           <DataGrid
             rows={uploadedFiles.filter(file => showAllFiles || file.Visible)}
             columns={columns}
-            getRowId={(row) => row.id}
+            getRowId={(row) => row.Id}
             slots={{ toolbar: GridToolbar }}
           />
         </div>

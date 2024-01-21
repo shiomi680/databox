@@ -1,9 +1,9 @@
 'use client'
-import { ControlledTextField } from "./controlled-text-field"
+import { ControlledTextField } from "../atoms/controlled-text-field"
 
 import { Grid } from '@mui/material'
 import { Control } from "react-hook-form"
-import { SelectableField } from "./selectable-filed"
+import { SelectableField } from "../atoms/selectable-filed"
 
 export enum FieldType {
   date = "date",
@@ -21,23 +21,19 @@ export type FieldParam = {
 }
 export type GridTextFieldParams = {
   fieldParam: FieldParam,
-  initialData: string,
-  handleFieldChange: (v: any) => void,
   control: Control<any, any>
 
 }
-
-export function GridTextField({ fieldParam, initialData, handleFieldChange, control }: GridTextFieldParams) {
+export const GridTextField: React.FC<GridTextFieldParams> = (
+  { fieldParam, control }) => {
   if (fieldParam.type == "select") {
     return (
       <Grid item xs={fieldParam.gridSize} key={fieldParam.name}>
         <SelectableField
           name={fieldParam.name}
           control={control}
-          defaultValue={initialData}
           label={fieldParam.title ? fieldParam.title : fieldParam.name}
           choices={fieldParam.choices ? fieldParam.choices : []}
-          onChangeValue={handleFieldChange}
           fullWidth
         />
       </Grid>
@@ -48,13 +44,10 @@ export function GridTextField({ fieldParam, initialData, handleFieldChange, cont
         <ControlledTextField
           name={fieldParam.name}
           control={control}
-          defaultValue={initialData}
           type={fieldParam.type}
           label={fieldParam.title ? fieldParam.title : fieldParam.name}
           fullWidth
-          onChangeValue={handleFieldChange}
           rows={fieldParam.rows}
-
         />
       </Grid>
 

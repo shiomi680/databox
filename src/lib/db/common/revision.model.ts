@@ -16,7 +16,7 @@ export class RevisionBase {
   @prop({ default: () => new Types.ObjectId() })
   _id: Types.ObjectId;
 
-  public get id() {
+  public get Id() {
     return this._id.toString()
   }
 

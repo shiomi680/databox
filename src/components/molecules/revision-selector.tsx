@@ -13,7 +13,7 @@ interface RevisionSelectorProps {
 }
 
 const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisionChange, initialSelectId }) => {
-  const selectedId = initialSelectId || (revisions.length > 0 ? revisions[0].id : undefined);
+  const selectedId = initialSelectId || (revisions.length > 0 ? revisions[0].Id : undefined);
 
   const [selectedRevision, setSelectedRevision] = useState(selectedId);
 
@@ -32,7 +32,7 @@ const RevisionSelector: React.FC<RevisionSelectorProps> = ({ revisions, onRevisi
       style={{ marginRight: '10px' }}
     >
       {revisions.map((revision) => (
-        <MenuItem key={revision.id} value={revision.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <MenuItem key={revision.Id} value={revision.Id} style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ marginRight: '30px' }}>{revision.CommitComment}</span>
           <span>{` ${revision.CreateAt}`}</span>
         </MenuItem>

@@ -6,10 +6,9 @@ import TextField from '@mui/material/TextField';
 type ControlledTextFieldProps = {
   name: string;
   control: any;
-  defaultValue: any;
   type: string;
+  rules?: any,
   label: string;
-  onChangeValue: (value: string | number) => void;
   fullWidth?: boolean;
   rows?: number;
 };
@@ -17,27 +16,26 @@ type ControlledTextFieldProps = {
 export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
   name,
   control,
-  defaultValue,
   type,
+  rules,
   label,
-  onChangeValue,
   fullWidth = false,
   rows,
 }) => {
   return (
+
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
-      render={({ field: { onChange, value, ref } }) => (
+      rules={rules}
+      render={({ field }) => (
         <TextField
-          value={value}
+          {...field}
           type={type}
           label={label}
           fullWidth={fullWidth}
           multiline={Boolean(rows && rows > 1)}
           rows={rows}
-          inputRef={ref}
 
         />
       )}
