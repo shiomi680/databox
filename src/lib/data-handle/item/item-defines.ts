@@ -1,7 +1,7 @@
 
 import { ColumnsDef } from "../general-defines"
 import path from "path";
-import { FieldParam } from "@/components/molecules/grid-text-field";
+import { FieldParam } from "@/components/general-form/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 

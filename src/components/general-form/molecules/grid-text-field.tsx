@@ -1,9 +1,9 @@
 'use client'
-import { ControlledTextField } from "../atoms/controlled-text-field"
+import { ControlledTextField } from "./controlled-text-field"
 
 import { Grid } from '@mui/material'
 import { Control } from "react-hook-form"
-import { SelectableField } from "../atoms/selectable-filed"
+import { SelectableField } from "./selectable-filed"
 
 export enum FieldType {
   date = "date",

@@ -38,10 +38,7 @@ export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
           multiline={Boolean(rows && rows > 1)}
           rows={rows}
           inputRef={ref}
-          onChange={(e) => {
-            onChange(e); // Call the method from react-hook-form
-            onChangeValue(e.target.value); // Call the custom method
-          }}
+
         />
       )}
     />

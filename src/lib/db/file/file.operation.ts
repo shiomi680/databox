@@ -7,7 +7,7 @@ export async function insertFileData(fileName: string, relPath: string) {
   await connectDB()
   const file = new FileModel({ FileName: fileName, FilePath: relPath })
   const savedFile = await file.save();
-  return savedFile;
+  return savedFile.toJSON();
 }
 
 export async function readFileData(id: string) {

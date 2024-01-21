@@ -1,9 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GeneralForm } from '../../organisms/general-form-panel';
+import { GeneralForm } from '../../general-form/general-form-panel';
 import { FileAttachment } from '@/lib/db/file/file.model';
-import { FileUploadComponent } from '../../organisms/file-panel';
+import { FileUploadComponent } from '../../file-component/file-panel';
 import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 import { Button, Container, TextField } from '@mui/material';
 import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
@@ -17,6 +17,7 @@ import { getTagList } from '@/lib/data-handle/tag/tag-action';
 import RevisionSelector from '../../molecules/revision-selector';
 import { RevisionInfo } from '@/lib/db/item/item.operation';
 import { Item, ItemInput } from '@/lib/db/item/item.model';
+import { FileUploadTableComponent } from '@/components/file-component/file-table';
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
@@ -97,6 +98,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
             />
           </div>
           <div style={{ marginTop: '20px' }}>
+            {/* <FileUploadTableComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} /> */}
             <FileUploadComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} />
           </div>
           <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>

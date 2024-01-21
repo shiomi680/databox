@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ItemSelectorPanel } from '../../selectors/menu-item-selector'
+import { ItemSelectorPanel } from '../../organisms/menu-item-selector'
 import { getItemListAction, ItemListElement } from '@/lib/data-handle/item/item-action'
 import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/data-handle/item/item-defines'
 import { Button, Link, Box } from "@mui/material";

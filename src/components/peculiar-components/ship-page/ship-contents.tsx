@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GeneralForm } from '../../organisms/general-form-panel';
-import { FileUploadComponent } from '../../organisms/file-panel';
+import { GeneralForm } from '../../general-form/general-form-panel';
+import { FileUploadComponent } from '../../file-component/file-panel';
 import { File as FileInfo, FileAttachment } from '@/lib/db/file/file.model';
 import { Button } from '@mui/material';
 import { ShipFormData, componentInfo } from '@/lib/data-handle/ship/ship-defines';

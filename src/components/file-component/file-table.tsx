@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { FileAttachment, File as FileClass } from '@/lib/db/file/file.model';
-import { Button, List, ListItem, CircularProgress, Container, Typography, IconButton, Switch } from '@mui/material';
+import { Button, CircularProgress, Container, IconButton, Switch } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { uploadFiles } from '@/lib/client/file-io';
 import { useDropzone } from 'react-dropzone';
+import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+
 type FileUploadProps = {
   initialFiles: FileAttachment[],
   onChange: (files: FileAttachment[]) => void,
 }
 
-export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps) {
+export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<FileAttachment[]>(initialFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
@@ -81,6 +83,43 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
 
   });
 
+  const columns: GridColDef[] = [
+    {
+      field: 'Visible',
+      headerName: 'Visible',
+      renderCell: (params) => (
+        <IconButton onClick={() => toggleFileVisibility(params.row.id)}>
+          {params.row.Visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+        </IconButton>
+      ),
+    },
+    {
+      field: 'FileName',
+      headerName: 'File Name',
+      renderCell: (params) => (
+        <a href={params.row.Url} download>
+          <span role="img" aria-label="file">
+            📄
+          </span>{' '}
+          {params.row.FileName}
+        </a>
+      ),
+    },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      renderCell: (params) => (
+        <Button startIcon={<DeleteIcon />}
+          variant="outlined"
+          color="secondary"
+          onClick={() => handleDelete(params.row.id)}>
+          Delete
+        </Button>
+      ),
+    },
+  ];
+
+
   return (
     <div {...getRootProps()}
       style={{
@@ -110,40 +149,14 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
       <input {...getInputProps()} />
       <Container>
         {isUploading && <CircularProgress />}
-        <List style={{ marginTop: 20 }}>
-          {uploadedFiles.filter(file => showAllFiles || file.Visible).map((file) => (
-            <ListItem
-              key={file.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '10px 0',
-                borderBottom: '1px solid #f0f0f0',
-              }}>
-              <IconButton onClick={() => toggleFileVisibility(file.id)}>
-                {file.Visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-              </IconButton>
-              <a
-                href={file.Url}
-                download
-                style={{ flex: 1, display: 'flex', alignItems: 'center', }}
-              >
-                <Typography variant="body1" style={{ marginRight: 10 }}>
-                  <span role="img" aria-label="file">
-                    📄
-                  </span>{' '}
-                  {file.FileName}
-                </Typography>
-              </a>
-              <Button startIcon={<DeleteIcon />}
-                variant="outlined"
-                color="secondary"
-                onClick={() => handleDelete(file.id)}>
-                Delete
-              </Button>
-            </ListItem>
-          ))}
-        </List>
+        <div style={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={uploadedFiles.filter(file => showAllFiles || file.Visible)}
+            columns={columns}
+            getRowId={(row) => row.id}
+            slots={{ toolbar: GridToolbar }}
+          />
+        </div>
       </Container>
     </div>
   )
