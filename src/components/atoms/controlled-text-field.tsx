@@ -2,6 +2,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
+import { Input } from './input';
 
 type ControlledTextFieldProps = {
   name: string;
@@ -30,19 +31,25 @@ export const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
       control={control}
       defaultValue={defaultValue}
       render={({ field: { onChange, value, ref } }) => (
-        <TextField
-          value={value}
-          type={type}
-          label={label}
-          fullWidth={fullWidth}
-          multiline={Boolean(rows && rows > 1)}
-          rows={rows}
-          inputRef={ref}
-          onChange={(e) => {
-            onChange(e); // Call the method from react-hook-form
-            onChangeValue(e.target.value); // Call the custom method
-          }}
-        />
+        <div>
+          <Input
+            aria-label={label}
+          >
+          </Input>
+          <TextField
+            value={value}
+            type={type}
+            label={label}
+            fullWidth={fullWidth}
+            multiline={Boolean(rows && rows > 1)}
+            rows={rows}
+            inputRef={ref}
+            onChange={(e) => {
+              onChange(e); // Call the method from react-hook-form
+              onChangeValue(e.target.value); // Call the custom method
+            }}
+          />
+        </div>
       )}
     />
   );

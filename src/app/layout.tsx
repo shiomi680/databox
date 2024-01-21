@@ -1,14 +1,16 @@
 import { Providers } from './providers'
 
-// import './globals.css'
-
+import './globals.css'
+import { cn } from "@/lib/utils"
 import type { Metadata } from 'next'
 import DataboxAppBar from '@/components/peculiar-components/layout/databox-appbar'
 
-import { Inter } from 'next/font/google'
+import { Inter as FontSans } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
-
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 export const metadata: Metadata = {
   title: 'Shipping List',
 
@@ -21,11 +23,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Providers>
-          <DataboxAppBar />
-          {children}</Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        {/* <Providers> */}
+        <DataboxAppBar />
+        {children}
+        {/* </Providers> */}
       </body>
     </html>
   )

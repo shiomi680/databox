@@ -5,7 +5,7 @@ import { GeneralForm } from '../../organisms/general-form-panel';
 import { FileAttachment } from '@/lib/db/file/file.model';
 import { FileUploadComponent } from '../../organisms/file-panel';
 import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
-import { Button, Container, TextField } from '@mui/material';
+import { Container, TextField } from '@mui/material';
 import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
 import ItemHandle from '@/lib/data-handle/item/item-convert';
 import { ItemFormData } from '@/lib/data-handle/item/item-defines';
@@ -17,6 +17,8 @@ import { getTagList } from '@/lib/data-handle/tag/tag-action';
 import RevisionSelector from '../../molecules/revision-selector';
 import { RevisionInfo } from '@/lib/db/item/item.operation';
 import { Item, ItemInput } from '@/lib/db/item/item.model';
+import { Button } from '@/components/atoms/button';
+import { Input } from '@/components/atoms/input';
 
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
@@ -103,7 +105,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
             <TextField label="Update message" style={{ marginRight: '10px' }} onChange={(e) => {
               setCommitComment(e.target.value)
             }} />
-            <Button type="submit" variant="contained">Submit</Button>
+            <Button type="submit" variant="default">Submit</Button>
           </div>
         </form>
       </Container >
