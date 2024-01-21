@@ -21,7 +21,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
   // visbleボタンを押したとき
   const toggleFileVisibility = (fileId: string) => {
     const newFiles = uploadedFiles.map(file =>
-      file.FileId === fileId ? { ...file, Visible: !file.Visible } : file
+      file.id === fileId ? { ...file, Visible: !file.Visible } : file
     );
     setUploadedFiles(newFiles);
     onChange(newFiles);
@@ -36,7 +36,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
       if (comingFiles) {
         const attachedFiles: FileAttachment[] = comingFiles.map(f => ({
           ...f,
-          FileId: f._id.toString(),
+          id: f.id,
           Visible: true
         }))
         const newFiles = [...uploadedFiles, ...attachedFiles];
@@ -60,7 +60,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
   };
   //ファイル削除
   const handleDelete = async (fileId: string) => {
-    const newFiles = uploadedFiles.filter((file) => file.FileId !== fileId);
+    const newFiles = uploadedFiles.filter((file) => file.id !== fileId);
     setUploadedFiles(newFiles)
     onChange(newFiles)
   }
@@ -113,14 +113,14 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
         <List style={{ marginTop: 20 }}>
           {uploadedFiles.filter(file => showAllFiles || file.Visible).map((file) => (
             <ListItem
-              key={file.FileId}
+              key={file.id}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 padding: '10px 0',
                 borderBottom: '1px solid #f0f0f0',
               }}>
-              <IconButton onClick={() => toggleFileVisibility(file.FileId)}>
+              <IconButton onClick={() => toggleFileVisibility(file.id)}>
                 {file.Visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
               <a
@@ -138,7 +138,7 @@ export function FileUploadComponent({ initialFiles, onChange }: FileUploadProps)
               <Button startIcon={<DeleteIcon />}
                 variant="outlined"
                 color="secondary"
-                onClick={() => handleDelete(file.FileId)}>
+                onClick={() => handleDelete(file.id)}>
                 Delete
               </Button>
             </ListItem>

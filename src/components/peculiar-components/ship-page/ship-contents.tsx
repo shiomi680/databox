@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GeneralForm } from '../../organisms/general-form-panel';
 import { FileUploadComponent } from '../../organisms/file-panel';
-import { FileInfo } from '@/lib/client/file-io';
+import { File as FileInfo, FileAttachment } from '@/lib/db/file/file.model';
 import { Button } from '@mui/material';
 import { ShipFormData, componentInfo } from '@/lib/data-handle/ship/ship-defines';
 import AddToast, { toast } from '../../molecules/add-toast';
-import { getShippingAction, createOrUpdateShippingAction } from '@/lib/data-handle/ship/ship-actions';
+import { getShippingAction, postShippingAction } from '@/lib/data-handle/ship/ship-actions';
 import { globalConsts } from '@/consts';
 import path from 'path';
 import { toFormData, toPostData } from '@/lib/data-handle/ship/ship-convert';
@@ -25,7 +25,7 @@ function ShipContents({ shipId }: ParentComponentProps) {
   const shipIdInt = parseInt(shipId)
 
   const [formData, setFormData] = useState<ShipFormData>();
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<FileAttachment[]>([]);
   const { initFormData, initUploadedFiles, loading } = useFetchData(shipId, isNew)
 
 
@@ -42,10 +42,10 @@ function ShipContents({ shipId }: ParentComponentProps) {
     event.preventDefault();
     if (formData) {
       try {
-        const updatedItem = await postDataApi(formData, uploadedFiles, isNew, shipIdInt);
+        const updatedItem = await postDataApi(formData, uploadedFiles, isNew, "", shipId);
         toast.success(("sucessfully submitted!"))
-        if (isNew && updatedItem?.ShippingModelId) {
-          router.push(path.join(SHIPPING_PAGE_URL, updatedItem.ShippingModelId.toString()))
+        if (isNew && updatedItem?.id) {
+          router.push(path.join(SHIPPING_PAGE_URL, updatedItem.id))
         }
       } catch (error) {
         console.log(error)
@@ -80,7 +80,7 @@ function ShipContents({ shipId }: ParentComponentProps) {
 const useFetchData = (shipId: string, isNew: boolean) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [initFormData, setInitFormData] = useState<ShipFormData>();
-  const [initUploadedFiles, setInitUploadedFiles] = useState<FileInfo[]>([]);
+  const [initUploadedFiles, setInitUploadedFiles] = useState<FileAttachment[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +89,7 @@ const useFetchData = (shipId: string, isNew: boolean) => {
         setInitFormData(data)
         setLoading(false)
       } else {
-        const apiData = await getShippingAction(parseInt(shipId));
+        const apiData = await getShippingAction(shipId);
         const data = toFormData(apiData)
         setInitFormData(data)
         if (apiData?.Files) {
@@ -103,14 +103,13 @@ const useFetchData = (shipId: string, isNew: boolean) => {
 
   return { initFormData, initUploadedFiles, loading };
 };
-const postDataApi = async (formData: ShipFormData, fileInfos: FileInfo[], createNew: boolean, id?: number) => {
+const postDataApi = async (formData: ShipFormData, fileInfos: FileAttachment[], createNew: boolean, commitComment: string, id?: string) => {
   const data = {
-    commitComment: "",
     shipData: formData,
     id: createNew ? undefined : id,
     files: fileInfos
   }
-  const updatedItem = await createOrUpdateShippingAction(toPostData(data))
+  const updatedItem = await postShippingAction(toPostData(data), commitComment)
   return updatedItem
 }
 

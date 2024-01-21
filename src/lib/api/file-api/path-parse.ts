@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { globalConsts } from '@/consts'
-import { File as FileModel } from '@/lib/data-handle/file/_file.model'
+import { File as FileInfo } from '@/lib/db/file/file.model'
 
 
 const STORAGE_DIR = globalConsts.localStorage.storageDir
@@ -31,8 +31,8 @@ export function relPathToAbsPath(relPath: string) {
   return path.join(FULL_STORAGE_DIR, relPath)
 }
 
-export function generateUrl(fileModel: FileModel) {
-  return path.join(DOWNLOAD_API, fileModel.FileId.toString())
+export function generateUrl(fileModel: FileInfo) {
+  return path.join(DOWNLOAD_API, fileModel.id)
 }
 
 //被らない名前を付ける

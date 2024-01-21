@@ -37,7 +37,7 @@ export const FileModel = (mongoose.models.File || getModelForClass(File)) as mon
 // @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class FileAttachment {
   @prop()
-  Id: string;
+  id: string;
 
   @prop()
   Url: string;
