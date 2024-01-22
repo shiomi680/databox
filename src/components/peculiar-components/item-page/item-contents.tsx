@@ -1,24 +1,28 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GeneralForm } from '../../general-form/general-form-panel';
-import { FileAttachment } from '@/lib/db/file/file.model';
-import { FileUploadComponent } from '../../file-component/file-panel';
-import { itemComponentInfo } from '@/lib/data-handle/item/item-defines';
-import { Button, Container } from '@mui/material';
-import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
-import ItemHandle from '@/lib/data-handle/item/item-convert';
-import { ItemFormData, itemFormDefault } from '@/lib/data-handle/item/item-defines';
-import AddToast, { toast } from '../../molecules/add-toast';
-import { globalConsts } from '@/consts';
-import path from 'path';
-import TagsField from '../../molecules/tag-field';
-import { getTagList } from '@/lib/data-handle/tag/tag-action';
-import RevisionSelector from '../../molecules/revision-selector';
-import { RevisionInfo, updateItem } from '@/lib/db/item/item.operation';
-import { ControlledTextField } from '@/components/general-form/atoms/controlled-text-field';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { Button, Container } from '@mui/material';
+import path from 'path';
 
+import { GeneralForm } from '../../general-form/general-form-panel';
+import { ControlledTextField } from '@/components/general-form/atoms/controlled-text-field';
+import TagsField from '../../molecules/tag-field';
+import RevisionSelector from '../../molecules/revision-selector';
+import AddToast, { toast } from '../../molecules/add-toast';
+import { FileControlComponent } from '@/components/file-component/file-control-panel';
+import { FileUploadComponent } from '../../file-component/file-panel';
+
+import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
+import { getTagList } from '@/lib/data-handle/tag/tag-action';
+import ItemHandle from '@/lib/data-handle/item/item-convert';
+
+import { FileAttachment } from '@/lib/db/file/file.model';
+import { ItemFormData, itemFormDefault, itemComponentInfo } from '@/lib/data-handle/item/item-defines';
+
+import { RevisionInfo } from '@/lib/db/item/item.operation';
+
+import { globalConsts } from '@/consts';
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 interface ParentComponentProps {
@@ -32,7 +36,6 @@ type InputForm = ItemFormData & {
 }
 
 function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps) {
-  const [uploadedFiles, setUploadedFiles] = useState<FileAttachment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [revisions, setRevisions] = useState<RevisionInfo[]>([])
   const [tagOptions, setTagOptions] = useState<string[]>([])
@@ -54,9 +57,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
           commitComment: ""
         }
         reset(formData)
-        if (apiData?.Files) {
-          setUploadedFiles(apiData.Files)
-        }
+
         if (apiData?.Revisions) {
           setRevisions(apiData.Revisions)
         }
@@ -77,7 +78,6 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
       const creation = (isNew || copy)
       const postId = creation ? undefined : itemId
       const item = ItemHandle.toPostData(formData, postId)
-      item.Files = uploadedFiles
       const updatedItem = await postItemAction(item, formData.commitComment)
       if (updatedItem?.Revisions) {
         setRevisions(updatedItem?.Revisions)
@@ -125,7 +125,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
         </div>
         <div style={{ marginTop: '20px' }}>
           {/* <FileUploadTableComponent initialFiles={uploadedFiles} onChange={setUploadedFiles} /> */}
-          <FileUploadComponent initialFiles={uploadedFiles} onChange={setUploadedFiles} />
+          <FileControlComponent control={control} name='files' />
         </div>
         <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>
           <ControlledTextField

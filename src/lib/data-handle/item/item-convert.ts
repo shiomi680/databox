@@ -26,8 +26,8 @@ export function toPostData(itemData: ItemFormData, id?: string) {
     ItemDescription: itemData.ItemDescription,
     Cost: parseFloat(itemData.Cost),
     SalePrice: parseFloat(itemData.SalePrice),
-    Files: [],
-    Tags: [],
+    Files: itemData.Files,
+    Tags: itemData.Tags
   }
   return item
 }
