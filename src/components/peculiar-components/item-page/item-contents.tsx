@@ -18,7 +18,8 @@ import ItemHandle from '@/lib/data-handle/item/item-convert';
 
 import { ItemFormData, itemFormDefault, itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 
-import { RevisionInfo } from '@/lib/db/item/item.operation';
+import { RevisionInfo } from "@/lib/db/common/revision.model";
+
 
 import { globalConsts } from '@/consts';
 const ITEM_PAGE_URL = globalConsts.url.itemPage

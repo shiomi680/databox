@@ -2,6 +2,12 @@ import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre } f
 import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
 
+export type RevisionInfo = {
+  Id: string,
+  CommitComment: string,
+  CreateAt: string
+}
+
 @modelOptions({
   options: { allowMixed: Severity.ALLOW },
   schemaOptions: {

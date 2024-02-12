@@ -1,5 +1,8 @@
 import { ItemModel, ItemRevisionModel, Item, ItemInput, ItemRevision } from "./item.model";
 import { connectDB } from "../db-connect";
+import { RevisionInfo } from "../common/revision.model";
+
+
 export async function addNewItem(item: ItemInput, commitComment: string) {
   await connectDB()
   // const newItem = new ItemModel(item);
@@ -70,11 +73,6 @@ export async function readItemByRevision(itemId: string, revisionId: string) {
   }
 }
 
-export type RevisionInfo = {
-  Id: string,
-  CommitComment: string,
-  CreateAt: string
-}
 
 
 async function getTargetItemsRevisions(objectId: string) {
