@@ -11,13 +11,11 @@ import TagsField from '../../molecules/tag-field';
 import RevisionSelector from '../../molecules/revision-selector';
 import AddToast, { toast } from '../../molecules/add-toast';
 import { FileControlComponent } from '@/components/file-component/file-control-panel';
-import { FileUploadComponent } from '../../file-component/file-panel';
 
 import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
 import { getTagList } from '@/lib/data-handle/tag/tag-action';
 import ItemHandle from '@/lib/data-handle/item/item-convert';
 
-import { FileAttachment } from '@/lib/db/file/file.model';
 import { ItemFormData, itemFormDefault, itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 
 import { RevisionInfo } from '@/lib/db/item/item.operation';
