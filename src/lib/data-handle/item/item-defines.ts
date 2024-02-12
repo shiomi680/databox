@@ -97,8 +97,8 @@ export const itemFormDefault: ItemFormData = {
   ModelNumber: "",
   ItemName: "",
   ItemDescription: "",
-  Cost: "",
-  SalePrice: "",
+  Cost: "0",
+  SalePrice: "0",
   Files: [],
   Tags: []
 }
