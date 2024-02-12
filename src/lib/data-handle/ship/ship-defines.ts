@@ -2,30 +2,10 @@ import { FieldParam, FieldType } from "@/components/general-form/molecules/grid-
 import { globalConsts } from "@/consts";
 import path from "path";
 import { ColumnsDef } from "../general-defines";
+import { FileAttachment } from "@/lib/db/file/file.model";
 
 const SHIP_PAGE_URL = globalConsts.url.shippingPage
 
-export const shipDefaultGridColumnVisibility = {
-  ShipDate: true,
-  ShipFrom: false,
-  ShipTo: false,
-  Title: true,
-  ShippingInvoicePrice: false,
-  ShippingInvoiceCurrency: false,
-  TradeTerm: false,
-  AcquisitionDate: false,
-  AcquisitionPrice: false,
-  BookValue: false,
-  Defrayer: false,
-  Comment: false,
-  CommentAboutSale: false,
-  Gx: false,
-  CommentAboutAcquisition: false,
-  InvoiceNo: false,
-  Carrier: false,
-  AwbNo: false,
-  ExportPermission: false,
-}
 
 
 export const shipGridColumnsDef: ColumnsDef[] = [
@@ -38,7 +18,7 @@ export const shipGridColumnsDef: ColumnsDef[] = [
   {
     field: 'Title',
     headerName: 'Title',
-    link: (data: any) => path.join(SHIP_PAGE_URL, data.ShippingModelId.toString())
+    link: (data: any) => path.join(SHIP_PAGE_URL, data.Id.toString())
   },
   {
     field: "ShipFrom",
@@ -99,29 +79,30 @@ export const shipGridColumnsDef: ColumnsDef[] = [
   },
 
 ]
-
-
-export type ShipFormData = {
-  ShipDate: string,
-  Title: string,
-  ShippingInvoicePrice: string,
-  ShipFrom: string,
-  ShipTo: string,
-  ShippingInvoiceCurrency: string,
-  TradeTerm: string,
-  AcquisitionDate: string,
-  AcquisitionPrice: string,
-  BookValue: string,
-  Defrayer: string,
-  Comment: string,
-  CommentAboutSale: string,
-  Gx: string,
-  CommentAboutAcquisition: string,
-  InvoiceNo: string,
-  Carrier: string,
-  AwbNo: string,
-  ExportPermission: string,
+export const shipDefaultGridColumnVisibility = {
+  ShipDate: true,
+  ShipFrom: false,
+  ShipTo: false,
+  Title: true,
+  ShippingInvoicePrice: false,
+  ShippingInvoiceCurrency: false,
+  TradeTerm: false,
+  AcquisitionDate: false,
+  AcquisitionPrice: false,
+  BookValue: false,
+  Defrayer: false,
+  Comment: false,
+  CommentAboutSale: false,
+  Gx: false,
+  CommentAboutAcquisition: false,
+  InvoiceNo: false,
+  Carrier: false,
+  AwbNo: false,
+  ExportPermission: false,
 }
+
+
+
 
 export const componentInfo: FieldParam[] = [
   {
@@ -250,3 +231,49 @@ export const componentInfo: FieldParam[] = [
     rows: 2
   },
 ]
+
+export type ShipFormData = {
+  ShipDate: string,
+  Title: string,
+  ShippingInvoicePrice: string,
+  ShipFrom: string,
+  ShipTo: string,
+  ShippingInvoiceCurrency: string,
+  TradeTerm: string,
+  AcquisitionDate: string,
+  AcquisitionPrice: string,
+  BookValue: string,
+  Defrayer: string,
+  Comment: string,
+  CommentAboutSale: string,
+  Gx: string,
+  CommentAboutAcquisition: string,
+  InvoiceNo: string,
+  Carrier: string,
+  AwbNo: string,
+  ExportPermission: string,
+  Files: FileAttachment[],
+}
+
+export const shipFormDefault: ShipFormData = {
+  ShipDate: "",
+  Title: "",
+  ShippingInvoicePrice: "0",
+  ShipFrom: "AGG",
+  ShipTo: "AGM",
+  ShippingInvoiceCurrency: "JPY",
+  TradeTerm: "",
+  AcquisitionDate: "",
+  AcquisitionPrice: "0",
+  BookValue: "",
+  Defrayer: "有償",
+  Comment: "",
+  CommentAboutSale: "",
+  Gx: "",
+  CommentAboutAcquisition: "",
+  InvoiceNo: "",
+  Carrier: "",
+  AwbNo: "",
+  ExportPermission: "",
+  Files: []
+}

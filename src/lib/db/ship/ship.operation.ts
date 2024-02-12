@@ -1,5 +1,6 @@
 import { ShippingModel, ShippingRevisionModel, Shipping, ShippingInput, ShippingRevision } from "./ship.model";
 import { connectDB } from "../db-connect";
+import { RevisionInfo } from "../common/revision.model";
 
 export async function addNewShipping(ship: ShippingInput, commitComment: string) {
   await connectDB()
@@ -60,12 +61,6 @@ export async function readShippingByRevision(shipId: string, revisionId: string)
   }
 }
 
-export type RevisionInfo = {
-  Id: string,
-  CommitComment: string,
-  CreateAt: string
-}
-
 async function getTargetShippingsRevisions(objectId: string) {
   await connectDB()
   const revisions = await ShippingRevisionModel.find({ ObjectId: objectId }, "_id CommitComment CreateAt").sort('-CreateAt');
@@ -78,7 +73,7 @@ async function shipAddRevisions(ship: Shipping, objectId: string) {
   const revisions = await getTargetShippingsRevisions(objectId)
   return {
     ...ship,
-    id: ship.Id,
+    Id: ship.Id,
     Revisions: revisions
   };
 }
