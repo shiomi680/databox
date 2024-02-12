@@ -3,6 +3,7 @@ import { ColumnsDef } from "../general-defines"
 import path from "path";
 import { FieldParam } from "@/components/general-form/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
+import { FieldType } from "@/components/general-form/molecules/grid-text-field";
 import { FileAttachment } from "@/lib/db/file/file.model";
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
@@ -46,43 +47,38 @@ export const defaultGridColumnVisibility = {
 }
 
 
-enum fieldType {
-  date = "date",
-  number = "number",
-  text = "text"
-}
 
 //content画面の設定
 export const itemComponentInfo: FieldParam[] = [
   {
     name: "ModelNumber",
     title: "Model Number",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "ItemName",
     title: "Item Name",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12
   },
   {
     name: "ItemDescription",
     title: "Item Description",
-    type: fieldType.text,
+    type: FieldType.text,
     gridSize: 12,
     rows: 4
   },
   {
     name: "Cost",
     title: "Cost",
-    type: fieldType.number,
+    type: FieldType.number,
     gridSize: 6
   },
   {
     name: "SalePrice",
     title: "Sale Price",
-    type: fieldType.number,
+    type: FieldType.number,
     gridSize: 6
   },
 ]
