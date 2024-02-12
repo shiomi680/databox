@@ -125,7 +125,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
         </div>
         <div style={{ marginTop: '20px' }}>
           {/* <FileUploadTableComponent initialFiles={uploadedFiles} onChange={setUploadedFiles} /> */}
-          <FileControlComponent control={control} name='files' />
+          <FileControlComponent control={control} name='Files' />
         </div>
         <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>
           <ControlledTextField
