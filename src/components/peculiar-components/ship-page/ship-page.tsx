@@ -4,12 +4,16 @@ import { MenuBar } from "../../layout/menu-bar";
 import ShipMenu from "./ship-menu";
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";
 import { globalConsts } from "@/consts";
+import path from "path";
 
+const SHIP_PAGE_URL = globalConsts.url.shippingPage
 interface ParentComponentProps {
   shipId: string;
+  revisionId?: string;
+  copy?: boolean;
 }
 
-function ShipPage({ shipId }: ParentComponentProps) {
+const ShipPage: React.FC<ParentComponentProps> = ({ shipId, revisionId, copy }) => {
   return (<div style={{ display: 'flex' }}>
     <MenuBar>
       <ShipMenu></ShipMenu>
@@ -27,7 +31,16 @@ function ShipPage({ shipId }: ParentComponentProps) {
       <Typography variant="h4" gutterBottom>
         Shipping form
       </Typography>
-      <ShipContents shipId={shipId} />
+      {shipId !== "new" && (
+        <Link href={path.join(SHIP_PAGE_URL, "copy", shipId)} >
+          <div style={{ marginBottom: '20px' }} >
+            <Button variant="contained" color="primary" >
+              COPY
+            </Button>
+          </div>
+        </Link>
+      )}
+      <ShipContents shipId={shipId != "new" ? shipId : undefined} revisionId={revisionId} copy={copy} />
     </Paper>
 
   </div>)
