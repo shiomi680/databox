@@ -35,7 +35,7 @@ export const ShipMenu: React.FC = () => {
         </div>
       </Link>
       <ItemSelectorPanel
-        idName={"id"}
+        idName={"Id"}
         modeLink={true}
         items={items}
         defaultGridColumnVisibility={shipDefaultGridColumnVisibility}
