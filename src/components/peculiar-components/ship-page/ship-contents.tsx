@@ -43,17 +43,6 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
   const [loading, setLoading] = useState<boolean>(true);
   const [revisions, setRevisions] = useState<RevisionInfo[]>([])
 
-  // const [formData, setFormData] = useState<ShipFormData>();
-  // const [uploadedFiles, setUploadedFiles] = useState<FileAttachment[]>([]);
-  // const { initFormData, initUploadedFiles, loading } = useFetchData(shipId, isNew)
-
-  //初期化が終わったらformDataとuploadedFilesを設定
-  //formが変更されるまでformDataに値が入っていないと、onSubmit時にデータがない
-  // useEffect(() => {
-  //   setFormData(initFormData)
-  //   setUploadedFiles(initUploadedFiles)
-  // }, [initFormData, initUploadedFiles]);
-
   useEffect(() => {
     const fetchData = async () => {
       if (!isNew && shipId) {
@@ -80,21 +69,7 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
     }
   };
 
-  //送信処理
-  // const onSubmitForm = async (event: React.FormEvent) => {
-  //   event.preventDefault();
-  //   if (formData) {
-  //     try {
-  //       const updatedItem = await postDataApi(formData, uploadedFiles, isNew, "", shipId);
-  //       toast.success(("sucessfully submitted!"))
-  //       if (isNew && updatedItem?.id) {
-  //         router.push(path.join(SHIPPING_PAGE_URL, updatedItem.id))
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // }
+
   const onSubmit: SubmitHandler<InputForm> = async (formData: InputForm) => {
     try {
       const creation = (isNew || copy)
@@ -118,23 +93,7 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
   if (loading) {
     return <div>Loading...</div>; // or a loading spinner
   }
-  // return (
-  //   <AddToast>
-  //     <form onSubmit={handleSubmit(onSubmitForm)}>
-  //       <GeneralForm
-  //         fieldParams={componentInfo}
-  //         initialData={initFormData}
-  //         onChange={setFormData}
-  //       ></GeneralForm>
-  //       <div style={{ marginTop: '20px' }}>
-  //         <FileUploadComponent initialFiles={initUploadedFiles} onChange={setUploadedFiles} />
-  //       </div>
-  //       <div style={{ marginTop: '20px' }}>
-  //         <Button type="submit" variant="contained">Submit</Button>
-  //       </div>
-  //     </form>
-  //   </AddToast>
-  // );
+
   return (
     <AddToast>
       <Container maxWidth="lg" component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -161,7 +120,6 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
           />
           <Button type="submit" variant="contained">Submit</Button>
         </div>
-        {/* <Button type="submit" variant="contained">Submit</Button> */}
       </Container>
     </AddToast>
   );
