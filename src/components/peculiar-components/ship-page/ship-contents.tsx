@@ -21,7 +21,7 @@ import { RevisionInfo } from "@/lib/db/common/revision.model";
 const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
 
 interface ParentComponentProps {
-  shipId: string;
+  shipId?: string;
   revisionId?: string;
   copy: boolean
 }
@@ -32,7 +32,6 @@ type InputForm = ShipFormData & {
 function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps) {
   const router = useRouter();
   const isNew = shipId === 'new';
-  const shipIdInt = parseInt(shipId)
   const { control, handleSubmit, reset } = useForm<InputForm>(
     {
       defaultValues: {
@@ -57,9 +56,9 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isNew) {
+      if (!isNew && shipId) {
 
-        const apiData = await getShippingAction(shipId);
+        const apiData = await getShippingAction(shipId, revisionId);
         const data = ShipHandle.toFormData(apiData)
         const formData: InputForm = {
           ...data,
