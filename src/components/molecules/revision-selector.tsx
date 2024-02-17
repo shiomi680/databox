@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Select, MenuItem } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material';
-import { RevisionInfo } from '@/lib/db/item/item.operation';
+import { RevisionInfo } from '@/lib/db/common/revision.model';
 
 
 interface RevisionSelectorProps {
