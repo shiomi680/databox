@@ -32,9 +32,8 @@ export function relPathToAbsPath(relPath: string) {
 }
 
 export function generateUrl(fileModel: FileInfo) {
-  return path.join(DOWNLOAD_API, fileModel.id)
+  return path.join(DOWNLOAD_API, fileModel.Id)
 }
-
 //被らない名前を付ける
 function _generateUniqueFileName(dir: string, name: string) {
   let uniqueFileName = name

@@ -13,7 +13,7 @@ interface ParentComponentProps {
   copy?: boolean;
 }
 
-const ShipPage: React.FC<ParentComponentProps> = ({ shipId, revisionId, copy }) => {
+const ShipPage: React.FC<ParentComponentProps> = ({ shipId, revisionId, copy = false }) => {
   return (<div style={{ display: 'flex' }}>
     <MenuBar>
       <ShipMenu></ShipMenu>

@@ -38,7 +38,7 @@ export function FileUploadTableComponent({ initialFiles, onChange }: FileUploadP
       if (comingFiles) {
         const attachedFiles: FileAttachment[] = comingFiles.map(f => ({
           ...f,
-          id: f.Id,
+          Id: f.Id,
           Visible: true
         }))
         const newFiles = [...uploadedFiles, ...attachedFiles];
