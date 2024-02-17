@@ -36,3 +36,31 @@ export class RevisionBase {
   @prop()
   CommitComment: string;
 }
+
+export interface WithId {
+  Id: string;
+}
+@modelOptions({
+  options: { allowMixed: Severity.ALLOW },
+  schemaOptions: {
+    toJSON: {
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc, ret) { delete ret._id; }
+    }
+  }
+})
+export class ExtendedRevision<T extends WithId> extends RevisionBase {
+  @prop({ refPath: 'onModel' })
+  Data: T;
+
+  @prop({ required: true })
+  onModel: string; // This holds the model name for dynamic reference
+}
+export function createExtendedRevisionModel<T extends WithId>(modelName: string) {
+  const model = mongoose.models[modelName] || getModelForClass(ExtendedRevision, {
+    schemaOptions: { collection: modelName },
+    options: { customName: modelName } // Ensure the model name is set correctly
+  });
+  return model;
+}
