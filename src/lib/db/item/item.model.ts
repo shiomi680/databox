@@ -1,7 +1,7 @@
 import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre, buildSchema } from '@typegoose/typegoose';
 import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
-import { ExtendedRevision, createExtendedRevisionModel, createExtendedRevisionSchema } from '../common/revision.model';
+import { ExtendedRevision, createExtendedRevisionModel, createExtendedRevisionSchema } from '../revision/revision.model';
 
 
 @modelOptions({

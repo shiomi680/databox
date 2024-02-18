@@ -1,7 +1,7 @@
 import { ItemModel, ItemRevisionModel, Item, ItemInput, ItemRevisionSchema } from "./item.model";
 import { connectDB } from "../db-connect";
-import { RevisionInfo } from "../common/revision.model";
-import { createRevisionFunctions } from "../common/revision.operation";
+import { RevisionInfo } from "../revision/revision.model";
+import { createRevisionFunctions } from "../revision/revision.operation";
 
 
 export async function addNewItem(item: ItemInput, commitComment: string) {

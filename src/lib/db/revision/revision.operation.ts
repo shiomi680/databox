@@ -1,6 +1,6 @@
 
 import { connectDB } from "../db-connect";
-import { RevisionInfo } from "../common/revision.model";
+import { RevisionInfo } from "./revision.model";
 import { Model, Document } from 'mongoose';
 import { mongoose } from '@typegoose/typegoose';
 import { Item } from "../item/item.model";

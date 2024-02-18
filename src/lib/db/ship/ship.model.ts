@@ -1,7 +1,7 @@
 import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre } from '@typegoose/typegoose';
 import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
-import { RevisionBase } from '../common/revision.model';
+import { RevisionBase } from '../revision/revision.model';
 
 @modelOptions({
   options: { allowMixed: Severity.ALLOW },
