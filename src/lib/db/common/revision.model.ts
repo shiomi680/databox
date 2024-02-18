@@ -1,7 +1,7 @@
-import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre } from '@typegoose/typegoose';
+import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre, buildSchema } from '@typegoose/typegoose';
 import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
-
+import { connectDB } from "../db-connect";
 export type RevisionInfo = {
   Id: string,
   CommitComment: string,
@@ -57,10 +57,27 @@ export class ExtendedRevision<T extends WithId> extends RevisionBase {
   @prop({ required: true })
   onModel: string; // This holds the model name for dynamic reference
 }
-export function createExtendedRevisionModel<T extends WithId>(modelName: string) {
-  const model = mongoose.models[modelName] || getModelForClass(ExtendedRevision, {
-    schemaOptions: { collection: modelName },
-    options: { customName: modelName } // Ensure the model name is set correctly
+
+export function createExtendedRevisionSchema(schema: any) {
+  const rtn = new mongoose.Schema({
+    Data: { type: schema, required: true },
+    ObjectId: { type: String, required: true },
+    CreateAt: { type: String, required: true, default: () => new Date().toISOString() },
+    CommitComment: { type: String, required: false }
+  }, {
+    toJSON: { virtuals: true }, // Ensure virtuals are included when document is converted to JSON
+    toObject: { virtuals: true } // Ensure virtuals are included when document is converted to a plain object
   });
+
+  rtn.virtual('Id').get(function () {
+    return this._id.toString();
+  });
+  return rtn
+}
+
+export function createExtendedRevisionModel(modelName: string, schema: any) {
+  const model = mongoose.models[modelName] || mongoose.model(modelName, schema);
   return model;
 }
+
+
