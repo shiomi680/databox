@@ -1,7 +1,7 @@
-import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre } from '@typegoose/typegoose';
+import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre, buildSchema } from '@typegoose/typegoose';
 import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
-import { RevisionBase } from '../common/revision.model';
+import { ExtendedRevision, createExtendedRevisionModel, createExtendedRevisionSchema } from '../revision/revision.model';
 
 
 @modelOptions({
@@ -53,26 +53,8 @@ export type ItemInput = Omit<Item, '_id' | "Id"> & { Id?: string };
 export const ItemModel = (mongoose.models.Item || getModelForClass(Item)) as mongoose.Model<mongoose.Document<unknown, {}> & Item>;
 
 
-// @post<RevisionBase>('save', function (doc) {
-//   doc.Id = doc._id.toString();
-// })
+//revision 設定
+const itemSchema = buildSchema(Item)
+export const ItemRevisionSchema = createExtendedRevisionSchema(itemSchema)
 
-
-@modelOptions({
-  options: { allowMixed: Severity.ALLOW },
-  schemaOptions: {
-    toJSON: {
-      virtuals: true,
-      versionKey: false,
-      transform: function (doc, ret) { delete ret._id; }
-    }
-  }
-})
-export class ItemRevision extends RevisionBase {
-
-  @prop({ ref: () => Item })
-  Item: Item;
-}
-
-
-export const ItemRevisionModel = (mongoose.models.ItemRevision || getModelForClass(ItemRevision)) as mongoose.Model<mongoose.Document<unknown, {}> & ItemRevision>;
+export const ItemRevisionModel = createExtendedRevisionModel('ItemRevision', ItemRevisionSchema);

@@ -18,7 +18,7 @@ import ItemHandle from '@/lib/data-handle/item/item-convert';
 
 import { ItemFormData, itemFormDefault, itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 
-import { RevisionInfo } from "@/lib/db/common/revision.model";
+import { RevisionInfo } from "@/lib/db/revision/revision.model";
 
 
 import { globalConsts } from '@/consts';

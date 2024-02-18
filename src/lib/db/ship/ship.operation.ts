@@ -1,6 +1,6 @@
 import { ShippingModel, ShippingRevisionModel, Shipping, ShippingInput, ShippingRevision } from "./ship.model";
 import { connectDB } from "../db-connect";
-import { RevisionInfo } from "../common/revision.model";
+import { RevisionInfo } from "../revision/revision.model";
 
 export async function addNewShipping(ship: ShippingInput, commitComment: string) {
   await connectDB()

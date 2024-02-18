@@ -14,7 +14,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import ShipHandle from '@/lib/data-handle/ship/ship-convert';
 import { Button, Container } from '@mui/material';
 import RevisionSelector from '../../molecules/revision-selector';
-import { RevisionInfo } from "@/lib/db/common/revision.model";
+import { RevisionInfo } from "@/lib/db/revision/revision.model";
 
 
 
