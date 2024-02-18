@@ -13,7 +13,7 @@ describe('insertFile', () => {
     item.SalePrice = 1.1
     item.Files = [
     ]
-    item.Tags = []
+    item.Tags = ["abc", "edf"]
     const rtn = await addNewItem(item, "submit")
     console.log(rtn)
     // const item2 = new Item()

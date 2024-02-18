@@ -117,7 +117,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
 
         <div style={{ marginTop: '20px' }}>
           <TagsField
-            name='tags'
+            name='Tags'
             tagOptions={tagOptions}
             control={control}
           />

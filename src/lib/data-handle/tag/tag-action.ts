@@ -1,7 +1,7 @@
-import { prisma } from '../../api/prisma'
-import { readTagList } from './tag-crud'
+"use server"
+import { readTagList } from "@/lib/db/tag/tag.operation"
 
 export async function getTagList() {
   const tags = await readTagList()
-  return tags.map(x => x.TagName)
+  return tags
 }

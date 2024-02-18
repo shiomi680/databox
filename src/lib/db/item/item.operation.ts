@@ -1,6 +1,7 @@
 import { ItemModel, ItemRevisionModel, Item, ItemInput, ItemRevision } from "./item.model";
 import { connectDB } from "../db-connect";
 import { RevisionInfo } from "../common/revision.model";
+import { addTagList } from "../tag/tag.operation";
 
 
 export async function addNewItem(item: ItemInput, commitComment: string) {
@@ -24,6 +25,9 @@ export async function addNewItem(item: ItemInput, commitComment: string) {
   });
   await revision.save();
 
+  //タグ入力候補用のリストへ追加
+  addTagList(item.Tags)
+
   return await itemAddRevisions(savedItem.toJSON(), savedItem.Id);
 
 }
@@ -41,6 +45,9 @@ export async function updateItem(id: string, item: ItemInput, commitComment: str
     CommitComment: commitComment
   });
   await revision.save();
+
+  //タグ入力候補用のリストへ追加
+  addTagList(item.Tags)
 
   return await itemAddRevisions(updatedItem.toJSON(), updatedItem.Id);
 }
