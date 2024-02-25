@@ -1,5 +1,5 @@
 "use server"
-import { readShipping, addNewShipping, updateShipping, readShippingByRevision, readShippingList } from "@/lib/db/ship/ship.operation"
+import { readShipping, addNewShipping, updateShipping, readShippingList, shipRevisionService } from "@/lib/db/ship/ship.operation"
 import { Shipping, ShippingInput } from '@/lib/db/ship/ship.model'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 
@@ -13,7 +13,7 @@ export async function getShippingAction(Id: string, revisonId?: string) {
   if (!revisonId) {
     return await readShipping(Id)
   } else {
-    return await readShippingByRevision(Id, revisonId)
+    return await shipRevisionService.readDataByRevisionId(Id, revisonId)
   }
 }
 
