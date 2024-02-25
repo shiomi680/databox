@@ -5,12 +5,12 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button, Container } from '@mui/material';
 import path from 'path';
 
-import { GeneralForm } from '../../general-form/general-form-panel';
-import { ControlledTextField } from '@/components/general-form/atoms/controlled-text-field';
-import TagsField from '../../molecules/tag-field';
-import RevisionSelector from '../../molecules/revision-selector';
-import AddToast, { toast } from '../../molecules/add-toast';
-import { FileControlComponent } from '@/components/file-component/file-control-panel';
+import { GeneralForm } from '../../features/general-form/general-form-panel';
+import { ControlledTextField } from '@/components/features/general-form/atoms/controlled-text-field';
+import TagsField from '../../features/tag-field';
+import RevisionSelector from '../../features/revision-selector';
+import AddToast, { toast } from '../../common/add-toast';
+import { FileControlComponent } from '@/components/features/file-component/file-control-panel';
 
 import { getItemAction, postItemAction } from '@/lib/data-handle/item/item-action';
 import { getTagList } from '@/lib/data-handle/tag/tag-action';

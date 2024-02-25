@@ -1,4 +1,4 @@
-import { FieldParam, FieldType } from "@/components/general-form/molecules/grid-text-field";
+import { FieldParam, FieldType } from "@/components/features/general-form/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
 import path from "path";
 import { ColumnsDef } from "../general-defines";

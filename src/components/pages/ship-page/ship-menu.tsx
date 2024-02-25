@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
-import { ItemSelectorPanel } from '../../organisms/menu-item-selector'
+import { ItemSelectorPanel } from '../../features/menu-item-selector'
 import { getShippingListAction, ShippingListElement } from '@/lib/data-handle/ship/ship-actions'
 import { shipDefaultGridColumnVisibility, shipGridColumnsDef } from "@/lib/data-handle/ship/ship-defines"
 import { Button, Link, Divider, Paper, Typography } from "@mui/material";

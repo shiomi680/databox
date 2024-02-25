@@ -1,5 +1,5 @@
 import { Controller } from 'react-hook-form';
-import { FileUploadComponent } from './file-panel';
+import { FileUploadComponent } from './organisms/file-upload-component';
 
 type FileControlComponentProps = {
   name?: string,

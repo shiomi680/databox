@@ -1,9 +1,9 @@
 
 import { ColumnsDef } from "../general-defines"
 import path from "path";
-import { FieldParam } from "@/components/general-form/molecules/grid-text-field";
+import { FieldParam } from "@/components/features/general-form/molecules/grid-text-field";
 import { globalConsts } from "@/consts";
-import { FieldType } from "@/components/general-form/molecules/grid-text-field";
+import { FieldType } from "@/components/features/general-form/molecules/grid-text-field";
 import { FileAttachment } from "@/lib/db/file/file.model";
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 

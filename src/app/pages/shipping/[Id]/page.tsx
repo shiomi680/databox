@@ -1,5 +1,5 @@
 "use client"
-import ShipPage from "@/components/peculiar-components/ship-page/ship-page"
+import ShipPage from "@/components/pages/ship-page/ship-page"
 
 
 export default function Page({ params }: { params: { Id: string } }) {

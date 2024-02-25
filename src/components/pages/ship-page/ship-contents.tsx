@@ -1,19 +1,19 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GeneralForm } from '../../general-form/general-form-panel';
+import { GeneralForm } from '../../features/general-form/general-form-panel';
 import { ShipFormData, componentInfo, shipFormDefault } from '@/lib/data-handle/ship/ship-defines';
-import AddToast, { toast } from '../../molecules/add-toast';
+import AddToast, { toast } from '../../common/add-toast';
 import { getShippingAction, postShippingAction } from '@/lib/data-handle/ship/ship-actions';
 import { globalConsts } from '@/consts';
 import path from 'path';
 import { toFormData, toPostData } from '@/lib/data-handle/ship/ship-convert';
-import { FileControlComponent } from '@/components/file-component/file-control-panel';
-import { ControlledTextField } from '@/components/general-form/atoms/controlled-text-field';
+import { FileControlComponent } from '@/components/features/file-component/file-control-panel';
+import { ControlledTextField } from '@/components/features/general-form/atoms/controlled-text-field';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ShipHandle from '@/lib/data-handle/ship/ship-convert';
 import { Button, Container } from '@mui/material';
-import RevisionSelector from '../../molecules/revision-selector';
+import RevisionSelector from '../../features/revision-selector';
 import { RevisionInfo } from "@/lib/db/revision/revision.model";
 
 

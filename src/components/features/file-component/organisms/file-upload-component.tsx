@@ -4,7 +4,7 @@ import { Button, List, CircularProgress, Container, Switch } from '@mui/material
 
 import { uploadFiles } from '@/lib/client/file-io';
 import { useDropzone } from 'react-dropzone';
-import FileItem from './molecules/file-item';
+import FileItem from '../molecules/file-item';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 type FileUploadProps = {

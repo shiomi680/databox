@@ -3,8 +3,7 @@ import { Providers } from './providers'
 // import './globals.css'
 
 import type { Metadata } from 'next'
-import DataboxAppBar from '@/components/peculiar-components/layout/databox-appbar'
-
+import DataboxAppBar from '@/components/layout/databox-appbar'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
