@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData()
   const f = formData.get('file')
   const file = f as File
-  const fileTable = await saveFile(file)
+  const fileTable = await saveFile(file.stream(), file.name)
   return NextResponse.json(fileTable)
 
 }

@@ -1,14 +1,15 @@
 // pages/api/file.js
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
-import { existsSync, createReadStream } from 'fs'
+import { existsSync, createReadStream, createWriteStream } from 'fs'
 import path from 'path'
-import { ReadableOptions } from 'stream'
+import { Readable, ReadableOptions, Stream, pipeline } from 'stream'
 import { UnwrapPromise } from '@prisma/client/runtime/library'
 import { generateUniqueFilePath, absPathToRelPath, relPathToAbsPath, generateUrl } from './path-parse'
 import { File as FileClass, FileAttachment } from '@/lib/db/file/file.model'
 import { insertFileData, readFileData } from "@/lib/db/file/file.operation"
-
+import { promisify } from 'util';
+const pump = promisify(pipeline);
 
 export type UploadResponse = FileClass & {
   Url: string;
@@ -46,21 +47,24 @@ export async function createDownloadResponse(fileId: string) {
   return res;
 }
 
-export async function saveFile(file: File) {
+export async function saveFile(stream: any, fileName: string) {
   //ファイルを適切な名前で保存してFileModelを登録する
+  // file.size
+  // const fileArrayBuffer = await file.slice(0, 100).arrayBuffer()
+  // file.slice(0, 100).arrayBuffer()
 
-  const fileArrayBuffer = await file.arrayBuffer()
-  const filePath = await generateUniqueFilePath(file.name)
-
-  await fs.writeFile(filePath, Buffer.from(fileArrayBuffer))
+  const filePath = await generateUniqueFilePath(fileName)
+  await pump(stream, createWriteStream(filePath));
 
   const relPath = absPathToRelPath(filePath)
-  const fileInfo = await insertFileData(file.name, relPath)
+  const fileInfo = await insertFileData(fileName, relPath)
   const rtn = {
     ...fileInfo,
     Url: generateUrl(fileInfo),
   }
   return rtn
+
+
 }
 
 
