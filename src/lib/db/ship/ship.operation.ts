@@ -3,7 +3,7 @@ import { connectDB } from "../db-connect";
 import { createRevisionFunctions } from "../revision/revision.operation";
 
 const functions = createRevisionFunctions(ShippingRevisionModel);
-const addShippingRevision = functions.createRevisonData;
+const addShippingRevision = functions.createRevisionData;
 const attachRevisionsToShipping = functions.attachRevisionsToData;
 export const readShippingByRevision = functions.readDataByRevisionId
 

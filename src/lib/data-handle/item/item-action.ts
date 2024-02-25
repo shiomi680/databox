@@ -1,14 +1,12 @@
 "use server"
-import { readItem, addNewItem, updateItem, readItemByRevision, readItemList } from "@/lib/db/item/item.operation"
+import { readItem, addNewItem, updateItem, itemRevisionService, readItemList } from "@/lib/db/item/item.operation"
 import { Item, ItemInput } from '@/lib/db/item/item.model'
-import { UnwrapPromise } from '@prisma/client/runtime/library'
-
 
 export async function getItemAction(Id: string, revisonId?: string) {
   if (!revisonId) {
     return await readItem(Id)
   } else {
-    return await readItemByRevision(Id, revisonId)
+    return await itemRevisionService.readDataByRevisionId(Id, revisonId)
   }
 }
 

@@ -1,53 +1,56 @@
-
 import { connectDB } from "../db-connect";
 import { RevisionInfo } from "./revision.model";
-import { Model, Document } from 'mongoose';
 import { mongoose } from '@typegoose/typegoose';
-import { Item } from "../item/item.model";
 
 export function createRevisionFunctions(revisionModel: mongoose.Model<Document, any>) {
-  const createRevisonData = async (item: any, commitComment: string) => {
+  const createRevisionData = async (entity: any, commitComment: string) => {
     const revision = new revisionModel({
-      Data: item,
-      ObjectId: item.Id,
+      Data: entity,
+      ObjectId: entity.Id,
       CommitComment: commitComment
     });
     return await revision.save();
-  }
+  };
   const readRevisions = async (objectId: string) => {
-    await connectDB()
+    await connectDB();
     const revisions: any[] = await revisionModel.find({ ObjectId: objectId }, "Id CommitComment CreateAt").sort('-CreateAt');
-    const rtn: RevisionInfo[] = revisions.map(x => x.toJSON())
-    return rtn
-  }
-
-  const attachRevisionsToData = async (item: any, objectId: string) => {
-    const revisions = await readRevisions(objectId)
-    const id = item.Id || item.id || item._id?.toString() || undefined
-    const rtn = {
-      ...item,
-      Id: id,
+    return revisions.map(x => x.toJSON()) as RevisionInfo[];
+  };
+  const attachRevisionsToData = async (entity: any, objectId: string) => {
+    const revisions = await readRevisions(objectId);
+    return {
+      ...entity,
+      Id: objectId,
       Revisions: revisions
     };
-    return rtn
-  }
-  const readDataByRevisionId = async (dataId: string, revisionId: string) => {
-    await connectDB()
-    const revisionQ = await revisionModel.findById(revisionId).exec();
-    const revision = revisionQ.toObject()
-
-    if (revision && revision.Data) {
-
-      return await attachRevisionsToData(revision.Data, dataId);
-    } else {
-      return
+  };
+  const readDataByRevisionId = async (entityId: string, revisionId: string) => {
+    await connectDB();
+    const revision = await revisionModel.findById(revisionId).exec();
+    if (revision && revision.toObject().Data) {
+      return await attachRevisionsToData(revision.toObject().Data, entityId);
     }
-  }
+  };
 
   return {
-    createRevisonData,
+    createRevisionData,
     readRevisions,
     readDataByRevisionId,
     attachRevisionsToData
+  }
+}
+
+export class RevisionService {
+  createRevisionData: (entity: any, commitComment: string) => Promise<any>;
+  readRevisions: (objectId: string) => Promise<any[]>;
+  readDataByRevisionId: (entityId: string, revisionId: string) => Promise<any>;
+  attachRevisionsToData: (entity: any, objectId: string) => Promise<any>;
+
+  constructor(revisionModel: mongoose.Model<Document, any>) {
+    const { createRevisionData, readRevisions, readDataByRevisionId, attachRevisionsToData } = createRevisionFunctions(revisionModel);
+    this.createRevisionData = createRevisionData;
+    this.readRevisions = readRevisions;
+    this.readDataByRevisionId = readDataByRevisionId;
+    this.attachRevisionsToData = attachRevisionsToData;
   }
 }
