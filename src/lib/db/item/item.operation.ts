@@ -1,7 +1,13 @@
-import { ItemModel, ItemRevisionModel, Item, ItemInput, ItemRevisionSchema } from "./item.model";
+import { ItemModel, ItemRevisionModel, ItemInput } from "./item.model";
 import { connectDB } from "../db-connect";
 import { addTagList } from "../tag/tag.operation";
 import { createRevisionFunctions } from "../revision/revision.operation";
+
+const functions = createRevisionFunctions(ItemRevisionModel)
+
+const itemAddRevisions = functions.attachRevisionsToData
+export const readItemByRevision = functions.readDataByRevisionId
+const createItemRevision = functions.createRevisonData
 
 
 export async function addNewItem(item: ItemInput, commitComment: string) {
@@ -58,8 +64,3 @@ export async function readItem(id: string) {
   }
 }
 
-const functions = createRevisionFunctions(ItemRevisionModel)
-
-const itemAddRevisions = functions.attachRevisionsToData
-export const readItemByRevision = functions.readDataByRevisionId
-const createItemRevision = functions.createRevisonData
