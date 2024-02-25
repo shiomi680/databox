@@ -1,12 +1,10 @@
 // pages/api/file.js
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
-import { existsSync, createReadStream, createWriteStream } from 'fs'
-import path from 'path'
-import { Readable, ReadableOptions, Stream, pipeline } from 'stream'
-import { UnwrapPromise } from '@prisma/client/runtime/library'
+import { createReadStream, createWriteStream } from 'fs'
+import { ReadableOptions, pipeline } from 'stream'
 import { generateUniqueFilePath, absPathToRelPath, relPathToAbsPath, generateUrl } from './path-parse'
-import { File as FileClass, FileAttachment } from '@/lib/db/file/file.model'
+import { File as FileClass } from '@/lib/db/file/file.model'
 import { insertFileData, readFileData } from "@/lib/db/file/file.operation"
 import { promisify } from 'util';
 const pump = promisify(pipeline);
@@ -49,9 +47,6 @@ export async function createDownloadResponse(fileId: string) {
 
 export async function saveFile(stream: any, fileName: string) {
   //ファイルを適切な名前で保存してFileModelを登録する
-  // file.size
-  // const fileArrayBuffer = await file.slice(0, 100).arrayBuffer()
-  // file.slice(0, 100).arrayBuffer()
 
   const filePath = await generateUniqueFilePath(fileName)
   await pump(stream, createWriteStream(filePath));
