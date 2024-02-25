@@ -38,12 +38,17 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
   const [loading, setLoading] = useState<boolean>(true);
   const [revisions, setRevisions] = useState<RevisionInfo[]>([])
   const [tagOptions, setTagOptions] = useState<string[]>([])
+  const [selectedRevisionId, setSelectedRevisionId] = useState<string | undefined>(revisionId);
   const { control, handleSubmit, reset, setValue } = useForm<InputForm>({
     defaultValues: {
       ...itemFormDefault,
       commitComment: ""
     }
   });
+
+
+
+  const router = useRouter();
 
   const isNew = itemId ? false : true
   useEffect(() => {
@@ -66,11 +71,8 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
       setTagOptions(tags)
     }
     fetchData();
-  }, [itemId]);
+  }, [itemId, revisionId]);
 
-
-
-  const router = useRouter();
 
   const onSubmit: SubmitHandler<InputForm> = async (formData: InputForm) => {
     try {
@@ -80,6 +82,8 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
       const updatedItem = await postItemAction(item, formData.commitComment)
       if (updatedItem?.Revisions) {
         setRevisions(updatedItem?.Revisions)
+        setSelectedRevisionId(updatedItem.Revisions[0]?.Id);
+
       }
       toast.success(("sucessfully submitted!"))
       if (creation && updatedItem && updatedItem.Id) {
@@ -107,7 +111,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
           <RevisionSelector
             revisions={revisions}
             onRevisionChange={handleRevisionChange}
-            initialSelectId={revisionId}
+            initialSelectId={selectedRevisionId}
           />
         </div>
         <GeneralForm
@@ -123,7 +127,6 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
           />
         </div>
         <div style={{ marginTop: '20px' }}>
-          {/* <FileUploadTableComponent initialFiles={uploadedFiles} onChange={setUploadedFiles} /> */}
           <FileControlComponent control={control} name='Files' />
         </div>
         <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>

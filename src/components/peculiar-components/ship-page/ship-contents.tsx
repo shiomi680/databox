@@ -17,7 +17,6 @@ import RevisionSelector from '../../molecules/revision-selector';
 import { RevisionInfo } from "@/lib/db/revision/revision.model";
 
 
-
 const SHIPPING_PAGE_URL = globalConsts.url.shippingPage
 
 interface ParentComponentProps {
@@ -30,8 +29,12 @@ type InputForm = ShipFormData & {
 }
 
 function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps) {
-  const router = useRouter();
-  const isNew = shipId === 'new';
+  const [selectedRevisionId, setSelectedRevisionId] = useState<string | undefined>(revisionId);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [revisions, setRevisions] = useState<RevisionInfo[]>([])
+
+
+
   const { control, handleSubmit, reset } = useForm<InputForm>(
     {
       defaultValues: {
@@ -40,9 +43,8 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
       }
     }
   );
-  const [loading, setLoading] = useState<boolean>(true);
-  const [revisions, setRevisions] = useState<RevisionInfo[]>([])
-
+  const router = useRouter();
+  const isNew = shipId === 'new';
   useEffect(() => {
     const fetchData = async () => {
       if (!isNew && shipId) {
@@ -61,13 +63,7 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
       setLoading(false)
     }
     fetchData();
-  }, [shipId]);
-
-  const handleRevisionChange = (revisionId: string) => {
-    if (shipId) {
-      router.push(path.join(SHIPPING_PAGE_URL, shipId, revisionId))
-    }
-  };
+  }, [shipId, revisionId]);
 
 
   const onSubmit: SubmitHandler<InputForm> = async (formData: InputForm) => {
@@ -77,9 +73,15 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
       const postData = toPostData(formData, postId)
       const updatedItem = await postShippingAction(postData, formData.commitComment);
       toast.success("Successfully submitted!");
+      if (updatedItem?.Revisions) {
+        setRevisions(updatedItem.Revisions);
+        setSelectedRevisionId(updatedItem.Revisions[0]?.Id.toString()); // Update the selectedRevisionId with the latest revision's ID
+      }
+
       if (isNew && updatedItem?.Id) {
         router.push(path.join(SHIPPING_PAGE_URL, updatedItem.Id));
       }
+
 
 
 
@@ -88,6 +90,11 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
     }
   };
 
+  const handleRevisionChange = (revisionId: string) => {
+    if (shipId) {
+      router.push(path.join(SHIPPING_PAGE_URL, shipId, revisionId))
+    }
+  };
 
   //表示内容
   if (loading) {
@@ -101,7 +108,7 @@ function ShipContents({ shipId, revisionId, copy = false }: ParentComponentProps
           <RevisionSelector
             revisions={revisions}
             onRevisionChange={handleRevisionChange}
-            initialSelectId={revisionId}
+            initialSelectId={selectedRevisionId}
           />
         </div>
         <GeneralForm

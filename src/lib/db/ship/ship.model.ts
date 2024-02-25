@@ -1,7 +1,7 @@
-import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre } from '@typegoose/typegoose';
+import { post, prop, getModelForClass, modelOptions, Severity, mongoose, pre, buildSchema } from '@typegoose/typegoose';
 import { FileAttachment } from "../file/file.model"
 import { Types } from 'mongoose';
-import { RevisionBase } from '../revision/revision.model';
+import { RevisionBase, createExtendedRevisionSchema, createExtendedRevisionModel } from '../revision/revision.model';
 
 @modelOptions({
   options: { allowMixed: Severity.ALLOW },
@@ -86,24 +86,14 @@ export class Shipping {
 
 }
 
-
 export type ShippingInput = Omit<Shipping, '_id' | "Id"> & { Id?: string };
 export const ShippingModel = (mongoose.models.Shipping || getModelForClass(Shipping)) as mongoose.Model<mongoose.Document<unknown, {}> & Shipping>;
 
-@modelOptions({
-  options: { allowMixed: Severity.ALLOW },
-  schemaOptions: {
-    toJSON: {
-      virtuals: true,
-      versionKey: false,
-      transform: function (doc, ret) { delete ret._id; }
-    }
-  }
-})
-export class ShippingRevision extends RevisionBase {
+// Create a Mongoose schema for Shipping
+const shippingSchema = buildSchema(Shipping);
 
-  @prop({ ref: () => Shipping })
-  Shipping: Shipping;
-}
+// Create an extended revision schema for Shipping
+export const ShippingRevisionSchema = createExtendedRevisionSchema(shippingSchema);
 
-export const ShippingRevisionModel = (mongoose.models.ShippingRevision || getModelForClass(ShippingRevision)) as mongoose.Model<mongoose.Document<unknown, {}> & ShippingRevision>;
+// Create an extended revision model for Shipping
+export const ShippingRevisionModel = createExtendedRevisionModel('ShippingRevision', ShippingRevisionSchema);
