@@ -19,7 +19,7 @@ import ItemHandle from '@/lib/data-handle/item/item-convert';
 import { ItemFormData, itemFormDefault, itemComponentInfo } from '@/lib/data-handle/item/item-defines';
 
 import { RevisionInfo } from "@/lib/db/revision/revision.model";
-
+import { ControlledToggle } from '@/components/features/general-form/atoms/controlled-toggle';
 
 import { globalConsts } from '@/consts';
 const ITEM_PAGE_URL = globalConsts.url.itemPage
@@ -129,6 +129,12 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
         <div style={{ marginTop: '20px' }}>
           <FileControlComponent control={control} name='Files' />
         </div>
+        <ControlledToggle
+          control={control}
+          name='Deleted'
+          label="Deleted"
+
+        />
         <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>
           <ControlledTextField
             control={control}
