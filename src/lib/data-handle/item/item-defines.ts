@@ -5,6 +5,7 @@ import { FieldParam } from "@/components/features/general-form/molecules/grid-te
 import { globalConsts } from "@/consts";
 import { FieldType } from "@/components/features/general-form/molecules/grid-text-field";
 import { FileAttachment } from "@/lib/db/file/file.model";
+import { Flag } from "@mui/icons-material";
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 //左のテーブル
@@ -35,6 +36,10 @@ export const gridColumnsDef: ColumnsDef[] = [
     field: "Tags",
     headerName: "Tags",
   },
+  {
+    field: "Deleted",
+    headerName: "Deleted"
+  }
 
 ]
 
@@ -80,7 +85,7 @@ export const itemComponentInfo: FieldParam[] = [
     title: "Sale Price",
     type: FieldType.number,
     gridSize: 6
-  },
+  }
 ]
 
 export type ItemFormData = {
@@ -90,7 +95,8 @@ export type ItemFormData = {
   Cost: string,
   SalePrice: string,
   Files: FileAttachment[],
-  Tags: string[]
+  Tags: string[],
+  Deleted: boolean
 }
 
 export const itemFormDefault: ItemFormData = {
@@ -100,5 +106,7 @@ export const itemFormDefault: ItemFormData = {
   Cost: "0",
   SalePrice: "0",
   Files: [],
-  Tags: []
+  Tags: [],
+  Deleted: false
+
 }

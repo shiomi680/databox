@@ -10,7 +10,8 @@ export function toFormData(item?: Item) {
       Cost: item.Cost.toString(),
       SalePrice: item.SalePrice.toString(),
       Tags: item.Tags,
-      Files: item.Files
+      Files: item.Files,
+      Deleted: item.Deleted
     }
     return param
   } else {
@@ -27,7 +28,8 @@ export function toPostData(itemData: ItemFormData, id?: string) {
     Cost: parseFloat(itemData.Cost) || 0,
     SalePrice: parseFloat(itemData.SalePrice) || 0,
     Files: itemData.Files,
-    Tags: itemData.Tags
+    Tags: itemData.Tags,
+    Deleted: itemData.Deleted
   }
   return item
 }

@@ -46,6 +46,9 @@ export class Item {
   @prop({ type: () => [String] })
   Tags: string[];
 
+  @prop()
+  Deleted: boolean;
+
 }
 
 export type ItemInput = Omit<Item, '_id' | "Id"> & { Id?: string };
