@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ItemSelectorPanel } from '../../features/menu-item-selector'
 import { getItemListAction } from '@/lib/data-handle/item/item-action'
 import { Item } from '@/lib/db/item/item.model'
-import { gridColumnsDef, defaultGridColumnVisibility } from '@/lib/data-handle/item/item-defines'
+import { gridColumnsDef, defaultGridColumnVisibility, defaultFilter } from '@/lib/data-handle/item/item-defines'
 import { Button, Link, Box } from "@mui/material";
 import { globalConsts } from '@/consts';
 import path from 'path'
@@ -36,6 +36,7 @@ export const ItemMenu: React.FC = () => {
         idName={"Id"}
         defaultGridColumnVisibility={defaultGridColumnVisibility}
         gridColumnsDef={gridColumnsDef}
+        defaultFilter={defaultFilter}
       />
     </Box>
   )

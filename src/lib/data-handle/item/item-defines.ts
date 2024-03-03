@@ -6,6 +6,7 @@ import { globalConsts } from "@/consts";
 import { FieldType } from "@/components/features/general-form/molecules/grid-text-field";
 import { FileAttachment } from "@/lib/db/file/file.model";
 import { Flag } from "@mui/icons-material";
+import { GridFilterModel } from "@mui/x-data-grid";
 const ITEM_PAGE_URL = globalConsts.url.itemPage
 
 //左のテーブル
@@ -49,8 +50,18 @@ export const defaultGridColumnVisibility = {
   ItemDescription: true,
   Cost: false,
   SalePrice: false,
+  Deleted: false
 }
 
+export const defaultFilter: GridFilterModel = {
+  items: [
+    {
+      field: "Deleted",
+      operator: "contains",
+      value: "false"
+    }
+  ]
+}
 
 
 //content画面の設定

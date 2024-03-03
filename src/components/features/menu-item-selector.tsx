@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { DataGrid, GridToolbar, GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar, GridColDef, GridColumnVisibilityModel, GridFilterModel } from '@mui/x-data-grid'
 import Link from 'next/link'
 import { Box } from '@mui/material'
 import { useState, useEffect } from 'react'
@@ -22,6 +22,7 @@ type TablePartProps = {
   gridColumnsDef: ColumnsDef[]
   //選択中のCategoryID　子も含めて選択中にするなら全ての子のID
   selectedCategoryIds?: number[] | null
+  defaultFilter?: GridFilterModel
   onSelect?: (itemId: number) => void
 }
 
@@ -31,12 +32,14 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
   idName,
   defaultGridColumnVisibility,
   gridColumnsDef,
-  selectedCategoryIds,
+  defaultFilter,
   onSelect,
 
 }) => {
 
   const [columnVisibility, setColumnVisibility] = useState<GridColumnVisibilityModel>(defaultGridColumnVisibility);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>(
+    defaultFilter || { items: [] });
   const columns: GridColDef[] = gridColumnsDef.map(
     columnsDef => {
       const { link, ...rest } = columnsDef
@@ -61,6 +64,8 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
     <Box>
       <div style={{ height: 1000, width: '100%' }}>
         <DataGrid
+          filterModel={filterModel}
+          onFilterModelChange={(newModel) => setFilterModel(newModel)}
           columnVisibilityModel={columnVisibility}
           onColumnVisibilityModelChange={(newModel) =>
             setColumnVisibility(newModel)
@@ -79,6 +84,6 @@ export const ItemSelectorPanel: React.FC<TablePartProps> = ({
           }}
         />
       </div>
-    </Box>
+    </Box >
   )
 }
