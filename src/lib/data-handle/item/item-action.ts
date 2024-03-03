@@ -1,5 +1,5 @@
 "use server"
-import { readItem, addNewItem, updateItem, itemRevisionService, readItemList } from "@/lib/db/item/item.operation"
+import { readItem, addNewItem, updateItem, itemRevisionService, readItemList, deleteItem } from "@/lib/db/item/item.operation"
 import { Item, ItemInput } from '@/lib/db/item/item.model'
 
 export async function getItemAction(Id: string, revisonId?: string) {
@@ -10,6 +10,9 @@ export async function getItemAction(Id: string, revisonId?: string) {
   }
 }
 
+export async function deleteItemAction(Id: string) {
+  return await deleteItem(Id)
+}
 
 
 export async function postItemAction(item: ItemInput, commitComment: string) {

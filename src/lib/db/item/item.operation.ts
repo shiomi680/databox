@@ -2,6 +2,7 @@ import { ItemModel, ItemInput, ItemRevisionModel } from "./item.model";
 import { connectDB } from "../db-connect";
 import { addTagList } from "../tag/tag.operation";
 import { RevisionService } from "../revision/revision.operation";
+import { Truculenta } from "next/font/google";
 
 export const itemRevisionService = new RevisionService(ItemRevisionModel)
 
@@ -14,6 +15,23 @@ export async function addNewItem(item: ItemInput, commitComment: string) {
 
   await itemRevisionService.createRevisionData(savedItem, commitComment); // Use itemRevisionService
   return await itemRevisionService.attachRevisionsToData(savedItem.toJSON(), savedItem.Id); // Use itemRevisionService
+}
+
+export async function deleteItem(id: string) {
+  const item = await ItemModel.findById(id);
+  if (item) {
+    const data = item.toJSON()
+
+    const itemInput: ItemInput = {
+      ...data,
+
+      Deleted: true
+    }
+    return await updateItem(id, itemInput, "delete")
+  }
+  else {
+    throw Error("id is not found")
+  }
 }
 
 export async function updateItem(id: string, item: ItemInput, commitComment: string) {
