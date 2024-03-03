@@ -45,6 +45,7 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
       commitComment: ""
     }
   });
+  const [deleteToggleShown, setDeleteToggleShown] = useState<boolean>(false)
 
 
 
@@ -61,6 +62,9 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
           commitComment: ""
         }
         reset(formData)
+        if (formData.Deleted) {
+          setDeleteToggleShown(true)
+        }
 
         if (apiData?.Revisions) {
           setRevisions(apiData.Revisions)
@@ -129,12 +133,17 @@ function ItemContents({ itemId, revisionId, copy = false }: ParentComponentProps
         <div style={{ marginTop: '20px' }}>
           <FileControlComponent control={control} name='Files' />
         </div>
-        <ControlledToggle
-          control={control}
-          name='Deleted'
-          label="Deleted"
+        {
+          deleteToggleShown &&
+          (
+            <ControlledToggle
+              control={control}
+              name='Deleted'
+              label="Deleted"
+            />
+          )
+        }
 
-        />
         <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>
           <ControlledTextField
             control={control}
