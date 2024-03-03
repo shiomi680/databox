@@ -3,7 +3,7 @@ import { Providers } from './providers'
 // import './globals.css'
 
 import type { Metadata } from 'next'
-
+import DataboxAppBar from '@/components/layout/databox-appbar'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Shipping List',
 
-  description:'Shipping List',
+  description: 'Shipping List',
 }
 
 export default function RootLayout({
@@ -22,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <DataboxAppBar />
+          {children}</Providers>
       </body>
     </html>
   )

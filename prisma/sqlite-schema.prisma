@@ -3,49 +3,108 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model ShippingModel {
-  ShippingId                   Int      @id @default(autoincrement())
-  ShipDate             DateTime?
-  ShipFrom             String?
-  ShipTo               String?
-  Title                String
-  ShippingInvoicePrice      Float?
-  ShippingInvoiceCurrency      String?
-  TradeTerm            String?
-  AcquisitionDate      DateTime?
-  AcquisitionPrice     Float?
-  BookValue     Float?
-  Defrayer             String?
-  Comment              String?
-  CommentAboutSale     String?
-  Gx          String?
+model ShippingRevision {
+  ShippingRevisionId                      Int      @id @default(autoincrement())
+  ShippingModel           ShippingModel @relation(fields: [ShippingModelId], references: [ShippingId])
+  ShippingModelId         Int
+  createdAt DateTime @default(now())
+  CommitComment  String
+  ShipDate                String?
+  ShipFrom                String?
+  ShipTo                  String?
+  Title                   String?
+  ShippingInvoicePrice    Decimal?
+  ShippingInvoiceCurrency String?
+  TradeTerm               String?
+  AcquisitionDate         String?
+  AcquisitionPrice        Decimal?
+  BookValue               Decimal?
+  Defrayer                String?
+  Comment                 String?
+  CommentAboutSale        String?
+  Gx                      String?
   CommentAboutAcquisition String?
-  InvoiceNo            String?
-  Carrier              String?
-  AwbNo                String?
-  ExportPermission     String?
-  ShippingFileMapping                 ShippingFileMapping[]
+  InvoiceNo               String?
+  Carrier                 String?
+  AwbNo                   String?
+  ExportPermission        String?
+  ShippingFileMappings    ShippingFileMapping[]
+}
+
+model ShippingModel {
+  ShippingId                      Int      @id @default(autoincrement())
+  ShippingRevisions       ShippingRevision[]
+
+}
+
+model ItemRevision{
+  ItemRevisionId                      Int      @id @default(autoincrement())
+  ItemModel               ItemModel @relation(fields: [ItemModelId], references: [ItemModelId])
+  ItemModelId             Int
+  CommitComment String
+  createdAt DateTime @default(now())
+  ModelNumber     String?
+  ItemName        String?
+  ItemDescription String?
+  Cost            Decimal?
+  SalePrice       Decimal?
+  ItemFileMappings ItemFileMapping[]
+  ItemTagMappings    ItemTagMapping[]
+}
+
+model ItemModel {
+  ItemModelId          Int               @id @default(autoincrement())
+  ItemRevisions           ItemRevision[]
+}
+
+model TagModel {
+  TagId    Int              @id @default(autoincrement())
+  TagName  String           @unique
+  ItemTagMappings    ItemTagMapping[]
+}
+
+model ItemTagMapping {
+  ItemRevisionId  Int
+  TagId   Int
+  ItemRevision    ItemRevision  @relation(fields: [ItemRevisionId], references: [ItemRevisionId])
+  TagModel     TagModel   @relation(fields: [TagId], references: [TagId])
+
+  @@id([ItemRevisionId, TagId])
+  @@index([ItemRevisionId, TagId], name: "ItemTagMapping_index")
+}
+
+
+
+model ItemFileMapping {
+  ItemRevisionId Int
+  FileId Int
+  Visible Boolean @default(true)
+  ItemRevision ItemRevision @relation(fields: [ItemRevisionId], references: [ItemRevisionId])
+  FileModel FileModel @relation(fields: [FileId], references: [FileId])
+
+  @@id([ItemRevisionId, FileId])
+  @@index([ItemRevisionId, FileId], name: "ItemFileMapping_index")
 }
 
 model ShippingFileMapping {
-  ShippingId Int
+  ShippingRevisionId Int
   FileId Int
-  ShippingModel   ShippingModel  @relation(fields: [ShippingId], references: [ShippingId])
-  FileModel   FileModel  @relation(fields: [FileId], references: [FileId])
+  Visible Boolean @default(true)
+  ShippingRevision        ShippingRevision @relation(fields: [ShippingRevisionId], references: [ShippingRevisionId])
+  FileModel FileModel @relation(fields: [FileId], references: [FileId])
 
-  @@id([ShippingId, FileId])
-  @@index([ShippingId, FileId], name: "ItemFileMapping_index")
+  @@id([ShippingRevisionId, FileId])
+  @@index([ShippingRevisionId, FileId], name: "ShippingFileMapping_index") // changed index name here
 }
+
 model FileModel{
   FileId          Int               @id @default(autoincrement())
   FileName        String?
   FilePath        String?
   UploadTimestamp DateTime @default(now())
-  ShippingFileMapping ShippingFileMapping[]
+  ShippingFileMappings ShippingFileMapping[]
+  ItemFileMappings ItemFileMapping[]
 }
-
-
-
 
 generator client {
   provider = "prisma-client-js"

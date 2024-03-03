@@ -1,62 +1,91 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:my-secret-pw@localhost:3306/mydatabase" // example: "mysql://root:password@localhost:3306/mydatabase"
+  url      = "file:./dev.db"
 }
 
-model BOM {
-  BOMID           Int                @id @default(autoincrement())
-  BOMName         String
-  BOMDescription  String?
-  ItemBOMMapping  ItemBOMMapping[]
+model ShippingModel {
+  Id                      Int      @id @default(autoincrement())
+  ShipDate                String?
+  ShipFrom                String?
+  ShipTo                  String?
+  Title                   String?
+  ShippingInvoicePrice    Decimal?
+  ShippingInvoiceCurrency String?
+  TradeTerm               String?
+  AcquisitionDate         String?
+  AcquisitionPrice        Decimal?
+  BookValue               Decimal?
+  Defrayer                String?
+  Comment                 String?
+  CommentAboutSale        String?
+  Gx                      String?
+  CommentAboutAcquisition String?
+  InvoiceNo               String?
+  Carrier                 String?
+  AwbNo                   String?
+  ExportPermission        String?
+  ShippingFileMappings    ShippingFileMapping[]
 }
 
-model Category {
-  CategoryID  Int    @id @default(autoincrement())
-  CategoryName String?
-  Item         Item[]
-}
 
-model Item {
-  ItemID          Int               @id @default(autoincrement())
+model ItemModel {
+  Id          Int               @id @default(autoincrement())
+  ModelNumber     String?
   ItemName        String?
   ItemDescription String?
   Cost            Decimal?
   SalePrice       Decimal?
-  CategoryID      Int?
-  Category        Category?          @relation(fields: [CategoryID], references: [CategoryID])
-  ItemBOMMapping  ItemBOMMapping[]
-  ItemFileMapping ItemFileMapping[]
+  ItemFileMappings ItemFileMapping[]
+  ItemTagMappings    ItemTagMapping[]
 }
 
-model ItemBOMMapping {
-  BOMID Int
-  ItemID Int
-  BOM   BOM   @relation(fields: [BOMID], references: [BOMID])
-  Item  Item  @relation(fields: [ItemID], references: [ItemID])
-  Quantity Int
-
-  @@id([BOMID, ItemID])
+model TagModel {
+  Id    Int              @id @default(autoincrement())
+  TagName  String           @unique
+  ItemTagMappings    ItemTagMapping[]
 }
+
+model ItemTagMapping {
+  ItemId  Int
+  TagId   Int
+  ItemModel    ItemModel  @relation(fields: [ItemId], references: [Id])
+  TagModel     TagModel   @relation(fields: [TagId], references: [Id])
+
+  @@id([ItemId, TagId])
+  @@index([ItemId, TagId], name: "ItemTagMapping_index")
+}
+
+
 
 model ItemFileMapping {
-  ItemID Int
-  FileID Int
-  Item   Item  @relation(fields: [ItemID], references: [ItemID])
-  FileTable   FileTable  @relation(fields: [FileID], references: [FileID])
+  ItemId Int
+  FileId Int
+  Visible Boolean @default(true)
+  ItemModel ItemModel @relation(fields: [ItemId], references: [Id])
+  FileModel FileModel @relation(fields: [FileId], references: [FileId])
 
-  @@id([ItemID, FileID])
-  @@index([ItemID, FileID], name: "ItemFileMapping_index")
+  @@id([ItemId, FileId])
+  @@index([ItemId, FileId], name: "ItemFileMapping_index")
 }
 
-model FileTable {
-  FileID          Int               @id @default(autoincrement())
+model ShippingFileMapping {
+  ShippingId Int
+  FileId Int
+  Visible Boolean @default(true)
+  ShippingModel ShippingModel @relation(fields: [ShippingId], references: [Id])
+  FileModel FileModel @relation(fields: [FileId], references: [FileId])
+
+  @@id([ShippingId, FileId])
+  @@index([ShippingId, FileId], name: "ShippingFileMapping_index") // changed index name here
+}
+
+model FileModel{
+  FileId          Int               @id @default(autoincrement())
   FileName        String?
   FilePath        String?
   UploadTimestamp DateTime @default(now())
-  ItemFileMapping ItemFileMapping[]
+  ShippingFileMappings ShippingFileMapping[]
+  ItemFileMappings ItemFileMapping[]
 }
 
 generator client {
